@@ -5,14 +5,13 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class Segurado {
 
     /*
 
-    Atributos
+    Atributos da parte de dados iniciais do segurado
 
      */
 
@@ -30,28 +29,45 @@ public class Segurado {
     private boolean filiaAteEC; //main.Segurado filiado até 13/11/2019?
     private String antesDepoisEC; //Informa se a filiação ocorreu antes ou depois de 13/11/2019 em String
     private String atendeNaoAtEC; //Informa se atende requisito de filiação até 13/11/2019 em String
-    private String idadeExigidaEC; //Idade exigida até 13/11/2019
-    private String[] idadeCompEC; //Idade do segurado en 13/11/2019
-    private String carenciaAteEC; //Carência exigida até 13/11/2019
-    private boolean dirAdqEC; //Testa se há direito adquirido em 13/11/2019
-    private String possuiNaoDirAdqEC; //Informa se possui direito adquirido em 13/11/2019 como String
-    private Date dtVerif; //Data variável para verificação do direito (art. 18 EC 103/2019) em Date
-    private String dtVerifString; //Data variável para verificação do direito (art. 18 EC 103/2019) em String
-    private String idadeExigidaDtVerif; //Idade exigina na data de verificação do direito (art. 18 EC 103/2019)
-    private String[] idadeCompDtVerif; //Idade atingida até a data de verificação do direito (art. 18 EC 103/2019)
-    private String carenciaDtVerif; //Carência na data de verificação do direito (art. 18 EC 103/2019)
-    private String[] tempoContrDtVerif; //Na data de verificação do direito (art. 18 EC 103/2019)
-    private boolean dirAdqDtVerif; //Testa se há direito adquirido na data de verificação do direito (art. 18 EC 103/2019)
-    private String possuiNaoDirAdqDtVerif; //Informa se possui direito adquirido na data de verificação do direito (art. 18 EC 103/2019)
-    private String idadeExigidaAposProg; //Idade exigida para concessão de aposentadoria programada (art. 19 da EC 103/2019)
-    private String possuiNaoDireitoAposProg; //Informa se possui direito adquirido à concessão de aposentadoria programada (art. 19 da EC 103/2019)
-    private String foiNaoRecDireitoAposFinal; //Informa se foi reconhecido direito adquirido à concessão de aposentadoria em qualquer das regras
+
+    /*
+
+    Atributos da parte de análise de direito:
+    -> os atributos desta parte estão em listas, sendo que cada nível da lista (r1 a r3) corresponde a uma regra de
+        análise de direito;
+    -> o nível r3 pode ter mais de um parágrafo, no caso de segurada do sexo feminino, caso em que será utilizado um
+        contador para buscar as informações;
+
+     */
+
+    private int r1; //Número do índice referente à regra de aposentadoria programada art. 19 da EC 103/2019. Sempre = 0
+    private int r2; //Número do índice referente à regra de direito adquirido antes da EC 103/2019
+    private int r3; //Número do índice referente à regra transitória art. 18 da EC 103/2019
+
+    private List<String> regraAnaliseDireito = new ArrayList<>(); //Lista com o nome das regras para análise do direito em formato String
+
+    private List<String> stringDataBase = new ArrayList<>(); //Lista com data base para análise do direito em formato String
+    private List<Date> dateDataBase = new ArrayList<>(); //Lista com data base para análise do direito em formato Date
+
+    private List<String> idadeExigida = new ArrayList<>(); //Lista contendo as idades exigidas na data base guardadas em String
+    private List<String> carenciaExigida = new ArrayList<>(); //Lista contendo as carências exigidas na data base guardadas em String
+    private List<String[]> TempCompExigido = new ArrayList<>(); //Lista contendo os tempos de contribuição exigidos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+
+    private List<String[]> idadeEfetiva = new ArrayList<>(); //Lista contendo as idades efetivas na data base. As idades são guardadas em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String> carenciaEfetiva = new ArrayList<>(); //Lista contendo as carências efetivas na data base. As carências são guardadas em String
+    private List<String[]> TempCompEfetivo = new ArrayList<>(); //Lista contendo os tempos de contribuição efetivos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+
+    private  List<String> recDireitoDataBase = new ArrayList<>(); //Lista com a afirmação quanto ao reconhecimento do direito na data base guardados como String com "foi reconhecido o direito" ou "não foi reconhecido o direito"
+
+    private  String recDireitoFinal; //Afirmação quanto ao reconhecumento do direito na por qualquer uma das regras como String com "foi reconhecido o direito" ou "não foi reconhecido o direito"
 
     /*
 
     Getters e Setters
 
      */
+
+
 
     public String getExtrato() {
         return extrato;
@@ -70,7 +86,7 @@ public class Segurado {
     }
 
     public String getSexo() {
-        return this.sexo.toLowerCase();
+        return sexo;
     }
 
     public void setSexo(String sexo) {
@@ -165,144 +181,130 @@ public class Segurado {
         this.atendeNaoAtEC = atendeNaoAtEC;
     }
 
-    public String getIdadeExigidaEC() {
-        return idadeExigidaEC;
+
+
+    public int getR1() {
+        return r1;
     }
 
-    public void setIdadeExigidaEC(String idadeExigidaEC) {
-        this.idadeExigidaEC = idadeExigidaEC;
+    public void setR1(int r1) {
+        this.r1 = r1;
     }
 
-    public String[] getIdadeCompEC() {
-        return idadeCompEC;
+    public int getR2() {
+        return r2;
     }
 
-    public void setIdadeCompEC(String[] idadeCompEC) {
-        this.idadeCompEC = idadeCompEC;
+    public void setR2(int r2) {
+        this.r2 = r2;
     }
 
-    public String getCarenciaAteEC() {
-        return carenciaAteEC;
+    public int getR3() {
+        return r3;
     }
 
-    public void setCarenciaAteEC(String carenciaExigidaAteEC) {
-        this.carenciaAteEC = carenciaExigidaAteEC;
+    public void setR3(int r3) {
+        this.r3 = r3;
     }
 
-    public boolean isDirAdqEC() {
-        return dirAdqEC;
+    public String getRegraAnaliseDireito(int index) {
+        return this.regraAnaliseDireito.get(index);
     }
 
-    public void setDirAdqEC(boolean dirAdqEC) {
-        this.dirAdqEC = dirAdqEC;
+    public void addRegraAnaliseDireito(String regraAnaliseDireito) {
+        this.regraAnaliseDireito.add(regraAnaliseDireito);
     }
 
-    public String getPossuiNaoDirAdqEC() {
-        return possuiNaoDirAdqEC;
+    public String getStringDataBase(int index) {
+        return this.stringDataBase.get(index);
     }
 
-    public void setPossuiNaoDirAdqEC(String possuiNaoDirAdqEC) {
-        this.possuiNaoDirAdqEC = possuiNaoDirAdqEC;
+    public void addStringDataBase(String stringDataBase) {
+        this.stringDataBase.add(stringDataBase);
     }
 
-    public Date getDtVerif() {
-        return dtVerif;
+    public Date getDateDataBase(int index) {
+        return this.dateDataBase.get(index);
     }
 
-    public void setDtVerif(Date dtVerif) {
-        this.dtVerif = dtVerif;
+    public void addDateDataBase(Date dateDataBase) {
+        this.dateDataBase.add(dateDataBase);
     }
 
-    public String getDtVerifString() {
-        return dtVerifString;
+    public String getIdadeExigida(int index) {
+        return this.idadeExigida.get(index);
     }
 
-    public void setDtVerifString(String dtVerifString) {
-        this.dtVerifString = dtVerifString;
+    public void addIdadeExigida(String idadeExigida){
+        this.idadeExigida.add(idadeExigida);
     }
 
-    public String getIdadeExigidaDtVerif() {
-        return idadeExigidaDtVerif;
+    public String getCarenciaExigida(int index) {
+        return this.idadeExigida.get(index);
     }
 
-    public void setIdadeExigidaDtVerif(String idadeExigidaDtVerif) {
-        this.idadeExigidaDtVerif = idadeExigidaDtVerif;
+    public void addCarenciaExigida(String carenciaExigida) {
+        this.carenciaExigida.add(carenciaExigida);
     }
 
-    public String[] getIdadeCompDtVerif() {
-        return idadeCompDtVerif;
+    public String[] getTempCompExigido(int index) {
+        return this.TempCompExigido.get(index);
     }
 
-    public void setIdadeCompDtVerif(String[] idadeCompDtVerif) {
-        this.idadeCompDtVerif = idadeCompDtVerif;
+    public void addTempCompExigido(String[] tempCompExigido) {
+        this.TempCompExigido.add(tempCompExigido);
     }
 
-    public String getCarenciaDtVerif() {
-        return carenciaDtVerif;
+    public String[] getIdadeEfetiva(int index) {
+        return this.idadeEfetiva.get(index);
     }
 
-    public void setCarenciaDtVerif(String carenciaDtVerif) {
-        this.carenciaDtVerif = carenciaDtVerif;
+    public void addIdadeEfetiva(String[] idadeEfetiva) {
+        this.idadeEfetiva.add(idadeEfetiva);
     }
 
-    public String[] getTempoContrDtVerif() {
-        return tempoContrDtVerif;
+    public String getCarenciaEfetiva(int index) {
+        return this.carenciaEfetiva.get(index);
     }
 
-    public void setTempoContrDtVerif(String[] tempoContrDtVerif) {
-        this.tempoContrDtVerif = tempoContrDtVerif;
+    public void addCarenciaEfetiva(String carenciaEfetiva) {
+        this.carenciaEfetiva.add(carenciaEfetiva);
     }
 
-    public boolean isDirAdqDtVerif() {
-        return dirAdqDtVerif;
+    public String[] getTempCompEfetivo(int index) {
+        return this.TempCompEfetivo.get(index);
     }
 
-    public void setDirAdqDtVerif(boolean dirAdqDtVerif) {
-        this.dirAdqDtVerif = dirAdqDtVerif;
+    public void addTempCompEfetivo(String[] tempCompEfetivo) {
+        this.TempCompEfetivo.add(tempCompEfetivo);
     }
 
-    public String getPossuiNaoDirAdqDtVerif() {
-        return possuiNaoDirAdqDtVerif;
+    public String getRecDireitoDataBase(int index) {
+        return this.recDireitoDataBase.get(index);
     }
 
-    public void setPossuiNaoDirAdqDtVerif(String possuiNaoDirAdqDtVerif) {
-        this.possuiNaoDirAdqDtVerif = possuiNaoDirAdqDtVerif;
+    public void addRecDireitoDataBase(String recDireitoDataBase) {
+        this.recDireitoDataBase.add(recDireitoDataBase);
     }
 
-    public String getIdadeExigidaAposProg() {
-        return idadeExigidaAposProg;
+    public String getRecDireitoFinal() {
+        return recDireitoFinal;
     }
 
-    public void setIdadeExigidaAposProg(String idadeExigidaAposProg) {
-        this.idadeExigidaAposProg = idadeExigidaAposProg;
-    }
-
-    public String getPossuiNaoDireitoAposProg() {
-        return possuiNaoDireitoAposProg;
-    }
-
-    public void setPossuiNaoDireitoAposProg(String possuiNaoDireitoAposProg) {
-        this.possuiNaoDireitoAposProg = possuiNaoDireitoAposProg;
-    }
-
-    public String getFoiNaoRecDireitoAposFinal() {
-        return foiNaoRecDireitoAposFinal;
-    }
-
-    public void setFoiNaoRecDireitoAposFinal(String foiNaoRecDireitoAposFinal) {
-        this.foiNaoRecDireitoAposFinal = foiNaoRecDireitoAposFinal;
+    public void setRecDireitoFinal(String recDireitoFinal) {
+        this.recDireitoFinal = recDireitoFinal;
     }
 
     /*
 
-    Métodos
+    Métodos de parse
 
      */
 
     /*
     Parse do arquivo Extrato.txt inteiro como String
      */
-    public String lerExtrato(){
+    public String parseExtrato(){
         String extrato = "";
         JFileChooser seletorArquivo = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
         seletorArquivo.setFileFilter(new Main.ExtensionFilter());
@@ -321,7 +323,7 @@ public class Segurado {
     /*
     Parse do nome do segurado a partir da String novoSegurado.lerExtrato
      */
-    public String lerNome() {
+    public String parseNome() {
         String nome = this.getExtrato();
         nome = nome.split("SEGURADO....: ")[1];
         nome = nome.split("DATA NASC")[0].trim();
@@ -329,9 +331,9 @@ public class Segurado {
     }
 
     /*
-    Parse do sexo do segurado a partir da String novoSegurado.lerExtrato a partir da String novoSegurado.lerExtrato
+    Parse do sexo do segurado
      */
-    public String lerSexo() {
+    public String parseSexo() {
         String sexo = this.getExtrato();
         sexo = sexo.split("SEXO....: ")[1];
         sexo = sexo.split("RAMO ATIV...:")[0].trim();
@@ -339,11 +341,11 @@ public class Segurado {
     }
 
     /*
-    Parse do artigo de gênero do segurado a partir da String novoSegurado.lerExtrato
+    Parse do artigo de gênero do segurado
      */
-    public char lerArtGenero () {
+    public char parseArtGenero() {
         char artGenero;
-        if(this.getSexo().equals("feminino")){
+        if(this.getSexo().equals("FEMININO")){
             artGenero = 'a';
         }
         else {
@@ -353,9 +355,9 @@ public class Segurado {
     }
 
     /*
-    Parse da data de nascimento como String a partir da String novoSegurado.lerExtrato
+    Parse da data de nascimento do segurado
      */
-    public String lerNascString(){
+    public String parseNascString(){
         String nascString = this.getExtrato();
         nascString = nascString.split("NASC...: ")[1];
         nascString = nascString.split("DAT........:")[0].trim();
@@ -363,7 +365,7 @@ public class Segurado {
     }
 
     /*
-    Converte a data de nascimento para date a partir da variável dataNascAsString em uma instância de main.Segurado
+    Converte a data de nascimento para Date
      */
     public Date nascToDate(){
         Calendar aDate = Calendar.getInstance();
@@ -376,7 +378,7 @@ public class Segurado {
     }
 
     /*
-    Parse da DER como String a partir da String novoSegurado.lerExtrato
+    Parse da DER como String
      */
     public String lerDerString(){
         String DERString = this.getExtrato();
@@ -386,7 +388,7 @@ public class Segurado {
     }
 
     /*
-    Converte a DER para date a partir da variável DERasString em uma instância de main.Segurado
+    Converte a DER para date
      */
     public Date DERtoDate(){
         Calendar aDate = Calendar.getInstance();
@@ -399,9 +401,9 @@ public class Segurado {
     }
 
     /*
-    Parse da idade e conversão para um array de String a partir da String novoSegurado.lerExtrato
+    Parse da idade e conversão para um array de String
      */
-    public String[] lerIdadeDER(){
+    public String[] parseIdadeDER(){
         String achaIdadeDER = this.getExtrato();
         achaIdadeDER = achaIdadeDER.split("Aposentadoria Programada")[2];
         achaIdadeDER = achaIdadeDER.split("Idade\\s+: ")[1];
@@ -415,9 +417,9 @@ public class Segurado {
     }
 
     /*
-    Parse da data de filiação como String a partir da String novoSegurado.lerExtrato
+    Parse da data de filiação como String
      */
-    public String lerFiliaString(){
+    public String parseFiliaString(){
         String filiaString = this.getExtrato();
         filiaString = filiaString.split("PERIODOS DE QUALIDADE DE SEGURADO\\S+: ")[1];
         filiaString = filiaString.split(" a")[0].trim();
@@ -425,7 +427,7 @@ public class Segurado {
     }
 
     /*
-    Converte a data de filiação para date a partir da variável filiaString em uma instância de main.Segurado
+    Converte a data de filiação para Date
      */
     public Date FiliaToDate(){
         Calendar aDate = Calendar.getInstance();
@@ -453,143 +455,132 @@ public class Segurado {
     }
 
     /*
-    Parse da idade em 13/11/2019 e conversão em um Array com anos, meses e dias a partir da String novoSegurado.lerExtrato
+
+    Métodos de parsing de atributos da parte de análise do direito do segurado
+
      */
-    public String[] lerIdadeEC(){
-        String achaIdadeEC = this.getExtrato();
-        achaIdadeEC = achaIdadeEC.split("Analise do direito em 13/11/2019")[1];
-        achaIdadeEC = achaIdadeEC.split("Idade\\s+: ")[1];
-        achaIdadeEC = achaIdadeEC.split("Soma")[0].trim();
-        String[] arrayIdadeEC;
-        arrayIdadeEC = achaIdadeEC.split(", ");
-        arrayIdadeEC[0] = arrayIdadeEC[0].split("a")[0];
-        arrayIdadeEC[1] = arrayIdadeEC[1].split("m")[0];
-        arrayIdadeEC[2] = arrayIdadeEC[2].split("d")[0];
-        return arrayIdadeEC;
+
+    /*
+    Atribuição do nome da regra de análise de direito
+     */
+    public String retornaNomeRegraAnaliseDireito(int index){
+        String regra = "";
+        if (index == this.r1) {
+            regra = "Regra geral do Art.19 - Aposentadoria Programada";
+        } else if (index == this.r2) {
+            regra = "Direito a aposentadoria por idade antes da Emenda Constitucional 103/2019";
+        } else if (index == this.r3) {
+            regra = "Regra transitoria do Art.18 - Aposentadoria por idade";
+        }
+        return regra;
     }
 
     /*
-    Parse da carência em 13/11/2019 a partir da String novoSegurado.lerExtrato
+    Parse da data base de verificação de direito
      */
-    public String lerCarenciaEC (){
-        String CarenciaEC = this.getExtrato();
-        CarenciaEC = CarenciaEC.split("Analise do direito em 13/11/2019")[1];
-        CarenciaEC = CarenciaEC.split("Quantidade de carencia\\s+: ")[1];
-        CarenciaEC = CarenciaEC.split("Idade")[0].trim();
-        return CarenciaEC;
+    public String parseDataBase(int index) {
+    String data = this.getExtrato();
+        if (index == this.r1) {
+            data = data.split(this.getRegraAnaliseDireito(index))[1];
+            data = data.split("Analise do direito em ")[1];
+            data = data.split("\\s")[0].trim();
+        } else if (index == this.r2) {
+            data = "13/11/2019";
+        } else if (index == this.r3) {
+            data = "ver else if do método parseDataBase";
+        }
+        return data;
     }
 
     /*
-    Parse direito adquirido em 13/11/2019 a partir da String novoSegurado.lerExtrato
+    Converte data base para Date
      */
-    public String lerDireitoAdquidoEC (){
-        String direitoAdqEC = this.getExtrato();
-        direitoAdqEC = direitoAdqEC.split("Direito a aposentadoria por idade antes da Emenda Constitucional 103/2019")[1];
-        direitoAdqEC = direitoAdqEC.split("Possui direito nesta regra: ")[1];
-        direitoAdqEC = direitoAdqEC.split("[^sn]")[0];
-        return direitoAdqEC;
-    }
-
-    /*
-    Parse da idade na data de veirificação do direito para art. 18 da EC 103/2019 a partir da String novoSegurado.lerExtrato
-     */
-    public String lerIdadeDtVerif(){
-        String idadeDtVerif = this.getExtrato();
-        idadeDtVerif = idadeDtVerif.split("Analise do direito em " +
-                this.getDtVerifString())[1];
-        idadeDtVerif = idadeDtVerif.split("Idade exigida: ")[1];
-        idadeDtVerif = idadeDtVerif.split("\n")[0].trim();
-        return idadeDtVerif;
-    }
-
-    /*
-    Parse da idade na data de veirificação do direito para art. 18 da EC 103/2019
-    a partir da String novoSegurado.lerExtrato e conversão em um Array com anos, meses e dias
-     */
-    public String[] lerIdadeCompDtVerif(){
-        String IdadeCompDtVerif = this.getExtrato();
-        IdadeCompDtVerif = IdadeCompDtVerif.split("Analise do direito em " +
-                this.getDtVerifString())[1];
-        IdadeCompDtVerif = IdadeCompDtVerif.split("Idade\\s+: ")[1];
-        IdadeCompDtVerif = IdadeCompDtVerif.split("Soma")[0].trim();
-        String[] arrayIdadeCompDtVerif = IdadeCompDtVerif.split(", ");
-        arrayIdadeCompDtVerif[0] = arrayIdadeCompDtVerif[0].split("a")[0];
-        arrayIdadeCompDtVerif[1] = arrayIdadeCompDtVerif[1].split("m")[0];
-        arrayIdadeCompDtVerif[2] = arrayIdadeCompDtVerif[2].split("d")[0];
-        return arrayIdadeCompDtVerif;
-    }
-
-    /*
-    Parse da carência na data de veirificação do direito para art. 18 da EC 103/2019
-    a partir da String novoSegurado.lerExtrato
-     */
-    public String lerCarenciaDtVerif(){
-        String carenciaDtVerif = this.getExtrato();
-        carenciaDtVerif = carenciaDtVerif.split("Analise do direito em " +
-                this.getDtVerifString())[1];
-        carenciaDtVerif = carenciaDtVerif.split("carencia\\s+: ")[1];
-        carenciaDtVerif = carenciaDtVerif.split("Idade")[0].trim();
-        return carenciaDtVerif;
-    }
-
-    /*
-    Parse do tempo de contribuição na data de veirificação do direito para art. 18 da EC 103/2019
-    a partir da String novoSegurado.lerExtrato
-     */
-    public String[] lerTempoContrDtVerif(){
-        String tempoContrDtVerif = this.getExtrato();
-        tempoContrDtVerif = tempoContrDtVerif.split("Analise do direito em " +
-                this.getDtVerifString())[1];
-        tempoContrDtVerif = tempoContrDtVerif.split("Total de tempo considerado : ")[1];
-        tempoContrDtVerif = tempoContrDtVerif.split("\n")[0].trim();
-        String[] arraytempoContrDtVerif = tempoContrDtVerif.split(", ");
-        arraytempoContrDtVerif[0] = arraytempoContrDtVerif[0].split("a")[0];
-        arraytempoContrDtVerif[1] = arraytempoContrDtVerif[1].split("m")[0];
-        arraytempoContrDtVerif[2] = arraytempoContrDtVerif[2].split("d")[0];
-        return arraytempoContrDtVerif;
-    }
-
-    /*
-    Parse de direito na data de verificação do direito
-    a partir da String novoSegurado.lerExtrato
-     */
-    public String lerDireitoDtVerif(){
-        String dirDtVerif = this.getExtrato();
-        dirDtVerif = dirDtVerif.split("Analise do direito em " +
-                this.getDtVerifString())[1];
-        dirDtVerif = dirDtVerif.split("Possui direito nesta data\\s+: ")[1];
-        dirDtVerif = dirDtVerif.split("[^sn]")[0];
-        return dirDtVerif;
+    public Date converteDataBaseDate(int index) {
+        int[] d = Arrays.stream(this.getStringDataBase(index).split("/")).mapToInt(Integer::parseInt).toArray();
+        Calendar aDate = Calendar.getInstance();
+        aDate.set(d[2], (d[1]-1), d[0]);
+        return aDate.getTime();
     }
 
 
     /*
-    Adiciona 1 ano à data de verificação do direito
+    Parse da idade efetiva na data base
      */
-    public Date adicAnoDtVerif(){
-        Calendar dtVerifCalendar = Calendar.getInstance();
-        dtVerifCalendar.setTime(this.getDtVerif());
-        dtVerifCalendar.add(Calendar.YEAR, 1);
-        Date novaDtVerif = dtVerifCalendar.getTime();
-        return novaDtVerif;
+    public String[] parseIdade(int index){
+        String achaIdadeEfetiva = this.getExtrato();
+        achaIdadeEfetiva = achaIdadeEfetiva.split(this.getRegraAnaliseDireito(index))[1] + achaIdadeEfetiva.split(this.getRegraAnaliseDireito(index))[2];
+        achaIdadeEfetiva = achaIdadeEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
+        achaIdadeEfetiva = achaIdadeEfetiva.split("Idade\\s+: ")[1];
+        achaIdadeEfetiva = achaIdadeEfetiva.split("Soma")[0].trim();
+        String[] arrayIdadeEfetiva;
+        arrayIdadeEfetiva = achaIdadeEfetiva.split(", ");
+        arrayIdadeEfetiva[0] = arrayIdadeEfetiva[0].split("a")[0];
+        arrayIdadeEfetiva[1] = arrayIdadeEfetiva[1].split("m")[0];
+        arrayIdadeEfetiva[2] = arrayIdadeEfetiva[2].split("d")[0];
+        return arrayIdadeEfetiva;
     }
 
     /*
-    Parse de direito à aposentadoria programada
-    a partir da String novoSegurado.lerExtrato
+    Parse da carência efetiva na data base de análise do direito
      */
-    public String lerDireitoAposProg(){
-        String dirAposProg = this.getExtrato();
-        dirAposProg = dirAposProg.split("Regra geral do Art.19")[1];
-        dirAposProg = dirAposProg.split("Possui direito nesta regra: ")[1];
-        dirAposProg = dirAposProg.split("[^sn]")[0];
-        return dirAposProg;
+    public String parseCarenciaEfetiva(int index){
+        String CarenciaEfetiva = this.getExtrato();
+        CarenciaEfetiva = CarenciaEfetiva.split(this.getRegraAnaliseDireito(index))[1] + CarenciaEfetiva.split(this.getRegraAnaliseDireito(index))[2];
+        CarenciaEfetiva = CarenciaEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
+        CarenciaEfetiva = CarenciaEfetiva.split("Quantidade de carencia\\s+: ")[1];
+        CarenciaEfetiva = CarenciaEfetiva.split("Idade")[0].trim();
+        return CarenciaEfetiva;
+    }
+
+    /*
+    Parse do tempo de contribuição efetiva na data base de análise do direito
+     */
+    public String[] parseTempCompEfetivo(int index) {
+        String tempCompEfetivo = this.getExtrato();
+        tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index))[1] + tempCompEfetivo.split(this.getRegraAnaliseDireito(index))[2];
+        tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
+        tempCompEfetivo = tempCompEfetivo.split("Total de tempo considerado\\s+: ")[1];
+        tempCompEfetivo = tempCompEfetivo.split("Quantidade de carencia")[0].trim();
+        String[] arrayTempCompEfetivo;
+        arrayTempCompEfetivo = tempCompEfetivo.split(", ");
+        arrayTempCompEfetivo[0] = arrayTempCompEfetivo[0].split("a")[0];
+        arrayTempCompEfetivo[1] = arrayTempCompEfetivo[1].split("m")[0];
+        arrayTempCompEfetivo[2] = arrayTempCompEfetivo[2].split("d")[0];
+        return arrayTempCompEfetivo;
+    }
+
+    /*
+    Parse de reconhecimento de direito na data base de análise do direito
+     */
+    public String parseRecDireitoDataBase(int index){
+        String recDireitoDataBase = this.getExtrato();
+        recDireitoDataBase = recDireitoDataBase.split(this.getRegraAnaliseDireito(index))[1] + recDireitoDataBase.split(this.getRegraAnaliseDireito(index))[2];
+        recDireitoDataBase = recDireitoDataBase.split("Analise do direito em " + this.getStringDataBase(index))[1];
+        recDireitoDataBase = recDireitoDataBase.split("Possui direito nesta data\\s+: ")[1];
+        recDireitoDataBase = recDireitoDataBase.split("[^sn]")[0];
+        if (recDireitoDataBase.equals("s")) {
+            recDireitoDataBase = "foi reconhecido";
+        } else {
+            recDireitoDataBase = "não foi reconhecido";
+        }
+        return recDireitoDataBase;
+    }
+
+    /*
+    Adiciona 1 ano à data base
+     */
+    public Date adicAnoDataBase(int index){
+        Calendar dataBase = Calendar.getInstance();
+        dataBase.setTime(this.getDateDataBase(index));
+        dataBase.add(Calendar.YEAR, 1);
+        Date novaDataBase = dataBase.getTime();
+        return novaDataBase;
     }
 
     /*
     Parse de direito à aposentadoria por qualquer uma das regras
      */
-    public String lerDireitoAposFinal(){
+    public String parseDireitoAposFinal(){
         String direitoAposFinal = this.getExtrato();
         direitoAposFinal = direitoAposFinal.split("Aposentadoria por idade convencional")[1];
         direitoAposFinal = direitoAposFinal.split("Possui direito neste perfil: ")[1];
@@ -600,6 +591,5 @@ public class Segurado {
         else direitoAposFinal = "não foi";
         return direitoAposFinal;
     }
-
 
 }
