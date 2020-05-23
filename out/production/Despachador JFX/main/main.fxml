@@ -8,6 +8,7 @@
     <Label text="Despachador"/>
     <Button text="Importar" fx:id="botaoInput" onAction="#acaoInput"/>
     <Button text="Gerar Despacho" fx:id="botaoGerarDespacho" onAction="#acaoGerarDespacho"/>
+    <Button text="Copiar para a área de transferência" fx:id="botaoCopy" onAction="#acaoCopy"/>
 
 
 </VBox>

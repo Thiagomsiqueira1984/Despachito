@@ -1,43 +1,78 @@
 package main;
 
 
+import com.sun.xml.internal.fastinfoset.util.StringArray;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class GeradorDespacho {
 
     /*
-    Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
+    Atributos
      */
-    public String escreverParte1(Segurado segur){
+    private List<String> despachoFinal = new ArrayList<>(); //Texto final do despacho
+    private String StringDespachoFinal;
+
+    /*
+    Getters e Setters
+     */
+
+    public String getDespachoFinal(int index) {
+        return this.despachoFinal.get(index);
+    }
+
+    public List<String> getDespachoFinal() {
+        return this.despachoFinal;
+    }
+
+    public void addDespachoFinal(String despachoFinal) {
+        this.despachoFinal.add(despachoFinal);
+    }
+
+    public String getStringDespachoFinal() {
+        return StringDespachoFinal;
+    }
+
+    public void setStringDespachoFinal(String stringDespachoFinal) {
+        StringDespachoFinal = stringDespachoFinal;
+    }
+
+    /*
+            Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
+             */
+    public String escreverParte1(Segurado segur) {
         return
-            "23.001.820 – Central Especializada de Alta Performance Aposentadoria por Idade\n" +
-                "\n" +
-                "Nome d"+segur.getArtGenero() + " requerente: " + segur.getNome() + "\n" +
-                "\n" +
-                "Trata-se de requerimento de aposentadoria por idade.\n" +
-                "\n" +
-                "A data de nascimento d" + segur.getArtGenero() + " requerente é " + segur.getDataNascAsString() +
-                ". A data de entrada do requerimento – DER é " +
-                segur.getDERasString() + ". Portanto, a idade na DER é de " +
-                segur.getIdadeDER()[0] + " anos, "+segur.getIdadeDER()[1] + " meses e "+segur.getIdadeDER()[2] + " dias"+".\n" +
-                "\n" +
-                "Trata-se de requerente do sexo "+segur.getSexo()+".\n" +
-                "\n" +
-                "O ingresso no RGPS ocorreu em " + segur.getDataFiliaAsString() + ", " + segur.getAntesDepoisEC() +
-                " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, "+segur.getAtendeNaoAtEC() +
-                " ao primeiro requisito para análise quanto à concessão por direito adquirido à aposentadoria antes da publicação da " +
-                "Emenda Constitucional 103/2019 e/ou pela regra transitória do art. 18 da citada emenda." + "\n";
+                "23.001.820 – Central Especializada de Alta Performance Aposentadoria por Idade\n" +
+                        "\n" +
+                        "Nome d" + segur.getArtGenero() + " requerente: " + segur.getNome() + "\n" +
+                        "\n" +
+                        "Trata-se de requerimento de aposentadoria por idade.\n" +
+                        "\n" +
+                        "A data de nascimento d" + segur.getArtGenero() + " requerente é " + segur.getDataNascAsString() +
+                        ". A data de entrada do requerimento – DER é " +
+                        segur.getDERasString() + ". Portanto, a idade na DER é de " +
+                        segur.getIdadeDER()[0] + " anos, " + segur.getIdadeDER()[1] + " meses e " + segur.getIdadeDER()[2] + " dias" + ".\n" +
+                        "\n" +
+                        "Trata-se de requerente do sexo " + segur.getSexo() + ".\n" +
+                        "\n" +
+                        "O ingresso no RGPS ocorreu em " + segur.getDataFiliaAsString() + ", " + segur.getAntesDepoisEC() +
+                        " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segur.getAtendeNaoAtEC() +
+                        " ao primeiro requisito para análise quanto à concessão por direito adquirido à aposentadoria antes da publicação da " +
+                        "Emenda Constitucional 103/2019 e/ou pela regra transitória do art. 18 da citada emenda." + "\n";
 
     }
 
     /*
     Método para escrever os parágrafos de reconhecimento de direito a partir do número de índice fornecido
       */
-    public  String escreverParagrafoAnaliseDireito(Segurado gSegur, int index){
-        String paragrafo =
+    public String escreverParagrafoAnaliseDireito(Segurado gSegur, int index) {
+        return
                 this.textoRegraAnaliseDireito(gSegur, index) + "considerado até " +
                 gSegur.getStringDataBase(index) + ", são necessários, cumulativamente, " +
                 gSegur.getIdadeExigida(index) + " de idade, com " +
-                gSegur.getCarenciaExigida(index)+ " contribuições para fins de carência" +
-                this.testaTempCompExigido(gSegur, index) + "Foram apuradas a idade de "+
+                gSegur.getCarenciaExigida(index) + " contribuições para fins de carência" +
+                this.testaTempCompExigido(gSegur, index) + "Foram apuradas a idade de " +
                 gSegur.getIdadeEfetiva(index)[0] + " anos, " +
                 gSegur.getIdadeEfetiva(index)[1] + " meses e " +
                 gSegur.getIdadeEfetiva(index)[2] + " dias, com " +
@@ -45,7 +80,6 @@ public class GeradorDespacho {
                 this.testaTempCompEfetivo(gSegur, index) + "Portanto, " +
                 gSegur.getRecDireitoDataBase(index) + " direito à aposentadoria por esta regra até " +
                 gSegur.getStringDataBase(index) + "." + "\n";
-        return paragrafo;
     }
 
     /*
@@ -72,7 +106,9 @@ public class GeradorDespacho {
                     " e " + gSegur.getTempCompExigido(index)[0] + " anos, " +
                             gSegur.getTempCompExigido(index)[1] + " meses e " +
                             gSegur.getTempCompExigido(index)[2] + " dias de tempo de contribuição. ";
-        } else { return ". "; }
+        } else {
+            return ". ";
+        }
     }
 
     /*
@@ -84,7 +120,9 @@ public class GeradorDespacho {
                     " e " + gSegur.getTempCompEfetivo(index)[0] + " anos, " +
                             gSegur.getTempCompEfetivo(index)[1] + " meses e " +
                             gSegur.getTempCompEfetivo(index)[2] + " dias de tempo de contribuição. ";
-        } else { return ". "; }
+        } else {
+            return ". ";
+        }
     }
 
     /*

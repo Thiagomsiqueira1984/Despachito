@@ -1,6 +1,12 @@
 package main;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.scene.control.Button;
 
@@ -12,6 +18,7 @@ public class Controller {
 
     public Button botaoInput = new Button();
     public Button botaoGerarDespacho = new Button();
+    public Button botaoCopy = new Button();
 
     /*
     Botão de importação de arquivo faz inicia os seguintes processos quando pressionado:
@@ -44,6 +51,15 @@ public class Controller {
          contador++;
         }
         constroiParteFinal();
+        cDesp.setStringDespachoFinal(String.join("\n", cDesp.getDespachoFinal()));
+        System.out.println(cDesp.getStringDespachoFinal());
+    }
+
+    public void acaoCopy() {
+        String pegaTexto = cDesp.getStringDespachoFinal();
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection copiarDespacho = new StringSelection(pegaTexto);
+        clipboard.setContents(copiarDespacho, null);
     }
 
     /*
@@ -237,21 +253,21 @@ public class Controller {
     Constrói a parte inicial do despacho - dados básicos do segurado
      */
     public void constroiParteInicial(){
-        System.out.println(cDesp.escreverParte1(cSegur));
+        cDesp.addDespachoFinal(cDesp.escreverParte1(cSegur));
     }
 
     /*
     Constrói parágrafo referente às regras de análise de direito no despacho
      */
     public void constroiParagrafoAnaliseDireito(int index) {
-        System.out.println(cDesp.escreverParagrafoAnaliseDireito(cSegur, index));
+        cDesp.addDespachoFinal(cDesp.escreverParagrafoAnaliseDireito(cSegur, index));
     }
 
     /*
     Constrói a parte inicial do despacho - reconhecimento de direito à aposentadoria por qualquer uma das regras
      */
     public void constroiParteFinal() {
-        System.out.println(cDesp.escreverParteFinal(cSegur));
+        cDesp.addDespachoFinal(cDesp.escreverParteFinal(cSegur));
     }
 
     }
