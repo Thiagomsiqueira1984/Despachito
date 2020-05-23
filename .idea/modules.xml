@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Despachador JFX.iml" filepath="$PROJECT_DIR$/Despachador JFX.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Despachito.iml" filepath="$PROJECT_DIR$/Despachito.iml" />
     </modules>
   </component>
 </project>
