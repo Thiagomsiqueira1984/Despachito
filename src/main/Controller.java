@@ -19,22 +19,31 @@ public class Controller {
     - faz o parse de todas as variáveis necessárias à constução do despacho
      */
     public void acaoInput() {
+        cSegur = new Segurado();
         importaArquivo();
         parseAtributosIniciais();
-        parseDadosR1();
+        parseAtributosR1();
         if (cSegur.isFiliaAteEC()) {
-        parseDadosR2();
-
+        parseAtributosR2();
+        parseAtributosR3();
+        parseAtributosFinais();
         }
     }
 
     public void acaoGerarDespacho() {
+        cDesp = new GeradorDespacho();
         constroiParteInicial();
-        int contador = 0;
+        int contador = 1;
         while (contador<=cSegur.getR1()+cSegur.getR2()+cSegur.getR3()) {
          constroiParagrafoAnaliseDireito(contador);
+            if (contador == cSegur.getR1()+cSegur.getR2()+cSegur.getR3()) {
+                contador = 0;
+                constroiParagrafoAnaliseDireito(contador);
+                break;
+            }
          contador++;
         }
+        constroiParteFinal();
     }
 
     /*
@@ -99,7 +108,7 @@ public class Controller {
     /*
     Parse de valores para parte nível r1 - regra de apoentadoria programada art. 19 da EC 103/2019
     */
-    public void parseDadosR1() {
+    public void parseAtributosR1() {
 
         cSegur.setR1(0);
 
@@ -112,18 +121,15 @@ public class Controller {
         Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR1());
         cSegur.addDateDataBase(dateDatabase);
 
-        if (cSegur.getSexo().equals("masculino")) {
-            cSegur.addIdadeExigida("65 anos");
-        } else {
-            cSegur.addIdadeExigida("62 anos");
-        }
+        String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR1());
+        cSegur.addIdadeExigida(idadeExigida);
 
         cSegur.addCarenciaExigida("180");
 
         String[] tempCompExigido = {"20", "00", "00"};
         cSegur.addTempCompExigido(tempCompExigido);
 
-        String[] idadeEfetiva = cSegur.parseIdade(cSegur.getR1());
+        String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR1());
         cSegur.addIdadeEfetiva(idadeEfetiva);
 
         String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR1());
@@ -140,7 +146,7 @@ public class Controller {
     /*
     Parse de valores para parte nível r2 - regra de direito adquirido antes da EC 103/2019
      */
-    public void parseDadosR2() {
+    public void parseAtributosR2() {
 
         cSegur.setR2(1);
 
@@ -153,18 +159,15 @@ public class Controller {
         Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR2());
         cSegur.addDateDataBase(dateDatabase);
 
-        if (cSegur.getSexo().equals("masculino")) {
-            cSegur.addIdadeExigida("65 anos");
-        } else {
-            cSegur.addIdadeExigida("60 anos");
-        }
+        String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR2());
+        cSegur.addIdadeExigida(idadeExigida);
 
         cSegur.addCarenciaExigida("180");
 
         String[] tempCompExigido = {"00", "00", "00"};
         cSegur.addTempCompExigido(tempCompExigido);
 
-        String[] idadeEfetiva = cSegur.parseIdade(cSegur.getR2());
+        String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR2());
         cSegur.addIdadeEfetiva(idadeEfetiva);
 
         String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR2());
@@ -179,45 +182,56 @@ public class Controller {
     }
 
     /*
-    Parse de valores para parte nível r2 - regra de direito adquirido antes da EC 103/2019
+    Parse de valores para parte nível r3 - Regra transitoria do Art.18 da EC 103/2019
      */
-    public void parseDadosR3() {
+    public void parseAtributosR3() {
 
         cSegur.setR3(2);
 
-        String regra = cSegur.retornaNomeRegraAnaliseDireito(cSegur.getR3());
-        cSegur.addRegraAnaliseDireito(regra);
+         do {
+                 String regra = cSegur.retornaNomeRegraAnaliseDireito(cSegur.getR3());
+                 cSegur.addRegraAnaliseDireito(regra);
 
-        String stringDataBase = cSegur.parseDataBase(cSegur.getR3());
-        cSegur.addStringDataBase(stringDataBase);
+                 String stringDataBase = cSegur.parseDataBase(cSegur.getR3());
+                 cSegur.addStringDataBase(stringDataBase);
 
-        Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR3());
-        cSegur.addDateDataBase(dateDatabase);
+                 Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR3());
+                 cSegur.addDateDataBase(dateDatabase);
 
-        if (cSegur.getSexo().equals("masculino")) {
-            cSegur.addIdadeExigida("65 anos");
-        } else {
-            cSegur.addIdadeExigida("FAZER MÉTODO DE PARSE DE IDADE EXIGIDA");
-        }
+                 String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR3());
+                 cSegur.addIdadeExigida(idadeExigida);
 
-        cSegur.addCarenciaExigida("180");
+                 cSegur.addCarenciaExigida("180");
 
-        String[] tempCompExigido = {"15", "00", "00"};
-        cSegur.addTempCompExigido(tempCompExigido);
+                 String[] tempCompExigido = {"15", "00", "00"};
+                 cSegur.addTempCompExigido(tempCompExigido);
 
-        String[] idadeEfetiva = cSegur.parseIdade(cSegur.getR3());
-        cSegur.addIdadeEfetiva(idadeEfetiva);
+                 String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR3());
+                 cSegur.addIdadeEfetiva(idadeEfetiva);
 
-        String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR3());
-        cSegur.addCarenciaEfetiva(carenciaEfetiva);
+                 String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR3());
+                 cSegur.addCarenciaEfetiva(carenciaEfetiva);
 
-        String[] tempCompEfetivo = cSegur.parseTempCompEfetivo(cSegur.getR3());
-        cSegur.addTempCompEfetivo(tempCompEfetivo);
+                 String[] tempCompEfetivo = cSegur.parseTempCompEfetivo(cSegur.getR3());
+                 cSegur.addTempCompEfetivo(tempCompEfetivo);
 
-        String recDireitoDataBase = cSegur.parseRecDireitoDataBase(cSegur.getR3());
-        cSegur.addRecDireitoDataBase(recDireitoDataBase);
+                 String recDireitoDataBase = cSegur.parseRecDireitoDataBase(cSegur.getR3());
+                 cSegur.addRecDireitoDataBase(recDireitoDataBase);
 
+             if (cSegur.getDateDataBase(cSegur.getR3()).compareTo(cSegur.getDER()) < 0) {
+                 cSegur.setR3(cSegur.getR3() + 1);
+             } else {break;}
+
+         } while (cSegur.getDateDataBase(cSegur.getR3() - 1).compareTo(cSegur.getDER())<0);
+
+        cSegur.setR3(cSegur.getR3() - 1);
+     }
+
+    public void parseAtributosFinais() {
+        String RecDireitoFinal = cSegur.parseDireitoAposFinal();
+        cSegur.setRecDireitoFinal(RecDireitoFinal);
     }
+
 
     /*
     Constrói a parte inicial do despacho - dados básicos do segurado
@@ -227,10 +241,17 @@ public class Controller {
     }
 
     /*
-    Constrói parágrafo referente à análise de direito no despacho
+    Constrói parágrafo referente às regras de análise de direito no despacho
      */
     public void constroiParagrafoAnaliseDireito(int index) {
         System.out.println(cDesp.escreverParagrafoAnaliseDireito(cSegur, index));
+    }
+
+    /*
+    Constrói a parte inicial do despacho - reconhecimento de direito à aposentadoria por qualquer uma das regras
+     */
+    public void constroiParteFinal() {
+        System.out.println(cDesp.escreverParteFinal(cSegur));
     }
 
     }

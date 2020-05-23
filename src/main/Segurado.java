@@ -240,7 +240,7 @@ public class Segurado {
     }
 
     public String getCarenciaExigida(int index) {
-        return this.idadeExigida.get(index);
+        return this.carenciaExigida.get(index);
     }
 
     public void addCarenciaExigida(String carenciaExigida) {
@@ -336,7 +336,7 @@ public class Segurado {
     public String parseSexo() {
         String sexo = this.getExtrato();
         sexo = sexo.split("SEXO....: ")[1];
-        sexo = sexo.split("RAMO ATIV...:")[0].trim();
+        sexo = sexo.split("RAMO ATIV...:")[0].trim().toLowerCase();
         return sexo;
     }
 
@@ -345,11 +345,11 @@ public class Segurado {
      */
     public char parseArtGenero() {
         char artGenero;
-        if(this.getSexo().equals("FEMININO")){
-            artGenero = 'a';
+        if(this.getSexo().equals("masculino")){
+            artGenero = 'o';
         }
         else {
-            artGenero = 'o';
+            artGenero = 'a';
         }
         return artGenero;
     }
@@ -481,13 +481,15 @@ public class Segurado {
     public String parseDataBase(int index) {
     String data = this.getExtrato();
         if (index == this.r1) {
-            data = data.split(this.getRegraAnaliseDireito(index))[1];
+            data = data.split(this.getRegraAnaliseDireito(index),2)[1];
             data = data.split("Analise do direito em ")[1];
             data = data.split("\\s")[0].trim();
         } else if (index == this.r2) {
             data = "13/11/2019";
         } else if (index == this.r3) {
-            data = "ver else if do método parseDataBase";
+            data = data.split(this.getRegraAnaliseDireito(index),0+this.r3)[this.getR3()-1];
+            data = data.split("Analise do direito em ")[1];
+            data = data.split("\\s")[0].trim();
         }
         return data;
     }
@@ -502,18 +504,47 @@ public class Segurado {
         return aDate.getTime();
     }
 
+    /*
+    Parse idade exigida na data base de análise do direito
+     */
+    public String parseIdadeExigida(int index){
+        String idadeExigida = "";
+        if (index == this.getR1()) {
+            if (this.getSexo().equals("masculino")) {
+                idadeExigida = "65 anos";
+            } else {
+                idadeExigida = "62 anos";
+            }
+        }
+        else if(index == this.getR2()){
+            if (this.getSexo().equals("masculino")) {
+                idadeExigida = "65 anos";
+            } else {
+                idadeExigida = "60 anos";
+            }
+        } else if (index == this.getR3()) {
+            idadeExigida = this.getExtrato();
+            idadeExigida = idadeExigida.split(this.getRegraAnaliseDireito(index),this.r3)[this.r3-1];
+            idadeExigida = idadeExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            idadeExigida = idadeExigida.split("Idade exigida: ")[1];
+            idadeExigida = idadeExigida.split("\\n")[0].trim();
+
+        }
+        return idadeExigida;
+    }
+
 
     /*
     Parse da idade efetiva na data base
      */
-    public String[] parseIdade(int index){
-        String achaIdadeEfetiva = this.getExtrato();
-        achaIdadeEfetiva = achaIdadeEfetiva.split(this.getRegraAnaliseDireito(index))[1] + achaIdadeEfetiva.split(this.getRegraAnaliseDireito(index))[2];
-        achaIdadeEfetiva = achaIdadeEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
-        achaIdadeEfetiva = achaIdadeEfetiva.split("Idade\\s+: ")[1];
-        achaIdadeEfetiva = achaIdadeEfetiva.split("Soma")[0].trim();
+    public String[] parseIdadeEfetiva(int index){
+        String IdadeEfetiva = this.getExtrato();
+        IdadeEfetiva = IdadeEfetiva.split(this.getRegraAnaliseDireito(index),2)[1];
+        IdadeEfetiva = IdadeEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
+        IdadeEfetiva = IdadeEfetiva.split("Idade\\s+: ")[1];
+        IdadeEfetiva = IdadeEfetiva.split("Soma")[0].trim();
         String[] arrayIdadeEfetiva;
-        arrayIdadeEfetiva = achaIdadeEfetiva.split(", ");
+        arrayIdadeEfetiva = IdadeEfetiva.split(", ");
         arrayIdadeEfetiva[0] = arrayIdadeEfetiva[0].split("a")[0];
         arrayIdadeEfetiva[1] = arrayIdadeEfetiva[1].split("m")[0];
         arrayIdadeEfetiva[2] = arrayIdadeEfetiva[2].split("d")[0];
@@ -524,12 +555,12 @@ public class Segurado {
     Parse da carência efetiva na data base de análise do direito
      */
     public String parseCarenciaEfetiva(int index){
-        String CarenciaEfetiva = this.getExtrato();
-        CarenciaEfetiva = CarenciaEfetiva.split(this.getRegraAnaliseDireito(index))[1] + CarenciaEfetiva.split(this.getRegraAnaliseDireito(index))[2];
-        CarenciaEfetiva = CarenciaEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
-        CarenciaEfetiva = CarenciaEfetiva.split("Quantidade de carencia\\s+: ")[1];
-        CarenciaEfetiva = CarenciaEfetiva.split("Idade")[0].trim();
-        return CarenciaEfetiva;
+        String carenciaEfetiva = this.getExtrato();
+        carenciaEfetiva = carenciaEfetiva.split(this.getRegraAnaliseDireito(index),2)[1];
+        carenciaEfetiva = carenciaEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
+        carenciaEfetiva = carenciaEfetiva.split("Quantidade de carencia\\s+: ")[1];
+        carenciaEfetiva = carenciaEfetiva.split("Idade")[0].trim();
+        return carenciaEfetiva;
     }
 
     /*
@@ -537,7 +568,7 @@ public class Segurado {
      */
     public String[] parseTempCompEfetivo(int index) {
         String tempCompEfetivo = this.getExtrato();
-        tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index))[1] + tempCompEfetivo.split(this.getRegraAnaliseDireito(index))[2];
+        tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
         tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
         tempCompEfetivo = tempCompEfetivo.split("Total de tempo considerado\\s+: ")[1];
         tempCompEfetivo = tempCompEfetivo.split("Quantidade de carencia")[0].trim();
@@ -554,7 +585,7 @@ public class Segurado {
      */
     public String parseRecDireitoDataBase(int index){
         String recDireitoDataBase = this.getExtrato();
-        recDireitoDataBase = recDireitoDataBase.split(this.getRegraAnaliseDireito(index))[1] + recDireitoDataBase.split(this.getRegraAnaliseDireito(index))[2];
+        recDireitoDataBase = recDireitoDataBase.split(this.getRegraAnaliseDireito(index),2)[1];
         recDireitoDataBase = recDireitoDataBase.split("Analise do direito em " + this.getStringDataBase(index))[1];
         recDireitoDataBase = recDireitoDataBase.split("Possui direito nesta data\\s+: ")[1];
         recDireitoDataBase = recDireitoDataBase.split("[^sn]")[0];
@@ -567,28 +598,17 @@ public class Segurado {
     }
 
     /*
-    Adiciona 1 ano à data base
-     */
-    public Date adicAnoDataBase(int index){
-        Calendar dataBase = Calendar.getInstance();
-        dataBase.setTime(this.getDateDataBase(index));
-        dataBase.add(Calendar.YEAR, 1);
-        Date novaDataBase = dataBase.getTime();
-        return novaDataBase;
-    }
-
-    /*
     Parse de direito à aposentadoria por qualquer uma das regras
      */
     public String parseDireitoAposFinal(){
         String direitoAposFinal = this.getExtrato();
-        direitoAposFinal = direitoAposFinal.split("Aposentadoria por idade convencional")[1];
+        direitoAposFinal = direitoAposFinal.split("ANALISE DO DIREITO", 2)[1];
         direitoAposFinal = direitoAposFinal.split("Possui direito neste perfil: ")[1];
         direitoAposFinal = direitoAposFinal.split("[^sn]")[0];
         if (direitoAposFinal.equals("s")){
-            direitoAposFinal = "foi";
+            direitoAposFinal = "foi reconhecido o direito";
         }
-        else direitoAposFinal = "não foi";
+        else direitoAposFinal = "não foi reconhecido o direito";
         return direitoAposFinal;
     }
 
