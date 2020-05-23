@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="main.Controller">
-
-    <Label text="Despachador"/>
-    <Button text="Importar" fx:id="botaoInput" onAction="#acaoInput"/>
-    <Button text="Gerar Despacho" fx:id="botaoGerarDespacho" onAction="#acaoGerarDespacho"/>
-    <Button text="Copiar para a área de transferência" fx:id="botaoCopy" onAction="#acaoCopy"/>
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="800.0" prefHeight="1024.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+   <children>
+   
 
 
-</VBox>
+
+
+   </children>
+   <top>
+      <SplitPane dividerPositions="0.7" maxWidth="1.7976931348623157E308" orientation="VERTICAL" prefHeight="140.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TextFlow maxWidth="1.7976931348623157E308" prefHeight="102.0" prefWidth="1280.0" style="-fx-background-color: #137ccd;" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                         <Label alignment="CENTER" prefHeight="100.0" prefWidth="259.0" text="Despachito" textFill="WHITE">
+                           <font>
+                              <Font name="Rubik-Bold" size="45.0" />
+                           </font>
+                        </Label>
+                     </children></TextFlow>
+               </children>
+            </AnchorPane>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+               <children>
+                  <Button fx:id="botaoInput" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoInput" prefHeight="25.0" prefWidth="220.0" text="Importar arquivo de extrato" />
+                  <Button fx:id="botaoGerarDespacho" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoGerarDespacho" prefHeight="25.0" prefWidth="220.0" text="Gerar Despacho" />
+               </children>
+            </HBox>
+        </items>
+      </SplitPane>
+   </top>
+   <bottom>
+      <SplitPane dividerPositions="0.3" maxWidth="1.7976931348623157E308" orientation="VERTICAL" prefHeight="160.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+        <items>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                    <Button fx:id="botaoCopy" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoCopy" prefHeight="25.0" prefWidth="220.0" text="Copiar para a área de transferência" />
+               </children>
+            </HBox>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="-12.0" prefHeight="109.0" prefWidth="1253.0" text="Atenção: o uso desta ferramenta não dispensa o servidor da realização da devida análise do processo, conferência dos dados do despacho com o extrato de tempo de contribuição utilizado e com os dados do processo." textAlignment="CENTER" textFill="#db0b2f" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="1.0" right="1.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </bottom>
+   <center>
+      <AnchorPane maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <children>
+             <TextArea fx:id="caixaDespacho" layoutX="272.0" layoutY="63.0" prefHeight="600.0" prefWidth="800.0" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+         </children>
+      </AnchorPane>
+   </center>
+
+
+</BorderPane>

@@ -1,12 +1,10 @@
 package main;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.util.Arrays;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.control.*;
+
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javafx.scene.control.Button;
 
@@ -18,6 +16,7 @@ public class Controller {
 
     public Button botaoInput = new Button();
     public Button botaoGerarDespacho = new Button();
+    public TextArea caixaDespacho = new TextArea();
     public Button botaoCopy = new Button();
 
     /*
@@ -51,15 +50,20 @@ public class Controller {
          contador++;
         }
         constroiParteFinal();
-        cDesp.setStringDespachoFinal(String.join("\n", cDesp.getDespachoFinal()));
-        System.out.println(cDesp.getStringDespachoFinal());
+        cDesp.setStringDespachoCompleto(String.join("\n", cDesp.getDespachoCompleto()));
+        caixaDespacho.setText(cDesp.getStringDespachoCompleto());
     }
 
+
+
+    /*
+    Copia a despacho para a área de transferência
+     */
     public void acaoCopy() {
-        String pegaTexto = cDesp.getStringDespachoFinal();
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringSelection copiarDespacho = new StringSelection(pegaTexto);
-        clipboard.setContents(copiarDespacho, null);
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent pegaTexto = new ClipboardContent();
+        pegaTexto.putString(caixaDespacho.getText());
+        clipboard.setContent(pegaTexto);
     }
 
     /*
@@ -253,21 +257,21 @@ public class Controller {
     Constrói a parte inicial do despacho - dados básicos do segurado
      */
     public void constroiParteInicial(){
-        cDesp.addDespachoFinal(cDesp.escreverParte1(cSegur));
+        cDesp.addDespachoCompleto(cDesp.escreverParte1(cSegur));
     }
 
     /*
     Constrói parágrafo referente às regras de análise de direito no despacho
      */
     public void constroiParagrafoAnaliseDireito(int index) {
-        cDesp.addDespachoFinal(cDesp.escreverParagrafoAnaliseDireito(cSegur, index));
+        cDesp.addDespachoCompleto(cDesp.escreverParagrafoAnaliseDireito(cSegur, index));
     }
 
     /*
     Constrói a parte inicial do despacho - reconhecimento de direito à aposentadoria por qualquer uma das regras
      */
     public void constroiParteFinal() {
-        cDesp.addDespachoFinal(cDesp.escreverParteFinal(cSegur));
+        cDesp.addDespachoCompleto(cDesp.escreverParteFinal(cSegur));
     }
 
     }

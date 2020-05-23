@@ -1,5 +1,7 @@
 package main;
 
+import javafx.stage.FileChooser;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -306,17 +308,15 @@ public class Segurado {
      */
     public String parseExtrato(){
         String extrato = "";
-        JFileChooser seletorArquivo = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
-        seletorArquivo.setFileFilter(new Main.ExtensionFilter());
-        seletorArquivo.setCurrentDirectory(new File("C:\\CNISLINHA"));
-        int valorRetorno = seletorArquivo.showOpenDialog(null);
-        if (valorRetorno == JFileChooser.APPROVE_OPTION){
-            File selectedFile = seletorArquivo.getSelectedFile();
+        FileChooser seletorArquivo = new FileChooser();
+        seletorArquivo.setInitialDirectory(new File("C:\\CNISLINHA"));
+        seletorArquivo.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Arquivos de texto", "*.txt"));
+
+        File selectedFile = seletorArquivo.showOpenDialog(null);
             try {
                 extrato = new String(Files.readAllBytes(selectedFile.toPath()));
             }
             catch (Exception ex){}
-        }
         return extrato;
     }
 

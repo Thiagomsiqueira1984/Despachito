@@ -1,8 +1,6 @@
 package main;
 
 
-import com.sun.xml.internal.fastinfoset.util.StringArray;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,36 +9,37 @@ public class GeradorDespacho {
     /*
     Atributos
      */
-    private List<String> despachoFinal = new ArrayList<>(); //Texto final do despacho
-    private String StringDespachoFinal;
+    private List<String> despachoCompleto = new ArrayList<>(); //Texto completo do despacho
+    private String stringDespachoCompleto; //Texto completo do despacho
+
 
     /*
     Getters e Setters
      */
 
-    public String getDespachoFinal(int index) {
-        return this.despachoFinal.get(index);
+    public String getDespachoCompleto(int index) {
+        return this.despachoCompleto.get(index);
     }
 
-    public List<String> getDespachoFinal() {
-        return this.despachoFinal;
+    public List<String> getDespachoCompleto() {
+        return this.despachoCompleto;
     }
 
-    public void addDespachoFinal(String despachoFinal) {
-        this.despachoFinal.add(despachoFinal);
+    public void addDespachoCompleto(String despachoCompleto) {
+        this.despachoCompleto.add(despachoCompleto);
     }
 
-    public String getStringDespachoFinal() {
-        return StringDespachoFinal;
+    public String getStringDespachoCompleto() {
+        return stringDespachoCompleto;
     }
 
-    public void setStringDespachoFinal(String stringDespachoFinal) {
-        StringDespachoFinal = stringDespachoFinal;
+    public void setStringDespachoCompleto(String stringDespachoCompleto) {
+        this.stringDespachoCompleto = stringDespachoCompleto;
     }
 
     /*
-            Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
-             */
+                Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
+                 */
     public String escreverParte1(Segurado segur) {
         return
                 "23.001.820 – Central Especializada de Alta Performance Aposentadoria por Idade\n" +

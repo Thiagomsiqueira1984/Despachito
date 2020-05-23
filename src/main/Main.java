@@ -1,8 +1,8 @@
 package main;
 
-import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.awt.*;
+
+
 import java.io.File;
 
 import javafx.application.Application;
@@ -16,11 +16,13 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage janelaInicial) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.setTitle("Despachador");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
+        janelaInicial.setTitle("Despachador");
+        janelaInicial.setScene(new Scene(root, 800, 600));
+        janelaInicial.setMinWidth(800);
+        janelaInicial.setMinHeight(600);
+        janelaInicial.show();
     }
 
     public static void main(String[] args) {
