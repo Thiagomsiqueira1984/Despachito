@@ -2,8 +2,6 @@ package main;
 
 import javafx.stage.FileChooser;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -19,15 +17,18 @@ public class Segurado {
 
     private String extrato; //Armazena o texto do arquivo de extrato na íntegra
     private String nome; //Nome do segurado
+    private String NB; //Número do benefício
+    private String codEspecieBeneficio; //Código da espécie de benefício
+    private String especieBeneficio; //Nome da espécie de benefício
     private String sexo; //Sexo do segurado
     private char artGenero; //Artigo de gênero do segurado
     private Date dataNasc; //Data de nascimento do segurado
-    private String dataNascAsString; //Data de nascimento do segurado formatada e como String
+    private String stringDataNasc; //Data de nascimento do segurado formatada e como String
     private Date DER; //Data de entrada do requerimento
-    private String DERasString;//Data de entrada do requerimento formatada e como String
+    private String stringDER;//Data de entrada do requerimento formatada e como String
     private String[] idadeDER; //Idade do segurado na DER
     private Date dataFilia; //Data de filiação ao RGPS
-    private String dataFiliaAsString; //Data de filiação ao RGPS formatada e como String
+    private String stringDataFiliaAs; //Data de filiação ao RGPS formatada e como String
     private boolean filiaAteEC; //main.Segurado filiado até 13/11/2019?
     private String antesDepoisEC; //Informa se a filiação ocorreu antes ou depois de 13/11/2019 em String
     private String atendeNaoAtEC; //Informa se atende requisito de filiação até 13/11/2019 em String
@@ -87,6 +88,30 @@ public class Segurado {
         this.nome = nome;
     }
 
+    public String getNB() {
+        return NB;
+    }
+
+    public void setNB(String NB) {
+        this.NB = NB;
+    }
+
+    public String getCodEspecieBeneficio() {
+        return codEspecieBeneficio;
+    }
+
+    public void setCodEspecieBeneficio(String codEspecieBeneficio) {
+        this.codEspecieBeneficio = codEspecieBeneficio;
+    }
+
+    public String getEspecieBeneficio() {
+        return especieBeneficio;
+    }
+
+    public void setEspecieBeneficio(String especieBeneficio) {
+        this.especieBeneficio = especieBeneficio;
+    }
+
     public String getSexo() {
         return sexo;
     }
@@ -111,12 +136,12 @@ public class Segurado {
         this.dataNasc = dataNasc;
     }
 
-    public String getDataNascAsString() {
-        return dataNascAsString;
+    public String getStringDataNasc() {
+        return stringDataNasc;
     }
 
-    public void setDataNascAsString(String dataNascAsString) {
-        this.dataNascAsString = dataNascAsString;
+    public void setStringDataNasc(String stringDataNasc) {
+        this.stringDataNasc = stringDataNasc;
     }
 
     public Date getDER() {
@@ -127,12 +152,12 @@ public class Segurado {
         this.DER = DER;
     }
 
-    public String getDERasString() {
-        return DERasString;
+    public String getStringDER() {
+        return stringDER;
     }
 
-    public void setDERasString(String DERasString) {
-        this.DERasString = DERasString;
+    public void setStringDER(String stringDER) {
+        this.stringDER = stringDER;
     }
 
     public String[] getIdadeDER() {
@@ -151,12 +176,12 @@ public class Segurado {
         this.dataFilia = dataFilia;
     }
 
-    public String getDataFiliaAsString() {
-        return dataFiliaAsString;
+    public String getStringDataFiliaAs() {
+        return stringDataFiliaAs;
     }
 
-    public void setDataFiliaAsString(String dataFiliaAsString) {
-        this.dataFiliaAsString = dataFiliaAsString;
+    public void setStringDataFiliaAs(String stringDataFiliaAs) {
+        this.stringDataFiliaAs = stringDataFiliaAs;
     }
 
     public boolean isFiliaAteEC() {
@@ -314,20 +339,57 @@ public class Segurado {
 
         File selectedFile = seletorArquivo.showOpenDialog(null);
             try {
-                extrato = new String(Files.readAllBytes(selectedFile.toPath()));
+                if (selectedFile != null) {
+                    extrato = new String(Files.readAllBytes(selectedFile.toPath()));
+                }
+                else
+                    extrato = null;
             }
             catch (Exception ex){}
         return extrato;
     }
 
     /*
-    Parse do nome do segurado a partir da String novoSegurado.lerExtrato
+    Parse do nome do segurado
      */
     public String parseNome() {
         String nome = this.getExtrato();
-        nome = nome.split("SEGURADO....: ")[1];
+        nome = nome.split("SEGURADO\\S+: ")[1];
         nome = nome.split("DATA NASC")[0].trim();
         return nome;
+    }
+
+    /*
+    Parse do número de benefício
+     */
+    public String parseNB() {
+        String nb = this.getExtrato();
+        nb = nb.split("NB\\S+: ")[1];
+        nb = nb.split("\\s+")[0].trim();
+        return nb;
+    }
+
+    /*
+    Parse do código da espécie de benefício
+     */
+    public String parseCodEspecie() {
+        String codEspecie = this.getExtrato();
+        codEspecie = codEspecie.split("ESPECIE\\S+: ")[1];
+        codEspecie = codEspecie.split("\\s+")[0].trim();
+        return codEspecie;
+    }
+
+    /*
+    Transforma código da espécie de benefício em nome da espécie
+     */
+    public String transfEspecieBeneficio() {
+        String nomeEspecie = "";
+        if (this.getCodEspecieBeneficio().equals("41")) {
+            nomeEspecie = "aposentadoria por idade";
+        } else if (this.getCodEspecieBeneficio().equals("42")) {
+            nomeEspecie = "aposentadoria por tempo de contribuição";
+        }
+        return nomeEspecie;
     }
 
     /*
@@ -335,7 +397,7 @@ public class Segurado {
      */
     public String parseSexo() {
         String sexo = this.getExtrato();
-        sexo = sexo.split("SEXO....: ")[1];
+        sexo = sexo.split("SEXO\\S+: ")[1];
         sexo = sexo.split("RAMO ATIV...:")[0].trim().toLowerCase();
         return sexo;
     }
@@ -372,7 +434,7 @@ public class Segurado {
         aDate.set(2019, 11, 31);
         Date nascDate = aDate.getTime();
         try{
-            nascDate = new SimpleDateFormat("dd/MM/yyyy").parse(this.getDataNascAsString());
+            nascDate = new SimpleDateFormat("dd/MM/yyyy").parse(this.getStringDataNasc());
         } catch (Exception ex){}
         return nascDate;
     }
@@ -395,7 +457,7 @@ public class Segurado {
         aDate.set(2019, 11, 31);
         Date DERdate = aDate.getTime();
         try{
-            DERdate = new SimpleDateFormat("dd/MM/yyyy").parse(this.getDERasString());
+            DERdate = new SimpleDateFormat("dd/MM/yyyy").parse(this.getStringDER());
         } catch (Exception ex){}
         return DERdate;
     }
@@ -434,7 +496,7 @@ public class Segurado {
         aDate.set(2019, 11, 31);
         Date FiliaDate = aDate.getTime();
         try{
-            FiliaDate = new SimpleDateFormat("dd/MM/yyyy").parse(this.getDataFiliaAsString());
+            FiliaDate = new SimpleDateFormat("dd/MM/yyyy").parse(this.getStringDataFiliaAs());
         } catch (Exception ex){}
         return FiliaDate;
     }
@@ -533,9 +595,22 @@ public class Segurado {
         return idadeExigida;
     }
 
+    /*
+    Parse carência exigida na data base de análise do direito
+     */
+    public String parseCarenciaExigida(int index) {
+        String carenciaExigida = this.getExtrato();
+        carenciaExigida = carenciaExigida.split(this.getRegraAnaliseDireito(index), 2)[1];
+        carenciaExigida = carenciaExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
+        carenciaExigida = carenciaExigida.split("Requisito\\s+:\\s+Carencia igual")[1];
+        carenciaExigida = carenciaExigida.split("Exigido\\s")[1];
+        carenciaExigida = carenciaExigida.split("\\s")[0].trim();
+        return carenciaExigida;
+    }
+
 
     /*
-    Parse da idade efetiva na data base
+    Parse da idade efetiva na data base de análise do direito
      */
     public String[] parseIdadeEfetiva(int index){
         String IdadeEfetiva = this.getExtrato();
@@ -564,7 +639,7 @@ public class Segurado {
     }
 
     /*
-    Parse do tempo de contribuição efetiva na data base de análise do direito
+    Parse do tempo de contribuição efetivo na data base de análise do direito
      */
     public String[] parseTempCompEfetivo(int index) {
         String tempCompEfetivo = this.getExtrato();

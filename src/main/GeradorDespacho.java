@@ -13,6 +13,8 @@ public class GeradorDespacho {
     private String stringDespachoCompleto; //Texto completo do despacho
 
 
+
+
     /*
     Getters e Setters
      */
@@ -37,34 +39,32 @@ public class GeradorDespacho {
         this.stringDespachoCompleto = stringDespachoCompleto;
     }
 
+
+
     /*
-                Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
-                 */
+    Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
+     */
     public String escreverParte1(Segurado segur) {
         return
-                "23.001.820 – Central Especializada de Alta Performance Aposentadoria por Idade\n" +
-                        "\n" +
-                        "Nome d" + segur.getArtGenero() + " requerente: " + segur.getNome() + "\n" +
-                        "\n" +
-                        "Trata-se de requerimento de aposentadoria por idade.\n" +
-                        "\n" +
-                        "A data de nascimento d" + segur.getArtGenero() + " requerente é " + segur.getDataNascAsString() +
+                "23.001.820 – Central Especializada de Alta Performance Aposentadoria por Idade" + "\n\n" +
+                        "Nome d" + segur.getArtGenero() + " requerente: " + segur.getNome() + "\n\n" +
+                        "Número do requerimento benefício: " + segur.getNB() + "\n\n" +
+                        "Trata-se de requerimento de " + segur.getEspecieBeneficio() + "." + "\n\n" +
+                        "A data de nascimento d" + segur.getArtGenero() + " requerente é " + segur.getStringDataNasc() +
                         ". A data de entrada do requerimento – DER é " +
-                        segur.getDERasString() + ". Portanto, a idade na DER é de " +
-                        segur.getIdadeDER()[0] + " anos, " + segur.getIdadeDER()[1] + " meses e " + segur.getIdadeDER()[2] + " dias" + ".\n" +
-                        "\n" +
-                        "Trata-se de requerente do sexo " + segur.getSexo() + ".\n" +
-                        "\n" +
-                        "O ingresso no RGPS ocorreu em " + segur.getDataFiliaAsString() + ", " + segur.getAntesDepoisEC() +
+                        segur.getStringDER() + ". Portanto, a idade na DER é de " +
+                        segur.getIdadeDER()[0] + " anos, " + segur.getIdadeDER()[1] + " meses e " + segur.getIdadeDER()[2] + " dias" + ".\n\n" +
+                        "Trata-se de requerente do sexo " + segur.getSexo() + ".\n\n" +
+                        "O ingresso no RGPS ocorreu em " + segur.getStringDataFiliaAs() + ", " + segur.getAntesDepoisEC() +
                         " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segur.getAtendeNaoAtEC() +
                         " ao primeiro requisito para análise quanto à concessão por direito adquirido à aposentadoria antes da publicação da " +
-                        "Emenda Constitucional 103/2019 e/ou pela regra transitória do art. 18 da citada emenda." + "\n";
+                        "Emenda Constitucional 103/2019 e/ou pela regra transitória do art. 18 da citada emenda." + "\n\n";
 
     }
 
     /*
     Método para escrever os parágrafos de reconhecimento de direito a partir do número de índice fornecido
-      */
+     */
     public String escreverParagrafoAnaliseDireito(Segurado gSegur, int index) {
         return
                 this.textoRegraAnaliseDireito(gSegur, index) + "considerado até " +

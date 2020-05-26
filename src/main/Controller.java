@@ -1,23 +1,43 @@
 package main;
 
+import javafx.fxml.Initializable;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.control.*;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javafx.scene.control.Button;
 
 
-public class Controller {
+public class Controller implements Initializable {
 
     Segurado cSegur = new Segurado();
     GeradorDespacho cDesp = new GeradorDespacho();
+    TextoRecorrente cTextoRec = new TextoRecorrente();
 
     public Button botaoInput = new Button();
     public Button botaoGerarDespacho = new Button();
     public TextArea caixaDespacho = new TextArea();
     public Button botaoCopy = new Button();
+    public TextArea caixaTR1 = new TextArea();
+
+    /*
+    Primeira caixa de texto recorrente
+     */
+    public void acaoCaixaTR() {
+        caixaTR1.setText(TextoRecorrente.tR1);
+    }
+
 
     /*
     Botão de importação de arquivo faz inicia os seguintes processos quando pressionado:
@@ -27,12 +47,20 @@ public class Controller {
     public void acaoInput() {
         cSegur = new Segurado();
         importaArquivo();
-        parseAtributosIniciais();
-        parseAtributosR1();
-        if (cSegur.isFiliaAteEC()) {
-        parseAtributosR2();
-        parseAtributosR3();
-        parseAtributosFinais();
+        if (cSegur.getExtrato()!=null) {
+            String codEspecieNB = cSegur.parseCodEspecie();
+            if (codEspecieNB.matches("41|42")) {
+                cSegur.setCodEspecieBeneficio(codEspecieNB);
+                parseAtributosIniciais();
+                parseAtributosR1();
+                if (cSegur.isFiliaAteEC()) {
+                    parseAtributosR2();
+                    parseAtributosR3();
+                    parseAtributosFinais();
+                    this.botaoGerarDespacho.setDisable(false);
+                }
+            } else {Popup.popup("Alerta","Arquivo selecionado não é um extrato de " +
+                    "aposentadoria por idade ou tempo de contribuição e não é suportado pelo programa");}
         }
     }
 
@@ -52,6 +80,7 @@ public class Controller {
         constroiParteFinal();
         cDesp.setStringDespachoCompleto(String.join("\n", cDesp.getDespachoCompleto()));
         caixaDespacho.setText(cDesp.getStringDespachoCompleto());
+        this.botaoCopy.setDisable(false);
     }
 
 
@@ -79,9 +108,15 @@ public class Controller {
      */
     public void parseAtributosIniciais() {
 
+        String especieNB = cSegur.transfEspecieBeneficio();
+        cSegur.setEspecieBeneficio(especieNB);
 
         String nome = cSegur.parseNome();
         cSegur.setNome(nome);
+
+        String nb = cSegur.parseNB();
+        cSegur.setNB(nb);
+
 
         String sexo = cSegur.parseSexo();
         cSegur.setSexo(sexo);
@@ -90,13 +125,13 @@ public class Controller {
         cSegur.setArtGenero(artGenero);
 
         String nascString = cSegur.parseNascString();
-        cSegur.setDataNascAsString(nascString);
+        cSegur.setStringDataNasc(nascString);
 
         Date nascDate = cSegur.nascToDate();
         cSegur.setDataNasc(nascDate);
 
         String DERString = cSegur.lerDerString();
-        cSegur.setDERasString(DERString);
+        cSegur.setStringDER(DERString);
 
         Date DERDate = cSegur.DERtoDate();
         cSegur.setDER(DERDate);
@@ -105,7 +140,7 @@ public class Controller {
         cSegur.setIdadeDER(arrayIdadeDER);
 
         String filiaString = cSegur.parseFiliaString();
-        cSegur.setDataFiliaAsString(filiaString);
+        cSegur.setStringDataFiliaAs(filiaString);
 
         Date filiaDate = cSegur.FiliaToDate();
         cSegur.setDataFilia(filiaDate);
@@ -144,7 +179,8 @@ public class Controller {
         String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR1());
         cSegur.addIdadeExigida(idadeExigida);
 
-        cSegur.addCarenciaExigida("180");
+        String carenciaExigida = cSegur.parseCarenciaExigida(cSegur.getR1());
+        cSegur.addCarenciaExigida(carenciaExigida);
 
         String[] tempCompExigido = {"20", "00", "00"};
         cSegur.addTempCompExigido(tempCompExigido);
@@ -182,7 +218,8 @@ public class Controller {
         String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR2());
         cSegur.addIdadeExigida(idadeExigida);
 
-        cSegur.addCarenciaExigida("180");
+        String carenciaExigida = cSegur.parseCarenciaExigida(cSegur.getR2());
+        cSegur.addCarenciaExigida(carenciaExigida);
 
         String[] tempCompExigido = {"00", "00", "00"};
         cSegur.addTempCompExigido(tempCompExigido);
@@ -209,34 +246,35 @@ public class Controller {
         cSegur.setR3(2);
 
          do {
-                 String regra = cSegur.retornaNomeRegraAnaliseDireito(cSegur.getR3());
-                 cSegur.addRegraAnaliseDireito(regra);
+             String regra = cSegur.retornaNomeRegraAnaliseDireito(cSegur.getR3());
+             cSegur.addRegraAnaliseDireito(regra);
 
-                 String stringDataBase = cSegur.parseDataBase(cSegur.getR3());
-                 cSegur.addStringDataBase(stringDataBase);
+             String stringDataBase = cSegur.parseDataBase(cSegur.getR3());
+             cSegur.addStringDataBase(stringDataBase);
 
-                 Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR3());
-                 cSegur.addDateDataBase(dateDatabase);
+             Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR3());
+             cSegur.addDateDataBase(dateDatabase);
 
-                 String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR3());
-                 cSegur.addIdadeExigida(idadeExigida);
+             String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR3());
+             cSegur.addIdadeExigida(idadeExigida);
 
-                 cSegur.addCarenciaExigida("180");
+             String carenciaExigida = cSegur.parseCarenciaExigida(cSegur.getR3());
+             cSegur.addCarenciaExigida(carenciaExigida);
 
-                 String[] tempCompExigido = {"15", "00", "00"};
-                 cSegur.addTempCompExigido(tempCompExigido);
+             String[] tempCompExigido = {"15", "00", "00"};
+             cSegur.addTempCompExigido(tempCompExigido);
 
-                 String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR3());
-                 cSegur.addIdadeEfetiva(idadeEfetiva);
+             String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR3());
+             cSegur.addIdadeEfetiva(idadeEfetiva);
 
-                 String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR3());
-                 cSegur.addCarenciaEfetiva(carenciaEfetiva);
+             String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR3());
+             cSegur.addCarenciaEfetiva(carenciaEfetiva);
 
-                 String[] tempCompEfetivo = cSegur.parseTempCompEfetivo(cSegur.getR3());
-                 cSegur.addTempCompEfetivo(tempCompEfetivo);
+             String[] tempCompEfetivo = cSegur.parseTempCompEfetivo(cSegur.getR3());
+             cSegur.addTempCompEfetivo(tempCompEfetivo);
 
-                 String recDireitoDataBase = cSegur.parseRecDireitoDataBase(cSegur.getR3());
-                 cSegur.addRecDireitoDataBase(recDireitoDataBase);
+             String recDireitoDataBase = cSegur.parseRecDireitoDataBase(cSegur.getR3());
+             cSegur.addRecDireitoDataBase(recDireitoDataBase);
 
              if (cSegur.getDateDataBase(cSegur.getR3()).compareTo(cSegur.getDER()) < 0) {
                  cSegur.setR3(cSegur.getR3() + 1);
@@ -274,5 +312,27 @@ public class Controller {
         cDesp.addDespachoCompleto(cDesp.escreverParteFinal(cSegur));
     }
 
+    /*
+    Inicializador do programa. Executa código antes de abrir a GUI
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        /*
+        testa se há um arquivo TextoRecorrente.txt e cria o mesmo em caso negativo
+         */
+        File tR = new File("TextoRecorrente.txt");
+        Path pathTR = Paths.get(tR.getAbsolutePath());
+        if (Files.notExists(pathTR)) {
+            try {
+                    tR.createNewFile();
+                    Files.write(pathTR, Collections.singleton(TextoRecorrente.tR1), StandardCharsets.UTF_8);
+            } catch (Exception ex) {}
+        }
+        try {
+            TextoRecorrente.textoRecorrente.addAll(Files.newInputStream(pathTR).read());
+        } catch (Exception ex) {
+        }
     }
+}
 

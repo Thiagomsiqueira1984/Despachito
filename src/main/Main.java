@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
@@ -18,10 +19,10 @@ public class Main extends Application {
     @Override
     public void start(Stage janelaInicial) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        janelaInicial.setTitle("Despachador");
-        janelaInicial.setScene(new Scene(root, 800, 600));
-        janelaInicial.setMinWidth(800);
-        janelaInicial.setMinHeight(600);
+        janelaInicial.setTitle("Despachito");
+        janelaInicial.setScene(new Scene(root, 1280, 1000));
+        janelaInicial.setMinWidth(1000);
+        janelaInicial.setMinHeight(800);
         janelaInicial.show();
     }
 
