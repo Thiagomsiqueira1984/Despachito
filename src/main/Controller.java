@@ -1,6 +1,8 @@
 package main;
 
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.control.*;
@@ -11,12 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
 
 public class Controller implements Initializable {
@@ -30,12 +30,17 @@ public class Controller implements Initializable {
     public TextArea caixaDespacho = new TextArea();
     public Button botaoCopy = new Button();
     public TextArea caixaTR1 = new TextArea();
+    public VBox painelTextoRecorrente = new VBox();
+    public Button botaoNovoTR = new Button();
 
     /*
-    Primeira caixa de texto recorrente
+    Ação do botão de adicionar bloco de texto recorrente
      */
-    public void acaoCaixaTR() {
-        caixaTR1.setText(TextoRecorrente.tR1);
+    public void acaoBotaoNovoTR() {
+        VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size()+1);
+        painelTextoRecorrente.getChildren().add(novoBloco);
+        novoBloco.setVisible(true);
+        botaoNovoTR.toFront();
     }
 
 
@@ -64,6 +69,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /*
+    Constrói o despacho e coloca na caixa de texto principal
+     */
     public void acaoGerarDespacho() {
         cDesp = new GeradorDespacho();
         constroiParteInicial();
@@ -330,9 +338,21 @@ public class Controller implements Initializable {
             } catch (Exception ex) {}
         }
         try {
-            TextoRecorrente.textoRecorrente.addAll(Files.newInputStream(pathTR).read());
-        } catch (Exception ex) {
+            Scanner ler = new Scanner(tR);
+            ler.useDelimiter(TextoRecorrente.divisor);
+            while (ler.hasNext()) {
+                TextoRecorrente.textoRecorrente.add(ler.next());
+            }
+            ler.close();
+        } catch (Exception ex) {}
+        for (int i = 0; i< TextoRecorrente.textoRecorrente.size(); i++) {
+            VBox novoBloco = cTextoRec.fazerblocoTR(i);
+            painelTextoRecorrente.getChildren().add(novoBloco);
+            novoBloco.setVisible(true);
+            botaoNovoTR.toFront();
         }
+
     }
 }
+
 
