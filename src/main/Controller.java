@@ -1,8 +1,6 @@
 package main;
 
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.control.*;
@@ -27,22 +25,22 @@ public class Controller implements Initializable {
 
     public Button botaoInput = new Button();
     public Button botaoGerarDespacho = new Button();
-    public TextArea caixaDespacho = new TextArea();
+
     public Button botaoCopy = new Button();
-    public TextArea caixaTR1 = new TextArea();
     public VBox painelTextoRecorrente = new VBox();
     public Button botaoNovoTR = new Button();
+
+    public TextArea caixaDespacho = new TextArea();
 
     /*
     Ação do botão de adicionar bloco de texto recorrente
      */
     public void acaoBotaoNovoTR() {
-        VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size()+1);
+        VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size(), this);
         painelTextoRecorrente.getChildren().add(novoBloco);
         novoBloco.setVisible(true);
         botaoNovoTR.toFront();
     }
-
 
     /*
     Botão de importação de arquivo faz inicia os seguintes processos quando pressionado:
@@ -64,7 +62,8 @@ public class Controller implements Initializable {
                     parseAtributosFinais();
                     this.botaoGerarDespacho.setDisable(false);
                 }
-            } else {Popup.popup("Alerta","Arquivo selecionado não é um extrato de " +
+            } else {
+                Popups.popup1("Alerta","Arquivo selecionado não é um extrato de " +
                     "aposentadoria por idade ou tempo de contribuição e não é suportado pelo programa");}
         }
     }
@@ -327,9 +326,9 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         /*
-        testa se há um arquivo TextoRecorrente.txt e cria o mesmo em caso negativo
+        testa se há um arquivo TextoRecorrente.dpch e cria o mesmo em caso negativo
          */
-        File tR = new File("TextoRecorrente.txt");
+        File tR = new File("TextoRecorrente.dpch");
         Path pathTR = Paths.get(tR.getAbsolutePath());
         if (Files.notExists(pathTR)) {
             try {
@@ -337,6 +336,10 @@ public class Controller implements Initializable {
                     Files.write(pathTR, Collections.singleton(TextoRecorrente.tR1), StandardCharsets.UTF_8);
             } catch (Exception ex) {}
         }
+
+        /*
+        Passa o conteúdo do arquivo de TextoRecorrente para a lista textoRecorrente
+         */
         try {
             Scanner ler = new Scanner(tR);
             ler.useDelimiter(TextoRecorrente.divisor);
@@ -345,8 +348,12 @@ public class Controller implements Initializable {
             }
             ler.close();
         } catch (Exception ex) {}
+
+        /*
+        Cria os blocos de texto recorrente com o conteúdo da lista textoRecorrente
+         */
         for (int i = 0; i< TextoRecorrente.textoRecorrente.size(); i++) {
-            VBox novoBloco = cTextoRec.fazerblocoTR(i);
+            VBox novoBloco = cTextoRec.fazerblocoTR(i, this);
             painelTextoRecorrente.getChildren().add(novoBloco);
             novoBloco.setVisible(true);
             botaoNovoTR.toFront();

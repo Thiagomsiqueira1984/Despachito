@@ -9,9 +9,12 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.*;
 
-public class Popup {
+public class Popups {
 
-    public static void popup(String titulo, String mensagem){
+    /*
+    Popup de erro com apenas um botão ok pra fechar
+     */
+    public static void popup1(String titulo, String mensagem){
 
         Stage janelinha = new Stage();
 
@@ -33,6 +36,7 @@ public class Popup {
 
         Scene cena = new Scene(layout);
         janelinha.setScene(cena);
+        janelinha.setResizable(false);
         janelinha.showAndWait();
 
     }
