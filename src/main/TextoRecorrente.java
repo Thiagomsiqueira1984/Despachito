@@ -11,6 +11,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,8 @@ public class TextoRecorrente {
             if (alteraTR.get()) {
                 areaTexto.setText(TextoRecorrente.textoRecorrente.get(index));
                 try {
-                    FileWriter f = new FileWriter("TextoRecorrente.dpch");
+                    File tRfolder = new File(System.getProperty("user.home"), "Despachito");
+                    FileWriter f = new FileWriter(new File(tRfolder, "TextoRecorrente.dpch"));
                     for (String str: TextoRecorrente.textoRecorrente) {
                         if (!str.trim().isEmpty()) {
                             f.write(str + divisor);

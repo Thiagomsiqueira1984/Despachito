@@ -328,12 +328,17 @@ public class Controller implements Initializable {
         /*
         testa se há um arquivo TextoRecorrente.dpch e cria o mesmo em caso negativo
          */
-        File tR = new File("TextoRecorrente.dpch");
+        File tRfolder = new File(System.getProperty("user.home"), "Despachito");
+        Path pathTRfolder = Paths.get(tRfolder.getAbsolutePath());
+        if (Files.notExists(pathTRfolder)) {
+            tRfolder.mkdir();
+        }
+        File tR = new File(tRfolder, "textoRecorrente.dpch");
         Path pathTR = Paths.get(tR.getAbsolutePath());
         if (Files.notExists(pathTR)) {
             try {
                     tR.createNewFile();
-                    Files.write(pathTR, Collections.singleton(TextoRecorrente.tR1), StandardCharsets.UTF_8);
+                    Files.write(pathTR, Collections.singleton(TextoRecorrente.tR1), StandardCharsets.ISO_8859_1);
             } catch (Exception ex) {}
         }
 
