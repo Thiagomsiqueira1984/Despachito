@@ -12,7 +12,7 @@ import javafx.scene.control.*;
 public class Popups {
 
     /*
-    Popup de erro com apenas um bot√£o ok pra fechar
+    Popup de erro com apenas um bot„o ok pra fechar
      */
     public static void popup1(String titulo, String mensagem){
 

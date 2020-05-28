@@ -15,54 +15,54 @@ public class Segurado {
 
      */
 
-    private String extrato; //Armazena o texto do arquivo de extrato na Ã­ntegra
+    private String extrato; //Armazena o texto do arquivo de extrato na íntegra
     private String nome; //Nome do segurado
-    private String NB; //NÃºmero do benefÃ­cio
-    private String codEspecieBeneficio; //CÃ³digo da espÃ©cie de benefÃ­cio
-    private String especieBeneficio; //Nome da espÃ©cie de benefÃ­cio
+    private String NB; //Número do benefício
+    private String codEspecieBeneficio; //Código da espécie de benefício
+    private String especieBeneficio; //Nome da espécie de benefício
     private String sexo; //Sexo do segurado
-    private char artGenero; //Artigo de gÃªnero do segurado
+    private char artGenero; //Artigo de gênero do segurado
     private Date dataNasc; //Data de nascimento do segurado
     private String stringDataNasc; //Data de nascimento do segurado formatada e como String
     private Date DER; //Data de entrada do requerimento
     private String stringDER;//Data de entrada do requerimento formatada e como String
     private String[] idadeDER; //Idade do segurado na DER
-    private Date dataFilia; //Data de filiaÃ§Ã£o ao RGPS
-    private String stringDataFiliaAs; //Data de filiaÃ§Ã£o ao RGPS formatada e como String
-    private boolean filiaAteEC; //main.Segurado filiado atÃ© 13/11/2019?
-    private String antesDepoisEC; //Informa se a filiaÃ§Ã£o ocorreu antes ou depois de 13/11/2019 em String
-    private String atendeNaoAtEC; //Informa se atende requisito de filiaÃ§Ã£o atÃ© 13/11/2019 em String
+    private Date dataFilia; //Data de filiação ao RGPS
+    private String stringDataFiliaAs; //Data de filiação ao RGPS formatada e como String
+    private boolean filiaAteEC; //main.Segurado filiado até 13/11/2019?
+    private String antesDepoisEC; //Informa se a filiação ocorreu antes ou depois de 13/11/2019 em String
+    private String atendeNaoAtEC; //Informa se atende requisito de filiação até 13/11/2019 em String
 
     /*
 
-    Atributos da parte de anÃ¡lise de direito:
-    -> os atributos desta parte estÃ£o em listas, sendo que cada nÃ­vel da lista (r1 a r3) corresponde a uma regra de
-        anÃ¡lise de direito;
-    -> o nÃ­vel r3 pode ter mais de um parÃ¡grafo, no caso de segurada do sexo feminino, caso em que serÃ¡ utilizado um
-        contador para buscar as informaÃ§Ãµes;
+    Atributos da parte de análise de direito:
+    -> os atributos desta parte estão em listas, sendo que cada nível da lista (r1 a r3) corresponde a uma regra de
+        análise de direito;
+    -> o nível r3 pode ter mais de um parágrafo, no caso de segurada do sexo feminino, caso em que será utilizado um
+        contador para buscar as informações;
 
      */
 
-    private int r1; //NÃºmero do Ã­ndice referente Ã  regra de aposentadoria programada art. 19 da EC 103/2019. Sempre = 0
-    private int r2; //NÃºmero do Ã­ndice referente Ã  regra de direito adquirido antes da EC 103/2019
-    private int r3; //NÃºmero do Ã­ndice referente Ã  regra transitÃ³ria art. 18 da EC 103/2019
+    private int r1; //Número do índice referente à regra de aposentadoria programada art. 19 da EC 103/2019. Sempre = 0
+    private int r2; //Número do índice referente à regra de direito adquirido antes da EC 103/2019
+    private int r3; //Número do índice referente à regra transitória art. 18 da EC 103/2019
 
-    private List<String> regraAnaliseDireito = new ArrayList<>(); //Lista com o nome das regras para anÃ¡lise do direito em formato String
+    private List<String> regraAnaliseDireito = new ArrayList<>(); //Lista com o nome das regras para análise do direito em formato String
 
-    private List<String> stringDataBase = new ArrayList<>(); //Lista com data base para anÃ¡lise do direito em formato String
-    private List<Date> dateDataBase = new ArrayList<>(); //Lista com data base para anÃ¡lise do direito em formato Date
+    private List<String> stringDataBase = new ArrayList<>(); //Lista com data base para análise do direito em formato String
+    private List<Date> dateDataBase = new ArrayList<>(); //Lista com data base para análise do direito em formato Date
 
     private List<String> idadeExigida = new ArrayList<>(); //Lista contendo as idades exigidas na data base guardadas em String
-    private List<String> carenciaExigida = new ArrayList<>(); //Lista contendo as carÃªncias exigidas na data base guardadas em String
-    private List<String[]> TempCompExigido = new ArrayList<>(); //Lista contendo os tempos de contribuiÃ§Ã£o exigidos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String> carenciaExigida = new ArrayList<>(); //Lista contendo as carências exigidas na data base guardadas em String
+    private List<String[]> TempCompExigido = new ArrayList<>(); //Lista contendo os tempos de contribuição exigidos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
 
-    private List<String[]> idadeEfetiva = new ArrayList<>(); //Lista contendo as idades efetivas na data base. As idades sÃ£o guardadas em array de String com [0] = anos, [1] = meses e [2] = dias
-    private List<String> carenciaEfetiva = new ArrayList<>(); //Lista contendo as carÃªncias efetivas na data base. As carÃªncias sÃ£o guardadas em String
-    private List<String[]> TempCompEfetivo = new ArrayList<>(); //Lista contendo os tempos de contribuiÃ§Ã£o efetivos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String[]> idadeEfetiva = new ArrayList<>(); //Lista contendo as idades efetivas na data base. As idades são guardadas em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String> carenciaEfetiva = new ArrayList<>(); //Lista contendo as carências efetivas na data base. As carências são guardadas em String
+    private List<String[]> TempCompEfetivo = new ArrayList<>(); //Lista contendo os tempos de contribuição efetivos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
 
-    private  List<String> recDireitoDataBase = new ArrayList<>(); //Lista com a afirmaÃ§Ã£o quanto ao reconhecimento do direito na data base guardados como String com "foi reconhecido o direito" ou "nÃ£o foi reconhecido o direito"
+    private  List<String> recDireitoDataBase = new ArrayList<>(); //Lista com a afirmação quanto ao reconhecimento do direito na data base guardados como String com "foi reconhecido o direito" ou "não foi reconhecido o direito"
 
-    private  String recDireitoFinal; //AfirmaÃ§Ã£o quanto ao reconhecumento do direito na por qualquer uma das regras como String com "foi reconhecido o direito" ou "nÃ£o foi reconhecido o direito"
+    private  String recDireitoFinal; //Afirmação quanto ao reconhecumento do direito na por qualquer uma das regras como String com "foi reconhecido o direito" ou "não foi reconhecido o direito"
 
     /*
 
@@ -324,7 +324,7 @@ public class Segurado {
 
     /*
 
-    MÃ©todos de parse
+    Métodos de parse
 
      */
 
@@ -360,7 +360,7 @@ public class Segurado {
     }
 
     /*
-    Parse do nÃºmero de benefÃ­cio
+    Parse do número de benefício
      */
     public String parseNB() {
         String nb = this.getExtrato();
@@ -370,7 +370,7 @@ public class Segurado {
     }
 
     /*
-    Parse do cÃ³digo da espÃ©cie de benefÃ­cio
+    Parse do código da espécie de benefício
      */
     public String parseCodEspecie() {
         String codEspecie = this.getExtrato();
@@ -380,14 +380,14 @@ public class Segurado {
     }
 
     /*
-    Transforma cÃ³digo da espÃ©cie de benefÃ­cio em nome da espÃ©cie
+    Transforma código da espécie de benefício em nome da espécie
      */
     public String transfEspecieBeneficio() {
         String nomeEspecie = "";
         if (this.getCodEspecieBeneficio().equals("41")) {
             nomeEspecie = "aposentadoria por idade";
         } else if (this.getCodEspecieBeneficio().equals("42")) {
-            nomeEspecie = "aposentadoria por tempo de contribuiÃ§Ã£o";
+            nomeEspecie = "aposentadoria por tempo de contribuição";
         }
         return nomeEspecie;
     }
@@ -403,7 +403,7 @@ public class Segurado {
     }
 
     /*
-    Parse do artigo de gÃªnero do segurado
+    Parse do artigo de gênero do segurado
      */
     public char parseArtGenero() {
         char artGenero;
@@ -463,7 +463,7 @@ public class Segurado {
     }
 
     /*
-    Parse da idade e conversÃ£o para um array de String
+    Parse da idade e conversão para um array de String
      */
     public String[] parseIdadeDER(){
         String achaIdadeDER = this.getExtrato();
@@ -479,7 +479,7 @@ public class Segurado {
     }
 
     /*
-    Parse da data de filiaÃ§Ã£o como String
+    Parse da data de filiação como String
      */
     public String parseFiliaString(){
         String filiaString = this.getExtrato();
@@ -489,7 +489,7 @@ public class Segurado {
     }
 
     /*
-    Converte a data de filiaÃ§Ã£o para Date
+    Converte a data de filiação para Date
      */
     public Date FiliaToDate(){
         Calendar aDate = Calendar.getInstance();
@@ -502,7 +502,7 @@ public class Segurado {
     }
 
     /*
-    Testa se a filiaÃ§Ã£o ocorreu atÃ© 13/11/2019
+    Testa se a filiação ocorreu até 13/11/2019
      */
     public boolean testaFiliaAteEC(){
         Calendar aDate = Calendar.getInstance();
@@ -518,12 +518,12 @@ public class Segurado {
 
     /*
 
-    MÃ©todos de parsing de atributos da parte de anÃ¡lise do direito do segurado
+    Métodos de parsing de atributos da parte de análise do direito do segurado
 
      */
 
     /*
-    AtribuiÃ§Ã£o do nome da regra de anÃ¡lise de direito
+    Atribuição do nome da regra de análise de direito
      */
     public String retornaNomeRegraAnaliseDireito(int index){
         String regra = "";
@@ -538,7 +538,7 @@ public class Segurado {
     }
 
     /*
-    Parse da data base de verificaÃ§Ã£o de direito
+    Parse da data base de verificação de direito
      */
     public String parseDataBase(int index) {
     String data = this.getExtrato();
@@ -567,7 +567,7 @@ public class Segurado {
     }
 
     /*
-    Parse idade exigida na data base de anÃ¡lise do direito
+    Parse idade exigida na data base de análise do direito
      */
     public String parseIdadeExigida(int index){
         String idadeExigida = "";
@@ -596,7 +596,7 @@ public class Segurado {
     }
 
     /*
-    Parse carÃªncia exigida na data base de anÃ¡lise do direito
+    Parse carência exigida na data base de análise do direito
      */
     public String parseCarenciaExigida(int index) {
         String carenciaExigida = this.getExtrato();
@@ -610,7 +610,7 @@ public class Segurado {
 
 
     /*
-    Parse da idade efetiva na data base de anÃ¡lise do direito
+    Parse da idade efetiva na data base de análise do direito
      */
     public String[] parseIdadeEfetiva(int index){
         String IdadeEfetiva = this.getExtrato();
@@ -627,7 +627,7 @@ public class Segurado {
     }
 
     /*
-    Parse da carÃªncia efetiva na data base de anÃ¡lise do direito
+    Parse da carência efetiva na data base de análise do direito
      */
     public String parseCarenciaEfetiva(int index){
         String carenciaEfetiva = this.getExtrato();
@@ -639,7 +639,7 @@ public class Segurado {
     }
 
     /*
-    Parse do tempo de contribuiÃ§Ã£o efetivo na data base de anÃ¡lise do direito
+    Parse do tempo de contribuição efetivo na data base de análise do direito
      */
     public String[] parseTempCompEfetivo(int index) {
         String tempCompEfetivo = this.getExtrato();
@@ -656,7 +656,7 @@ public class Segurado {
     }
 
     /*
-    Parse de reconhecimento de direito na data base de anÃ¡lise do direito
+    Parse de reconhecimento de direito na data base de análise do direito
      */
     public String parseRecDireitoDataBase(int index){
         String recDireitoDataBase = this.getExtrato();
@@ -667,13 +667,13 @@ public class Segurado {
         if (recDireitoDataBase.equals("s")) {
             recDireitoDataBase = "foi reconhecido";
         } else {
-            recDireitoDataBase = "nÃ£o foi reconhecido";
+            recDireitoDataBase = "não foi reconhecido";
         }
         return recDireitoDataBase;
     }
 
     /*
-    Parse de direito Ã  aposentadoria por qualquer uma das regras
+    Parse de direito à aposentadoria por qualquer uma das regras
      */
     public String parseDireitoAposFinal(){
         String direitoAposFinal = this.getExtrato();
@@ -683,7 +683,7 @@ public class Segurado {
         if (direitoAposFinal.equals("s")){
             direitoAposFinal = "foi reconhecido o direito";
         }
-        else direitoAposFinal = "nÃ£o foi reconhecido o direito";
+        else direitoAposFinal = "não foi reconhecido o direito";
         return direitoAposFinal;
     }
 

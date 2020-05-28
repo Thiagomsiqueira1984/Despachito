@@ -33,7 +33,7 @@ public class Controller implements Initializable {
     public TextArea caixaDespacho = new TextArea();
 
     /*
-    A√ß√£o do bot√£o de adicionar bloco de texto recorrente
+    AÁ„o do bot„o de adicionar bloco de texto recorrente
      */
     public void acaoBotaoNovoTR() {
         VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size(), this);
@@ -43,9 +43,9 @@ public class Controller implements Initializable {
     }
 
     /*
-    Bot√£o de importa√ß√£o de arquivo faz inicia os seguintes processos quando pressionado:
-    - abre uma janela para sele√ß√£o do arquivo de extrato do qual ser√£o extra√≠dos os dados
-    - faz o parse de todas as vari√°veis necess√°rias √† constu√ß√£o do despacho
+    Bot„o de importaÁ„o de arquivo faz inicia os seguintes processos quando pressionado:
+    - abre uma janela para seleÁ„o do arquivo de extrato do qual ser„o extraÌdos os dados
+    - faz o parse de todas as vari·veis necess·rias ‡ constuÁ„o do despacho
      */
     public void acaoInput() {
         cSegur = new Segurado();
@@ -63,13 +63,13 @@ public class Controller implements Initializable {
                     this.botaoGerarDespacho.setDisable(false);
                 }
             } else {
-                Popups.popup1("Alerta","Arquivo selecionado n√£o √© um extrato de " +
-                    "aposentadoria por idade ou tempo de contribui√ß√£o e n√£o √© suportado pelo programa");}
+                Popups.popup1("Alerta","Arquivo selecionado n„o È um extrato de " +
+                    "aposentadoria por idade ou tempo de contribuiÁ„o e n„o È suportado pelo programa");}
         }
     }
 
     /*
-    Constr√≥i o despacho e coloca na caixa de texto principal
+    ConstrÛi o despacho e coloca na caixa de texto principal
      */
     public void acaoGerarDespacho() {
         cDesp = new GeradorDespacho();
@@ -93,7 +93,7 @@ public class Controller implements Initializable {
 
 
     /*
-    Copia a despacho para a √°rea de transfer√™ncia
+    Copia a despacho para a ·rea de transferÍncia
      */
     public void acaoCopy() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -103,7 +103,7 @@ public class Controller implements Initializable {
     }
 
     /*
-    Chama m√©todo lerExtrato e seta
+    Chama mÈtodo lerExtrato e seta
      */
     public void importaArquivo() {
         String extrato = cSegur.parseExtrato();
@@ -163,12 +163,12 @@ public class Controller implements Initializable {
         if (cSegur.isFiliaAteEC()) {
             cSegur.setAtendeNaoAtEC("atende");
         } else {
-            cSegur.setAtendeNaoAtEC("n√£o atende");
+            cSegur.setAtendeNaoAtEC("n„o atende");
         }
     }
 
     /*
-    Parse de valores para parte n√≠vel r1 - regra de apoentadoria programada art. 19 da EC 103/2019
+    Parse de valores para parte nÌvel r1 - regra de apoentadoria programada art. 19 da EC 103/2019
     */
     public void parseAtributosR1() {
 
@@ -207,7 +207,7 @@ public class Controller implements Initializable {
     }
 
     /*
-    Parse de valores para parte n√≠vel r2 - regra de direito adquirido antes da EC 103/2019
+    Parse de valores para parte nÌvel r2 - regra de direito adquirido antes da EC 103/2019
      */
     public void parseAtributosR2() {
 
@@ -246,7 +246,7 @@ public class Controller implements Initializable {
     }
 
     /*
-    Parse de valores para parte n√≠vel r3 - Regra transitoria do Art.18 da EC 103/2019
+    Parse de valores para parte nÌvel r3 - Regra transitoria do Art.18 da EC 103/2019
      */
     public void parseAtributosR3() {
 
@@ -299,63 +299,36 @@ public class Controller implements Initializable {
 
 
     /*
-    Constr√≥i a parte inicial do despacho - dados b√°sicos do segurado
+    ConstrÛi a parte inicial do despacho - dados b·sicos do segurado
      */
     public void constroiParteInicial(){
         cDesp.addDespachoCompleto(cDesp.escreverParte1(cSegur));
     }
 
     /*
-    Constr√≥i par√°grafo referente √†s regras de an√°lise de direito no despacho
+    ConstrÛi par·grafo referente ‡s regras de an·lise de direito no despacho
      */
     public void constroiParagrafoAnaliseDireito(int index) {
         cDesp.addDespachoCompleto(cDesp.escreverParagrafoAnaliseDireito(cSegur, index));
     }
 
     /*
-    Constr√≥i a parte inicial do despacho - reconhecimento de direito √† aposentadoria por qualquer uma das regras
+    ConstrÛi a parte inicial do despacho - reconhecimento de direito ‡ aposentadoria por qualquer uma das regras
      */
     public void constroiParteFinal() {
         cDesp.addDespachoCompleto(cDesp.escreverParteFinal(cSegur));
     }
 
     /*
-    Inicializador do programa. Executa c√≥digo antes de abrir a GUI
+    Inicializador do programa. Executa cÛdigo antes de abrir a GUI
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        /*
-        testa se h√° um arquivo TextoRecorrente.dpch e cria o mesmo em caso negativo
-         */
-        File tRfolder = new File(System.getProperty("user.home"), "Despachito");
-        Path pathTRfolder = Paths.get(tRfolder.getAbsolutePath());
-        if (Files.notExists(pathTRfolder)) {
-            tRfolder.mkdir();
-        }
-        File tR = new File(tRfolder, "textoRecorrente.dpch");
-        Path pathTR = Paths.get(tR.getAbsolutePath());
-        if (Files.notExists(pathTR)) {
-            try {
-                    tR.createNewFile();
-                    Files.write(pathTR, Collections.singleton(TextoRecorrente.tR1), StandardCharsets.ISO_8859_1);
-            } catch (Exception ex) {}
-        }
+        cTextoRec.iniciaTR();
 
         /*
-        Passa o conte√∫do do arquivo de TextoRecorrente para a lista textoRecorrente
-         */
-        try {
-            Scanner ler = new Scanner(tR);
-            ler.useDelimiter(TextoRecorrente.divisor);
-            while (ler.hasNext()) {
-                TextoRecorrente.textoRecorrente.add(ler.next());
-            }
-            ler.close();
-        } catch (Exception ex) {}
-
-        /*
-        Cria os blocos de texto recorrente com o conte√∫do da lista textoRecorrente
+        Cria os blocos de texto recorrente com o conte˙do da lista textoRecorrente
          */
         for (int i = 0; i< TextoRecorrente.textoRecorrente.size(); i++) {
             VBox novoBloco = cTextoRec.fazerblocoTR(i, this);

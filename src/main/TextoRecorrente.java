@@ -13,8 +13,14 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TextoRecorrente {
@@ -37,21 +43,80 @@ public class TextoRecorrente {
     /*
     Texto inicial para o arquivo de database de texto recorrente
      */
-    public static String tR1 =
-            "Foram computados todos os vÃ­nculos empregatÃ­cios que constam no CNIS, realizadas as devidas alteraÃ§Ãµes," +
-            " confirmaÃ§Ãµes e inclusÃµes conforme a documentaÃ§Ã£o apresentada." +
-            divisor +
-            "NÃ£o foram computados os seguintes vÃ­nculos empregatÃ­cios:" + "\n" + "-" +
-            divisor +
-            "Computados meses de atividade rural como carÃªncia por conta da AÃ§Ã£o Civil PÃºblica" +
-                    " nÂº 50382611520154047100/RS." +
-            divisor +
-            "Foi computado perÃ­odo de benefÃ­cio por incapacidade como carÃªncia por conta da AÃ§Ã£o Civil PÃºblica" +
-                    " nÂº 200971000041034/RS.";
+    public static String tR1 = "Foram computados todos os vínculos empregatícios que constam no CNIS, realizadas as devidas alterações, confirmações e inclusões conforme a documentação apresentada.";
+
+    public static String tR2 =
+            "Não foram computados os seguintes vínculos empregatícios:" + "\n" + "-";
+
+    public static String tR3 =
+            "Computados meses de atividade rural como carência por conta da Ação Civil Pública" +
+                    " nº 50382611520154047100/RS.";
+
+    public static String tR4 =
+            "Foi computado período de benefício por incapacidade como carência por conta da Ação Civil Pública" +
+                    " nº 200971000041034/RS.";
 
     /*
-    MÃ©todos
+    Métodos
      */
+
+    public static String UTF8toISO(String str){
+        Charset utf8charset = Charset.forName("UTF-8");
+        Charset iso88591charset = Charset.forName("ISO-8859-1");
+
+        ByteBuffer inputBuffer = ByteBuffer.wrap(str.getBytes());
+
+        // decode UTF-8
+        CharBuffer data = utf8charset.decode(inputBuffer);
+
+        // encode ISO-8559-1
+        ByteBuffer outputBuffer = iso88591charset.encode(data);
+        byte[] outputData = outputBuffer.array();
+
+        return new String(outputData);
+    }
+
+    /*
+    testa se há um arquivo TextoRecorrente.dpch e cria o mesmo em caso negativo
+     */
+    public void iniciaTR() {
+        File tRfolder = new File(System.getProperty("user.home"), "Despachito");
+        Path pathTRfolder = Paths.get(tRfolder.getAbsolutePath());
+        if (Files.notExists(pathTRfolder)) {
+            tRfolder.mkdir();
+        }
+        File tR = new File(tRfolder, "textoRecorrente.dpch");
+        Path pathTR = Paths.get(tR.getAbsolutePath());
+        if (Files.notExists(pathTR)) {
+            try {
+                tR.createNewFile();
+                textoRecorrente.add(UTF8toISO(tR1));
+                textoRecorrente.add(UTF8toISO(tR2));
+                textoRecorrente.add(UTF8toISO(tR3));
+                textoRecorrente.add(UTF8toISO(tR4));
+                try {
+                    FileWriter f = new FileWriter(tR);
+                    for (String str: TextoRecorrente.textoRecorrente) {
+                        if (!str.trim().isEmpty()) {
+                            f.write(str + divisor);
+                        }
+                    }
+                    f.close();
+                } catch (Exception ex) {}
+            } catch (Exception ex) {
+            }
+        }
+        else //Passa o conteúdo do arquivo de TextoRecorrente para a lista textoRecorrente
+        try {
+            Scanner ler = new Scanner(tR);
+            ler.useDelimiter(TextoRecorrente.divisor);
+            while (ler.hasNext()) {
+                TextoRecorrente.textoRecorrente.add(ler.next());
+            }
+            ler.close();
+        } catch (Exception ex) {
+        }
+    }
 
     /*
     grupo de controles para texto recorrente
@@ -72,13 +137,13 @@ public class TextoRecorrente {
         }
 
         /*
-        Caixa com os botÃµes
+        Caixa com os botões
          */
         HBox h = new HBox();
         h.setAlignment(Pos.TOP_RIGHT);
 
         /*
-        Chama popupu para editar o texto recorrente, atualizando a lista e o campo correspondente em caso de alteraÃ§Ã£o
+        Chama popupu para editar o texto recorrente, atualizando a lista e o campo correspondente em caso de alteração
          */
         Button bEditar = new Button("Editar");
         bEditar.setOnAction(e -> {
@@ -114,7 +179,7 @@ public class TextoRecorrente {
     }
 
     /*
-    Popup de ediÃ§Ã£o do texto recorrente
+    Popup de edição do texto recorrente
      */
     public boolean popupEditar(int index){
 
@@ -123,7 +188,7 @@ public class TextoRecorrente {
         Stage janelinha = new Stage();
 
         janelinha.initModality(Modality.APPLICATION_MODAL);
-        janelinha.setTitle("EdiÃ§Ã£o de texto recorrente");
+        janelinha.setTitle("Edição de texto recorrente");
         janelinha.setWidth(1000);
 
         HBox hB = new HBox();
@@ -142,7 +207,7 @@ public class TextoRecorrente {
         botaoCancelar.setOnAction(e -> janelinha.close());
 
         /*
-        Salva as ediÃ§Ãµes feitas, se alguma, na lista de texto recorrente, substituindo ou adicionando
+        Salva as edições feitas, se alguma, na lista de texto recorrente, substituindo ou adicionando
          */
         Button botaoSalvar = new Button("Salvar");
         botaoSalvar.setPrefWidth(100);

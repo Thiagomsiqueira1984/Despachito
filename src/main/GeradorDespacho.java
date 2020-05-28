@@ -42,93 +42,93 @@ public class GeradorDespacho {
 
 
     /*
-    MÃ©todo para escrever em String a parte 1 do despacho - Parte fixa com cabeÃ§alho e dados bÃ¡sicos
+    Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
      */
     public String escreverParte1(Segurado segur) {
         return
-                "23.001.820 â€“ Central Especializada de Alta Performance Aposentadoria por Idade" + "\n\n" +
+                "23.001.820 ? Central Especializada de Alta Performance Aposentadoria por Idade" + "\n\n" +
                         "Nome d" + segur.getArtGenero() + " requerente: " + segur.getNome() + "\n\n" +
-                        "NÃºmero do requerimento benefÃ­cio: " + segur.getNB() + "\n\n" +
+                        "Número do requerimento benefício: " + segur.getNB() + "\n\n" +
                         "Trata-se de requerimento de " + segur.getEspecieBeneficio() + "." + "\n\n" +
-                        "A data de nascimento d" + segur.getArtGenero() + " requerente Ã© " + segur.getStringDataNasc() +
-                        ". A data de entrada do requerimento â€“ DER Ã© " +
-                        segur.getStringDER() + ". Portanto, a idade na DER Ã© de " +
+                        "A data de nascimento d" + segur.getArtGenero() + " requerente é " + segur.getStringDataNasc() +
+                        ". A data de entrada do requerimento ? DER é " +
+                        segur.getStringDER() + ". Portanto, a idade na DER é de " +
                         segur.getIdadeDER()[0] + " anos, " + segur.getIdadeDER()[1] + " meses e " + segur.getIdadeDER()[2] + " dias" + ".\n\n" +
                         "Trata-se de requerente do sexo " + segur.getSexo() + ".\n\n" +
                         "O ingresso no RGPS ocorreu em " + segur.getStringDataFiliaAs() + ", " + segur.getAntesDepoisEC() +
-                        " publicaÃ§Ã£o da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segur.getAtendeNaoAtEC() +
-                        " ao primeiro requisito para anÃ¡lise quanto Ã  concessÃ£o por direito adquirido Ã  aposentadoria antes da publicaÃ§Ã£o da " +
-                        "Emenda Constitucional 103/2019 e/ou pela regra transitÃ³ria do art. 18 da citada emenda." + "\n\n";
+                        " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segur.getAtendeNaoAtEC() +
+                        " ao primeiro requisito para análise quanto à concessão por direito adquirido à aposentadoria antes da publicação da " +
+                        "Emenda Constitucional 103/2019 e/ou pela regra transitória do art. 18 da citada emenda." + "\n\n";
 
     }
 
     /*
-    MÃ©todo para escrever os parÃ¡grafos de reconhecimento de direito a partir do nÃºmero de Ã­ndice fornecido
+    Método para escrever os parágrafos de reconhecimento de direito a partir do número de índice fornecido
      */
     public String escreverParagrafoAnaliseDireito(Segurado gSegur, int index) {
         return
-                this.textoRegraAnaliseDireito(gSegur, index) + "considerado atÃ© " +
-                gSegur.getStringDataBase(index) + ", sÃ£o necessÃ¡rios, cumulativamente, " +
+                this.textoRegraAnaliseDireito(gSegur, index) + "considerado até " +
+                gSegur.getStringDataBase(index) + ", são necessários, cumulativamente, " +
                 gSegur.getIdadeExigida(index) + " de idade, com " +
-                gSegur.getCarenciaExigida(index) + " contribuiÃ§Ãµes para fins de carÃªncia" +
+                gSegur.getCarenciaExigida(index) + " contribuições para fins de carência" +
                 this.testaTempCompExigido(gSegur, index) + "Foram apuradas a idade de " +
                 gSegur.getIdadeEfetiva(index)[0] + " anos, " +
                 gSegur.getIdadeEfetiva(index)[1] + " meses e " +
                 gSegur.getIdadeEfetiva(index)[2] + " dias, com " +
-                gSegur.getCarenciaEfetiva(index) + " contribuiÃ§Ãµes para fins de carÃªncia" +
+                gSegur.getCarenciaEfetiva(index) + " contribuições para fins de carência" +
                 this.testaTempCompEfetivo(gSegur, index) + "Portanto, " +
-                gSegur.getRecDireitoDataBase(index) + " direito Ã  aposentadoria por esta regra atÃ© " +
+                gSegur.getRecDireitoDataBase(index) + " direito à aposentadoria por esta regra até " +
                 gSegur.getStringDataBase(index) + "." + "\n";
     }
 
     /*
-    Retorna o texto com o nome da regra de anÃ¡lise do direito formatado para o despacho
+    Retorna o texto com o nome da regra de análise do direito formatado para o despacho
      */
     public String textoRegraAnaliseDireito(Segurado gSegur, int index) {
         String texto = "";
         if (index == gSegur.getR1()) {
-            texto = "Quanto Ã  regra de aposentadoria programada art. 19 da Emenda Constitucional 103/2019, ";
+            texto = "Quanto à regra de aposentadoria programada art. 19 da Emenda Constitucional 103/2019, ";
         } else if (index == gSegur.getR2()) {
-            texto = "Quanto Ã  regra de direito adquirido antes da Emenda Constitucional 103/2019, ";
+            texto = "Quanto à regra de direito adquirido antes da Emenda Constitucional 103/2019, ";
         } else {
-            texto = "Quanto Ã  regra transitÃ³ria, art. 18 da Emenda Constitucional 103/2019, ";
+            texto = "Quanto à regra transitória, art. 18 da Emenda Constitucional 103/2019, ";
         }
         return texto;
     }
 
     /*
-    Testa se a regra a ser impressa leva em consideraÃ§Ã£o o tempo de contribuiÃ§Ã£o e retorna texto do tempo de contribuiÃ§Ã£o exigido
+    Testa se a regra a ser impressa leva em consideração o tempo de contribuição e retorna texto do tempo de contribuição exigido
      */
     public String testaTempCompExigido(Segurado gSegur, int index) {
         if (index != gSegur.getR2()) {
             return
                     " e " + gSegur.getTempCompExigido(index)[0] + " anos, " +
                             gSegur.getTempCompExigido(index)[1] + " meses e " +
-                            gSegur.getTempCompExigido(index)[2] + " dias de tempo de contribuiÃ§Ã£o. ";
+                            gSegur.getTempCompExigido(index)[2] + " dias de tempo de contribuição. ";
         } else {
             return ". ";
         }
     }
 
     /*
-    Testa se a regra a ser impressa leva em consideraÃ§Ã£o o tempo de contribuiÃ§Ã£o e retorna texto do tempo de contribuiÃ§Ã£o efetivo
+    Testa se a regra a ser impressa leva em consideração o tempo de contribuição e retorna texto do tempo de contribuição efetivo
      */
     public String testaTempCompEfetivo(Segurado gSegur, int index) {
         if (index != gSegur.getR2()) {
             return
                     " e " + gSegur.getTempCompEfetivo(index)[0] + " anos, " +
                             gSegur.getTempCompEfetivo(index)[1] + " meses e " +
-                            gSegur.getTempCompEfetivo(index)[2] + " dias de tempo de contribuiÃ§Ã£o. ";
+                            gSegur.getTempCompEfetivo(index)[2] + " dias de tempo de contribuição. ";
         } else {
             return ". ";
         }
     }
 
     /*
-    MÃ©todo para escrever a parte final do despacho - reconhecimento de direito Ã  aposentadoria por qualquer uma das regras
+    Método para escrever a parte final do despacho - reconhecimento de direito à aposentadoria por qualquer uma das regras
      */
     public String escreverParteFinal(Segurado gSegur) {
-        return "Pelo exposto, " + gSegur.getRecDireitoFinal() + " Ã  concessÃ£o da aposentadoria por idade.";
+        return "Pelo exposto, " + gSegur.getRecDireitoFinal() + " à concessão da aposentadoria por idade.";
     }
 
 }
