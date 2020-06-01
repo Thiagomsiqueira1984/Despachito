@@ -5,12 +5,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.control.*;
 
-import java.io.File;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import javafx.scene.control.Button;
@@ -20,9 +15,11 @@ import javafx.scene.layout.VBox;
 public class Controller implements Initializable {
 
     Segurado cSegur = new Segurado();
-    GeradorDespacho cDesp = new GeradorDespacho();
+    GeradorDespachoApIdade cDespI = new GeradorDespachoApIdade();
+    GeradorDespachoApTC cDespTC = new GeradorDespachoApTC();
     TextoRecorrente cTextoRec = new TextoRecorrente();
 
+    public Button config = new Button();
     public Button botaoInput = new Button();
     public Button botaoGerarDespacho = new Button();
 
@@ -31,6 +28,13 @@ public class Controller implements Initializable {
     public Button botaoNovoTR = new Button();
 
     public TextArea caixaDespacho = new TextArea();
+
+    /*
+    Ação do botão de abrir tela de configurações
+     */
+    public void abrirConfig() {
+        Config.janelaConfig();
+    }
 
     /*
     Ação do botão de adicionar bloco de texto recorrente
@@ -52,41 +56,66 @@ public class Controller implements Initializable {
         importaArquivo();
         if (cSegur.getExtrato()!=null) {
             String codEspecieNB = cSegur.parseCodEspecie();
-            if (codEspecieNB.matches("41|42")) {
+            if (codEspecieNB.equals("41")) {
                 cSegur.setCodEspecieBeneficio(codEspecieNB);
                 parseAtributosIniciais();
-                parseAtributosR1();
+                cDespI.parseAtributosR1(cSegur);
                 if (cSegur.isFiliaAteEC()) {
-                    parseAtributosR2();
-                    parseAtributosR3();
+                    cDespI.parseAtributosR2(cSegur);
+                    cDespI.parseAtributosR3(cSegur);
+                    parseAtributosFinais();
+                    this.botaoGerarDespacho.setDisable(false);
+                }
+            } else if (codEspecieNB.equals("42")) {
+                cSegur.setCodEspecieBeneficio(codEspecieNB);
+                parseAtributosIniciais();
+                cDespTC.parseAtributosR1(cSegur);
+                if (cSegur.isFiliaAteEC()) {
+                    cDespTC.parseAtributosR4(cSegur);
+                    cDespTC.parseAtributosR5(cSegur);
+                    cDespTC.parseAtributosR6(cSegur);
+                    cDespTC.parseAtributosR7(cSegur);
+                    cDespTC.parseAtributosR8(cSegur);
+                    cDespTC.parseAtributosR9(cSegur);
                     parseAtributosFinais();
                     this.botaoGerarDespacho.setDisable(false);
                 }
             } else {
-                Popups.popup1("Alerta","Arquivo selecionado não é um extrato de " +
-                    "aposentadoria por idade ou tempo de contribuição e não é suportado pelo programa");}
+                Popups.popupAlerta("Alerta", "Arquivo selecionado não é um extrato de " +
+                        "aposentadoria por idade ou tempo de contribuição e não é suportado pelo programa");
+            }
         }
     }
 
     /*
     Constrói o despacho e coloca na caixa de texto principal
+    testa a espécie de benefício e constrói o tipo de despacho adequado
      */
     public void acaoGerarDespacho() {
-        cDesp = new GeradorDespacho();
+
+        //todo adaptar a impressao de aposentadoria por tempo de contribuição
+
+        cDespI = new GeradorDespachoApIdade();
+        cDespTC = new GeradorDespachoApTC();
         constroiParteInicial();
+        int quantParagrafos = cSegur.countRegraAnaliseDireito();
         int contador = 1;
-        while (contador<=cSegur.getR1()+cSegur.getR2()+cSegur.getR3()) {
-         constroiParagrafoAnaliseDireito(contador);
-            if (contador == cSegur.getR1()+cSegur.getR2()+cSegur.getR3()) {
-                contador = 0;
-                constroiParagrafoAnaliseDireito(contador);
-                break;
-            }
-         contador++;
+        while (contador < quantParagrafos) {
+            constroiParagrafoAnaliseDireito(contador);
+            contador++;
         }
+        contador = 0;
+        constroiParagrafoAnaliseDireito(contador);
+
         constroiParteFinal();
-        cDesp.setStringDespachoCompleto(String.join("\n", cDesp.getDespachoCompleto()));
-        caixaDespacho.setText(cDesp.getStringDespachoCompleto());
+
+        if (cSegur.getCodEspecieBeneficio().equals("41")) {
+            cDespI.setStringDespachoCompletoIdade(String.join("\n", cDespI.getDespachoCompletoIdade()));
+            caixaDespacho.setText(cDespI.getStringDespachoCompletoIdade());
+        } else {
+            cDespTC.setStringDespachoCompletoTC(String.join("\n", cDespTC.getDespachoCompletoTC()));
+            caixaDespacho.setText(cDespTC.getStringDespachoCompletoTC());
+        }
         this.botaoCopy.setDisable(false);
     }
 
@@ -167,134 +196,17 @@ public class Controller implements Initializable {
         }
     }
 
-    /*
-    Parse de valores para parte nível r1 - regra de apoentadoria programada art. 19 da EC 103/2019
-    */
-    public void parseAtributosR1() {
 
-        cSegur.setR1(0);
 
-        String regra = cSegur.retornaNomeRegraAnaliseDireito(cSegur.getR1());
-        cSegur.addRegraAnaliseDireito(regra);
 
-        String stringDataBase = cSegur.parseDataBase(cSegur.getR1());
-        cSegur.addStringDataBase(stringDataBase);
-
-        Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR1());
-        cSegur.addDateDataBase(dateDatabase);
-
-        String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR1());
-        cSegur.addIdadeExigida(idadeExigida);
-
-        String carenciaExigida = cSegur.parseCarenciaExigida(cSegur.getR1());
-        cSegur.addCarenciaExigida(carenciaExigida);
-
-        String[] tempCompExigido = {"20", "00", "00"};
-        cSegur.addTempCompExigido(tempCompExigido);
-
-        String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR1());
-        cSegur.addIdadeEfetiva(idadeEfetiva);
-
-        String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR1());
-        cSegur.addCarenciaEfetiva(carenciaEfetiva);
-
-        String[] tempCompEfetivo = cSegur.parseTempCompEfetivo(cSegur.getR1());
-        cSegur.addTempCompEfetivo(tempCompEfetivo);
-
-        String recDireitoDataBase = cSegur.parseRecDireitoDataBase(cSegur.getR1());
-        cSegur.addRecDireitoDataBase(recDireitoDataBase);
-
-    }
-
-    /*
-    Parse de valores para parte nível r2 - regra de direito adquirido antes da EC 103/2019
-     */
-    public void parseAtributosR2() {
-
-        cSegur.setR2(1);
-
-        String regra = cSegur.retornaNomeRegraAnaliseDireito(cSegur.getR2());
-        cSegur.addRegraAnaliseDireito(regra);
-
-        String stringDataBase = cSegur.parseDataBase(cSegur.getR2());
-        cSegur.addStringDataBase(stringDataBase);
-
-        Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR2());
-        cSegur.addDateDataBase(dateDatabase);
-
-        String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR2());
-        cSegur.addIdadeExigida(idadeExigida);
-
-        String carenciaExigida = cSegur.parseCarenciaExigida(cSegur.getR2());
-        cSegur.addCarenciaExigida(carenciaExigida);
-
-        String[] tempCompExigido = {"00", "00", "00"};
-        cSegur.addTempCompExigido(tempCompExigido);
-
-        String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR2());
-        cSegur.addIdadeEfetiva(idadeEfetiva);
-
-        String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR2());
-        cSegur.addCarenciaEfetiva(carenciaEfetiva);
-
-        String[] tempCompEfetivo = cSegur.parseTempCompEfetivo(cSegur.getR2());
-        cSegur.addTempCompEfetivo(tempCompEfetivo);
-
-        String recDireitoDataBase = cSegur.parseRecDireitoDataBase(cSegur.getR2());
-        cSegur.addRecDireitoDataBase(recDireitoDataBase);
-
-    }
-
-    /*
-    Parse de valores para parte nível r3 - Regra transitoria do Art.18 da EC 103/2019
-     */
-    public void parseAtributosR3() {
-
-        cSegur.setR3(2);
-
-         do {
-             String regra = cSegur.retornaNomeRegraAnaliseDireito(cSegur.getR3());
-             cSegur.addRegraAnaliseDireito(regra);
-
-             String stringDataBase = cSegur.parseDataBase(cSegur.getR3());
-             cSegur.addStringDataBase(stringDataBase);
-
-             Date dateDatabase = cSegur.converteDataBaseDate(cSegur.getR3());
-             cSegur.addDateDataBase(dateDatabase);
-
-             String idadeExigida = cSegur.parseIdadeExigida(cSegur.getR3());
-             cSegur.addIdadeExigida(idadeExigida);
-
-             String carenciaExigida = cSegur.parseCarenciaExigida(cSegur.getR3());
-             cSegur.addCarenciaExigida(carenciaExigida);
-
-             String[] tempCompExigido = {"15", "00", "00"};
-             cSegur.addTempCompExigido(tempCompExigido);
-
-             String[] idadeEfetiva = cSegur.parseIdadeEfetiva(cSegur.getR3());
-             cSegur.addIdadeEfetiva(idadeEfetiva);
-
-             String carenciaEfetiva = cSegur.parseCarenciaEfetiva(cSegur.getR3());
-             cSegur.addCarenciaEfetiva(carenciaEfetiva);
-
-             String[] tempCompEfetivo = cSegur.parseTempCompEfetivo(cSegur.getR3());
-             cSegur.addTempCompEfetivo(tempCompEfetivo);
-
-             String recDireitoDataBase = cSegur.parseRecDireitoDataBase(cSegur.getR3());
-             cSegur.addRecDireitoDataBase(recDireitoDataBase);
-
-             if (cSegur.getDateDataBase(cSegur.getR3()).compareTo(cSegur.getDER()) < 0) {
-                 cSegur.setR3(cSegur.getR3() + 1);
-             } else {break;}
-
-         } while (cSegur.getDateDataBase(cSegur.getR3() - 1).compareTo(cSegur.getDER())<0);
-
-        cSegur.setR3(cSegur.getR3() - 1);
-     }
 
     public void parseAtributosFinais() {
         String RecDireitoFinal = cSegur.parseDireitoAposFinal();
-        cSegur.setRecDireitoFinal(RecDireitoFinal);
+        if (cSegur.getCodEspecieBeneficio().equals("41")) {
+            cSegur.setRecDireitoFinalIdade(RecDireitoFinal);
+        } else {
+            cSegur.setRecDireitoFinalTC(RecDireitoFinal);
+        }
     }
 
 
@@ -302,21 +214,33 @@ public class Controller implements Initializable {
     Constrói a parte inicial do despacho - dados básicos do segurado
      */
     public void constroiParteInicial(){
-        cDesp.addDespachoCompleto(cDesp.escreverParte1(cSegur));
+        if (cSegur.getCodEspecieBeneficio().equals("41")) {
+            cDespI.addDespachoCompletoIdade(cDespI.escreverParte1(cSegur));
+        } else {
+            cDespTC.addDespachoCompletoTC(cDespTC.escreverParte1(cSegur));
+        }
     }
 
     /*
     Constrói parágrafo referente às regras de análise de direito no despacho
      */
     public void constroiParagrafoAnaliseDireito(int index) {
-        cDesp.addDespachoCompleto(cDesp.escreverParagrafoAnaliseDireito(cSegur, index));
+        if (cSegur.getCodEspecieBeneficio().equals("41")) {
+            cDespI.addDespachoCompletoIdade(cDespI.escreverParagrafoAnaliseDireito(cSegur, index));
+        } else {
+            cDespTC.addDespachoCompletoTC(cDespTC.escreverParagrafoAnaliseDireito(cSegur, index));
+        }
     }
 
     /*
     Constrói a parte inicial do despacho - reconhecimento de direito à aposentadoria por qualquer uma das regras
      */
     public void constroiParteFinal() {
-        cDesp.addDespachoCompleto(cDesp.escreverParteFinal(cSegur));
+        if (cSegur.getCodEspecieBeneficio().equals("41")) {
+            cDespI.addDespachoCompletoIdade(cDespI.escreverParteFinal(cSegur));
+        } else {
+            cDespTC.addDespachoCompletoTC(cDespTC.escreverParteFinal(cSegur));
+        }
     }
 
     /*
@@ -325,10 +249,11 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        cTextoRec.iniciaTR();
+        TextoRecorrente.iniciaTR();
+        Config.criaListaOL();
 
         /*
-        Cria os blocos de texto recorrente com o conteúdo da lista textoRecorrente
+        Cria os blocos de texto recorrente na GUI com o conteúdo da lista textoRecorrente
          */
         for (int i = 0; i< TextoRecorrente.textoRecorrente.size(); i++) {
             VBox novoBloco = cTextoRec.fazerblocoTR(i, this);

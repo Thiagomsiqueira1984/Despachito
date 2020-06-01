@@ -14,7 +14,7 @@ public class Popups {
     /*
     Popup de erro com apenas um botão ok pra fechar
      */
-    public static void popup1(String titulo, String mensagem){
+    public static void popupAlerta(String titulo, String mensagem){
 
         Stage janelinha = new Stage();
 
@@ -40,4 +40,6 @@ public class Popups {
         janelinha.showAndWait();
 
     }
+
+
 }

@@ -43,7 +43,8 @@ public class TextoRecorrente {
     /*
     Texto inicial para o arquivo de database de texto recorrente
      */
-    public static String tR1 = "Foram computados todos os vínculos empregatícios que constam no CNIS, realizadas as devidas alterações, confirmações e inclusões conforme a documentação apresentada.";
+    public static String tR1 =
+            "Foram computados todos os vínculos empregatícios que constam no CNIS, realizadas as devidas alterações, confirmações e inclusões conforme a documentação apresentada.";
 
     public static String tR2 =
             "Não foram computados os seguintes vínculos empregatícios:" + "\n" + "-";
@@ -60,26 +61,10 @@ public class TextoRecorrente {
     Métodos
      */
 
-    public static String UTF8toISO(String str){
-        Charset utf8charset = Charset.forName("UTF-8");
-        Charset iso88591charset = Charset.forName("ISO-8859-1");
-
-        ByteBuffer inputBuffer = ByteBuffer.wrap(str.getBytes());
-
-        // decode UTF-8
-        CharBuffer data = utf8charset.decode(inputBuffer);
-
-        // encode ISO-8559-1
-        ByteBuffer outputBuffer = iso88591charset.encode(data);
-        byte[] outputData = outputBuffer.array();
-
-        return new String(outputData);
-    }
-
     /*
     testa se há um arquivo TextoRecorrente.dpch e cria o mesmo em caso negativo
      */
-    public void iniciaTR() {
+    public static void iniciaTR() {
         File tRfolder = new File(System.getProperty("user.home"), "Despachito");
         Path pathTRfolder = Paths.get(tRfolder.getAbsolutePath());
         if (Files.notExists(pathTRfolder)) {
@@ -90,10 +75,10 @@ public class TextoRecorrente {
         if (Files.notExists(pathTR)) {
             try {
                 tR.createNewFile();
-                textoRecorrente.add(UTF8toISO(tR1));
-                textoRecorrente.add(UTF8toISO(tR2));
-                textoRecorrente.add(UTF8toISO(tR3));
-                textoRecorrente.add(UTF8toISO(tR4));
+                textoRecorrente.add(tR1);
+                textoRecorrente.add(tR2);
+                textoRecorrente.add(tR3);
+                textoRecorrente.add(tR4);
                 try {
                     FileWriter f = new FileWriter(tR);
                     for (String str: TextoRecorrente.textoRecorrente) {
@@ -103,8 +88,7 @@ public class TextoRecorrente {
                     }
                     f.close();
                 } catch (Exception ex) {}
-            } catch (Exception ex) {
-            }
+            } catch (Exception ex) {}
         }
         else //Passa o conteúdo do arquivo de TextoRecorrente para a lista textoRecorrente
         try {
@@ -114,8 +98,7 @@ public class TextoRecorrente {
                 TextoRecorrente.textoRecorrente.add(ler.next());
             }
             ler.close();
-        } catch (Exception ex) {
-        }
+        } catch (Exception ex) {}
     }
 
     /*

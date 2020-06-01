@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Segurado {
 
@@ -43,26 +44,45 @@ public class Segurado {
 
      */
 
-    private int r1; //Número do índice referente à regra de aposentadoria programada art. 19 da EC 103/2019. Sempre = 0
-    private int r2; //Número do índice referente à regra de direito adquirido antes da EC 103/2019
-    private int r3; //Número do índice referente à regra transitória art. 18 da EC 103/2019
+    private int r1 = -1; //Número do índice referente à regra de aposentadoria programada art. 19 da EC 103/2019. Sempre = 0
+    private int r2 = -1; //Número do índice referente à regra de direito adquirido à aposentadoria por idade antes da EC 103/2019 (idade)
+    private int r3 = -1; //Número do índice referente à regra transitória art. 18 da EC 103/2019 (idade)
+    private int r4 = -1; //Número do índice referente à regra de direito adquirido à aposentadoria integral por tempo de contribuição antes da EC 103/2019 (TC)
+    private int r5 = -1; //Número do índice referente à regra de direito adquirido à aposentadoria proporcional por tempo de contribuição antes da EC 103/2019 (TC)
+    private int r6 = -1; //Número do índice referente à regra transitória art. 15 da EC 103/2019 (TC)
+    private int r7 = -1; //Número do índice referente à regra transitória art. 16 da EC 103/2019 (TC)
+    private int r8 = -1; //Número do índice referente à regra transitória art. 17 da EC 103/2019 (TC)
+    private int r9 = -1; //Número do índice referente à regra transitória art. 20 da EC 103/2019 (TC)
 
     private List<String> regraAnaliseDireito = new ArrayList<>(); //Lista com o nome das regras para análise do direito em formato String
 
     private List<String> stringDataBase = new ArrayList<>(); //Lista com data base para análise do direito em formato String
     private List<Date> dateDataBase = new ArrayList<>(); //Lista com data base para análise do direito em formato Date
 
-    private List<String> idadeExigida = new ArrayList<>(); //Lista contendo as idades exigidas na data base guardadas em String
-    private List<String> carenciaExigida = new ArrayList<>(); //Lista contendo as carências exigidas na data base guardadas em String
-    private List<String[]> TempCompExigido = new ArrayList<>(); //Lista contendo os tempos de contribuição exigidos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String> idadeExigida = new ArrayList<>(); //Lista contendo as idades exigidas guardadas em String
+    private List<String> carenciaExigida = new ArrayList<>(); //Lista contendo as carências exigidas guardadas em String
+    private List<String[]> pedagio = new ArrayList<>(); //Lista de pedágio de tempo de contribuição com [0] = anos, [1] = meses e [2] = dias
+    private List<String[]> tempCompExigido = new ArrayList<>(); //Lista contendo os tempos de contribuição exigidos guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String[]> tempCompPedagio = new ArrayList<>(); //Lista contendo os tempos de contribuição exigidos com pedagio guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String> pontuacaoExigida = new ArrayList<>(); //Lista de pontuação exigida (idade + tempo de contribuição)
 
-    private List<String[]> idadeEfetiva = new ArrayList<>(); //Lista contendo as idades efetivas na data base. As idades são guardadas em array de String com [0] = anos, [1] = meses e [2] = dias
-    private List<String> carenciaEfetiva = new ArrayList<>(); //Lista contendo as carências efetivas na data base. As carências são guardadas em String
-    private List<String[]> TempCompEfetivo = new ArrayList<>(); //Lista contendo os tempos de contribuição efetivos na data base guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String[]> idadeEfetiva = new ArrayList<>(); //Lista contendo as idades efetivas guardadas em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String> carenciaEfetiva = new ArrayList<>(); //Lista contendo as carências efetivas guardadas em String
+    private List<String[]> tempCompEfetivo = new ArrayList<>(); //Lista contendo os tempos de contribuição efetivos guardados em array de String com [0] = anos, [1] = meses e [2] = dias
+    private List<String[]> pontuacaoEfetiva = new ArrayList<>(); //Lista de pontuação efetiva (idade + tempo de contribuição)  guardadas em array de String com [0] = anos, [1] = meses e [2] = dias
 
-    private  List<String> recDireitoDataBase = new ArrayList<>(); //Lista com a afirmação quanto ao reconhecimento do direito na data base guardados como String com "foi reconhecido o direito" ou "não foi reconhecido o direito"
+    private List<String> recDireitoDataBase = new ArrayList<>(); //Lista com a afirmação quanto ao reconhecimento do direito  guardados como String com "foi reconhecido o direito" ou "não foi reconhecido o direito"
 
-    private  String recDireitoFinal; //Afirmação quanto ao reconhecumento do direito na por qualquer uma das regras como String com "foi reconhecido o direito" ou "não foi reconhecido o direito"
+    /*
+    Afirmação quanto ao reconhecumento do direito a aposentadoria por idade
+    por qualquer uma das regras com String "foi reconhecido o direito" ou "não foi reconhecido o direito"
+     */
+    private String recDireitoFinalIdade;
+    /*
+    Afirmação quanto ao reconhecumento do direito a aposentadoria por tempo de contribuição
+    por qualquer uma das regras com String "foi reconhecido o direito" ou "não foi reconhecido o direito"
+     */
+    private String recDireitoFinalTC;
 
     /*
 
@@ -208,8 +228,6 @@ public class Segurado {
         this.atendeNaoAtEC = atendeNaoAtEC;
     }
 
-
-
     public int getR1() {
         return r1;
     }
@@ -232,6 +250,58 @@ public class Segurado {
 
     public void setR3(int r3) {
         this.r3 = r3;
+    }
+
+    public int getR4() {
+        return r4;
+    }
+
+    public void setR4(int r4) {
+        this.r4 = r4;
+    }
+
+    public int getR5() {
+        return r5;
+    }
+
+    public void setR5(int r5) {
+        this.r5 = r5;
+    }
+
+    public int getR6() {
+        return r6;
+    }
+
+    public void setR6(int r6) {
+        this.r6 = r6;
+    }
+
+    public int getR7() {
+        return r7;
+    }
+
+    public void setR7(int r7) {
+        this.r7 = r7;
+    }
+
+    public int getR8() {
+        return r8;
+    }
+
+    public void setR8(int r8) {
+        this.r8 = r8;
+    }
+
+    public int getR9() {
+        return r9;
+    }
+
+    public void setR9(int r9) {
+        this.r9 = r9;
+    }
+
+    public int countRegraAnaliseDireito() {
+        return this.regraAnaliseDireito.size();
     }
 
     public String getRegraAnaliseDireito(int index) {
@@ -274,12 +344,36 @@ public class Segurado {
         this.carenciaExigida.add(carenciaExigida);
     }
 
+    public String[] getPedagio(int index) {
+        return this.pedagio.get(index);
+    }
+
+    public void addPedagio(String[] pedagio) {
+        this.pedagio.add(pedagio);
+    }
+
     public String[] getTempCompExigido(int index) {
-        return this.TempCompExigido.get(index);
+        return this.tempCompExigido.get(index);
     }
 
     public void addTempCompExigido(String[] tempCompExigido) {
-        this.TempCompExigido.add(tempCompExigido);
+        this.tempCompExigido.add(tempCompExigido);
+    }
+
+    public String[] getTempCompPedagio(int index) {
+        return this.tempCompPedagio.get(index);
+    }
+
+    public void addTempCompPedagio(String[] tempCompPedagio) {
+        this.tempCompPedagio.add(tempCompPedagio);
+    }
+
+    public String getPontuacaoExigida(int index) {
+        return this.pontuacaoExigida.get(index);
+    }
+
+    public void addPontuacaoExigida(String pontuacaoExigida) {
+        this.pontuacaoExigida.add(pontuacaoExigida);
     }
 
     public String[] getIdadeEfetiva(int index) {
@@ -299,11 +393,19 @@ public class Segurado {
     }
 
     public String[] getTempCompEfetivo(int index) {
-        return this.TempCompEfetivo.get(index);
+        return this.tempCompEfetivo.get(index);
     }
 
     public void addTempCompEfetivo(String[] tempCompEfetivo) {
-        this.TempCompEfetivo.add(tempCompEfetivo);
+        this.tempCompEfetivo.add(tempCompEfetivo);
+    }
+
+    public String[] getPontuacaoEfetiva(int index) {
+        return this.pontuacaoEfetiva.get(index);
+    }
+
+    public void addPontuacaoEfetiva(String[] pontuacaoEfetiva) {
+        this.pontuacaoEfetiva.add(pontuacaoEfetiva);
     }
 
     public String getRecDireitoDataBase(int index) {
@@ -314,12 +416,20 @@ public class Segurado {
         this.recDireitoDataBase.add(recDireitoDataBase);
     }
 
-    public String getRecDireitoFinal() {
-        return recDireitoFinal;
+    public String getRecDireitoFinalIdade() {
+        return recDireitoFinalIdade;
     }
 
-    public void setRecDireitoFinal(String recDireitoFinal) {
-        this.recDireitoFinal = recDireitoFinal;
+    public void setRecDireitoFinalIdade(String recDireitoFinalIdade) {
+        this.recDireitoFinalIdade = recDireitoFinalIdade;
+    }
+
+    public String getRecDireitoFinalTC() {
+        return recDireitoFinalTC;
+    }
+
+    public void setRecDireitoFinalTC(String recDireitoFinalTC) {
+        this.recDireitoFinalTC = recDireitoFinalTC;
     }
 
     /*
@@ -467,7 +577,7 @@ public class Segurado {
      */
     public String[] parseIdadeDER(){
         String achaIdadeDER = this.getExtrato();
-        achaIdadeDER = achaIdadeDER.split("Aposentadoria Programada")[2];
+        achaIdadeDER = achaIdadeDER.split("Analise do direito em " + this.getStringDER())[2];
         achaIdadeDER = achaIdadeDER.split("Idade\\s+: ")[1];
         achaIdadeDER = achaIdadeDER.split("Soma")[0].trim();
         String[] arrayIdadeDER;
@@ -534,22 +644,45 @@ public class Segurado {
         } else if (index == this.r3) {
             regra = "Regra transitoria do Art.18 - Aposentadoria por idade";
         }
+        else if (index == this.r4) {
+            regra = "Direito a aposentadoria por tempo de contribuicao integral antes da Emenda Constitucional 103/2019";
+        }
+        else if (index == this.r5) {
+            regra = "Direito a aposentadoria por tempo de contribuicao proporcional antes da Emenda Constitucional 103/2019";
+        }
+        else if (index == this.r6) {
+            regra = "Regra transitoria do Art.15 - Aposentadoria por tempo de contribuicao com soma de idade e tempo";
+        }
+        else if (index == this.r7) {
+            regra = "Regra transitoria do Art.16 - Tempo de contribuicao com idade minima";
+        }
+        else if (index == this.r8) {
+            regra = "Regra transitoria do Art.17 - Tempo de contribuicao com pedagio de 50%";
+        }
+        else if (index == this.r9) {
+            regra = "Regra transitoria do Art.20 - Tempo de contribuicao com pedagio de 100%";
+        }
         return regra;
     }
+
+
 
     /*
     Parse da data base de verificação de direito
      */
     public String parseDataBase(int index) {
-    String data = this.getExtrato();
-        if (index == this.r1) {
-            data = data.split(this.getRegraAnaliseDireito(index),2)[1];
-            data = data.split("Analise do direito em ")[1];
-            data = data.split("\\s")[0].trim();
-        } else if (index == this.r2) {
+
+        String data = this.getExtrato();
+
+    if (index == this.r1) {
+            data = this.getStringDER();
+
+        } else if (index == this.r2 | index == this.getR4() | index == this.getR5()) {
             data = "13/11/2019";
-        } else if (index == this.r3) {
-            data = data.split(this.getRegraAnaliseDireito(index),0+this.r3)[this.getR3()-1];
+
+        } else { //Regras de direito que podem gerar mais de um parágrafo com datas diferentes no loop de do while
+            int limite = this.limite(index);
+            data = data.split(this.getRegraAnaliseDireito(index),limite)[limite-1];
             data = data.split("Analise do direito em ")[1];
             data = data.split("\\s")[0].trim();
         }
@@ -584,9 +717,9 @@ public class Segurado {
             } else {
                 idadeExigida = "60 anos";
             }
-        } else if (index == this.getR3()) {
+        } else if (index == this.getR3()|index == this.getR5()|index == this.getR7()|index == this.getR9()) {
             idadeExigida = this.getExtrato();
-            idadeExigida = idadeExigida.split(this.getRegraAnaliseDireito(index),this.r3)[this.r3-1];
+            idadeExigida = idadeExigida.split(this.getRegraAnaliseDireito(index),this.limite(index))[this.limite(index)-1];
             idadeExigida = idadeExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
             idadeExigida = idadeExigida.split("Idade exigida: ")[1];
             idadeExigida = idadeExigida.split("\\n")[0].trim();
@@ -600,21 +733,121 @@ public class Segurado {
      */
     public String parseCarenciaExigida(int index) {
         String carenciaExigida = this.getExtrato();
-        carenciaExigida = carenciaExigida.split(this.getRegraAnaliseDireito(index), 2)[1];
-        carenciaExigida = carenciaExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
-        carenciaExigida = carenciaExigida.split("Requisito\\s+:\\s+Carencia igual")[1];
-        carenciaExigida = carenciaExigida.split("Exigido\\s")[1];
-        carenciaExigida = carenciaExigida.split("\\s")[0].trim();
+        if (index == this.getR1()) {
+            carenciaExigida = "180";
+        } else {
+            carenciaExigida = carenciaExigida.split(this.getRegraAnaliseDireito(index), 2)[1];
+            carenciaExigida = carenciaExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            carenciaExigida = carenciaExigida.split("Requisito\\s+:\\s+Carencia igual")[1];
+            carenciaExigida = carenciaExigida.split("Exigido\\s")[1];
+            carenciaExigida = carenciaExigida.split("\\s")[0].trim();
+        }
         return carenciaExigida;
     }
 
+    /*
+    Parse de pedágio de tempo de contribuição
+     */
+    public String[] parsePedagio(int index) {
+        String[] arrayPedagio = new String[]{"00", "00", "00"};
+        if (index == this.getR5()|index == this.getR8()|index == this.getR9()) {
+            String pedagio = this.getExtrato();
+            pedagio = pedagio.split(this.getRegraAnaliseDireito(index), 2)[1];
+            pedagio = pedagio.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            pedagio = pedagio.split("Tempo de pedagio\\s+: ")[1];
+            pedagio = pedagio.split("Total de tempo considerado")[0].trim();
+            arrayPedagio = pedagio.split(", ");
+            arrayPedagio[0] = arrayPedagio[0].split("a")[0];
+            arrayPedagio[1] = arrayPedagio[1].split("m")[0];
+            arrayPedagio[2] = arrayPedagio[2].split("d")[0];
+        }
+        return arrayPedagio;
+    }
+
+    /*
+    Parse de tempo de contribuição exigido na data base de análise do direito
+     */
+    public String[] parseTempCompExigido(int index) {
+        String[] tempCompExigido = new String[]{"00", "00", "00"};
+        if (index == this.getR1()) {
+            if (this.getSexo().equals("masculino")) {
+                tempCompExigido = new String[]{"20", "00", "00"};
+            } else {
+                tempCompExigido = new String[]{"15", "00", "00"};
+            }
+        }
+
+        else if (index == this.getR3()) {
+            tempCompExigido = new String[]{"15", "00", "00"};
+        }
+
+        else if (index == this.getR5()) {
+            if (this.getSexo().equals("masculino")) {
+                tempCompExigido = new String[]{"30", "00", "00"};
+            } else {
+                tempCompExigido = new String[]{"25", "00", "00"};
+            }
+        }
+
+        else if (index == this.getR4() | index == this.getR6() | index == this.getR7() |
+                index == this.getR8() | index == this.getR9()) {
+            if (this.getSexo().equals("masculino")) {
+                tempCompExigido = new String[]{"35", "00", "00"};
+            } else {
+                tempCompExigido = new String[]{"30", "00", "00"};
+            }
+        }
+        return tempCompExigido;
+    }
+
+    /*
+    Soma pedágio ao tempo de contribuição exigido
+     */
+    public String[] somaPedagioTempComp(int index) {
+        String[] PedagioTempComp = new String[3];
+        String[] tempComp = this.getTempCompExigido(index);
+        int[] tcpInt;
+        String[] pedagio = this.getPedagio(index);
+        int[] ped;
+        List<String> l = new ArrayList<>();
+        if (index == this.getR5()|index == this.getR8()|index == this.getR9()) {
+            tcpInt = Stream.of(tempComp).mapToInt(Integer::parseInt).toArray();
+            ped = Stream.of(pedagio).mapToInt(Integer::parseInt).toArray();
+            for(int i = 0; i < tcpInt.length; i++){
+                l.add(Integer.toString(tcpInt[i] + ped[i]));
+            }
+            PedagioTempComp = l.toArray(PedagioTempComp);
+        }
+        else {PedagioTempComp = tempComp;}
+        return PedagioTempComp;
+    }
+
+    /*
+    Parse de pontuação exigida
+     */
+    public String parsePontuacaoExigida(int index) {
+        String PontuacaoExigida = "00 anos";
+        if (index == this.getR6()) {
+
+            int limite = 0; //Limite de divisões do split da regra de direito
+            int pedaco = 0; //Pedaço do split que será usado para o parse
+            limite = 1+(this.getR6() - this.getR5());
+            pedaco = limite - 1;
+
+            PontuacaoExigida = this.getExtrato();
+            PontuacaoExigida = PontuacaoExigida.split(this.getRegraAnaliseDireito(index), limite)[pedaco];
+            PontuacaoExigida = PontuacaoExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            PontuacaoExigida = PontuacaoExigida.split("Pontuacao exigida: ")[1];
+            PontuacaoExigida = PontuacaoExigida.split("\\n")[0].trim();
+        }
+        return PontuacaoExigida;
+    }
 
     /*
     Parse da idade efetiva na data base de análise do direito
      */
     public String[] parseIdadeEfetiva(int index){
         String IdadeEfetiva = this.getExtrato();
-        IdadeEfetiva = IdadeEfetiva.split(this.getRegraAnaliseDireito(index),2)[1];
         IdadeEfetiva = IdadeEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
         IdadeEfetiva = IdadeEfetiva.split("Idade\\s+: ")[1];
         IdadeEfetiva = IdadeEfetiva.split("Soma")[0].trim();
@@ -631,7 +864,6 @@ public class Segurado {
      */
     public String parseCarenciaEfetiva(int index){
         String carenciaEfetiva = this.getExtrato();
-        carenciaEfetiva = carenciaEfetiva.split(this.getRegraAnaliseDireito(index),2)[1];
         carenciaEfetiva = carenciaEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
         carenciaEfetiva = carenciaEfetiva.split("Quantidade de carencia\\s+: ")[1];
         carenciaEfetiva = carenciaEfetiva.split("Idade")[0].trim();
@@ -643,10 +875,27 @@ public class Segurado {
      */
     public String[] parseTempCompEfetivo(int index) {
         String tempCompEfetivo = this.getExtrato();
-        tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
-        tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
-        tempCompEfetivo = tempCompEfetivo.split("Total de tempo considerado\\s+: ")[1];
-        tempCompEfetivo = tempCompEfetivo.split("Quantidade de carencia")[0].trim();
+        if (this.getCodEspecieBeneficio().equals("42") && index==this.getR1()) {
+            tempCompEfetivo = tempCompEfetivo.split("Regra transitoria do Art.15", 2)[1];
+            tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            tempCompEfetivo = tempCompEfetivo.split("Total de tempo considerado\\s+: ")[1];
+            tempCompEfetivo = tempCompEfetivo.split("Quantidade de carencia")[0].trim();
+        }
+        else {
+            tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
+            tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            if (index == this.getR5() |
+                index == this.getR8() |
+                index == this.getR9()){
+                tempCompEfetivo = tempCompEfetivo.split("Tempo s/ descontar pedagio\\s+: ")[1];
+                tempCompEfetivo = tempCompEfetivo.split("Tempo de pedagio")[0].trim();
+            }
+            else {
+                tempCompEfetivo = tempCompEfetivo.split("Total de tempo considerado\\s+: ")[1];
+                tempCompEfetivo = tempCompEfetivo.split("Quantidade de carencia")[0].trim();
+            }
+
+        }
         String[] arrayTempCompEfetivo;
         arrayTempCompEfetivo = tempCompEfetivo.split(", ");
         arrayTempCompEfetivo[0] = arrayTempCompEfetivo[0].split("a")[0];
@@ -656,14 +905,50 @@ public class Segurado {
     }
 
     /*
+    Parse de pontuação efetiva
+     */
+    public String[] parsePontuacaoEfetiva(int index) {
+        String[] arrayPontuacaoEfetiva = {"00", "00", "00"};
+        if (index == this.getR6()) {
+            String pef = this.getExtrato();
+            pef = pef.split(this.getRegraAnaliseDireito(index), index)[index-1];
+            pef = pef.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            pef = pef.split("Soma Idade e TC\\s+: ")[1];
+            pef = pef.split("Possui direito nesta data")[0].trim();
+            arrayPontuacaoEfetiva = pef.split(", ");
+            arrayPontuacaoEfetiva[0] = arrayPontuacaoEfetiva[0].split("a")[0];
+            arrayPontuacaoEfetiva[1] = arrayPontuacaoEfetiva[1].split("m")[0];
+            arrayPontuacaoEfetiva[2] = arrayPontuacaoEfetiva[2].split("d")[0];
+        }
+        return arrayPontuacaoEfetiva;
+    }
+
+    /*
     Parse de reconhecimento de direito na data base de análise do direito
      */
     public String parseRecDireitoDataBase(int index){
-        String recDireitoDataBase = this.getExtrato();
-        recDireitoDataBase = recDireitoDataBase.split(this.getRegraAnaliseDireito(index),2)[1];
-        recDireitoDataBase = recDireitoDataBase.split("Analise do direito em " + this.getStringDataBase(index))[1];
-        recDireitoDataBase = recDireitoDataBase.split("Possui direito nesta data\\s+: ")[1];
-        recDireitoDataBase = recDireitoDataBase.split("[^sn]")[0];
+        String recDireitoDataBase = "";
+        if (index == this.getR1()) {
+            int id = Integer.parseInt(this.getIdadeEfetiva(index)[0]);
+            int car = Integer.parseInt(this.getCarenciaEfetiva(index));
+            int tc = Integer.parseInt(this.getTempCompEfetivo(index)[0]);
+            if (this.getSexo().equals("masculino")) {
+                if (id >= 65 && car >= 180 && tc >= 20) {
+                    recDireitoDataBase = "s";
+                }
+            } else {
+                if (id >= 62 && car >= 180 && tc >= 15) {
+                    recDireitoDataBase = "s";
+                }
+            }
+        }
+        else {
+            recDireitoDataBase = this.getExtrato();
+            recDireitoDataBase = recDireitoDataBase.split(this.getRegraAnaliseDireito(index), 2)[1];
+            recDireitoDataBase = recDireitoDataBase.split("Analise do direito em " + this.getStringDataBase(index))[1];
+            recDireitoDataBase = recDireitoDataBase.split("Possui direito nesta data\\s+: ")[1];
+            recDireitoDataBase = recDireitoDataBase.split("[^sn]")[0];
+        }
         if (recDireitoDataBase.equals("s")) {
             recDireitoDataBase = "foi reconhecido";
         } else {
@@ -687,4 +972,81 @@ public class Segurado {
         return direitoAposFinal;
     }
 
+    /*
+    Faz análise preliminar de carência para possível direito a aposentadoria por idade ou tempo de contribuição
+     */
+    public boolean fazPreAnaliseCarencia() {
+        int carencia = Integer.parseInt(this.getCarenciaEfetiva(0));
+        return (carencia >= 180);
+    }
+
+    /*
+    Faz análise preliminar de tempo de contribuição para possível direito a aposentadoria por tempo de contribuição
+     */
+    public boolean fazPreAnaliseTC() {
+        boolean preAnaliseTC = false;
+        if (this.getSexo().equals("masculino")) {
+            if (Integer.parseInt(this.getTempCompEfetivo(this.getR1())[0]) >= 35) {
+                preAnaliseTC = true;
+            }
+        } else if (this.getSexo().equals("feminino")) {
+            if (Integer.parseInt(this.getTempCompEfetivo(this.getR1())[0]) >= 30) {
+                preAnaliseTC = true;
+            }
+        }
+        return preAnaliseTC;
+    }
+
+    /*
+    Faz análise preliminar de idade para possível direito a aposentadoria por idade
+     */
+    public boolean fazPreAnaliseIdade() {
+        boolean preAnaliseIdade = false;
+        if (this.getSexo().equals("masculino")) {
+            if (Integer.parseInt(this.getIdadeEfetiva(this.getR1())[0]) >= 65) {
+                preAnaliseIdade = true;
+            }
+        } else if (this.getSexo().equals("feminino")) {
+            if (Integer.parseInt(this.getIdadeEfetiva(this.getR1())[0]) >= 60) {
+                preAnaliseIdade = true;
+            }
+        }
+        return preAnaliseIdade;
+    }
+
+    /*
+    Fornece limite utilização em split de parsing de atributos com possibilidade de multiplos parágrafos
+    retorna o limite de divisões a serem feitas
+     */
+    public int limite(int index) {
+
+        int limite = 0; //Limite de divisões do split da regra de direito
+
+        if (index == this.getR3()) {
+            limite = 1+(this.getR3() - this.getR2());
+
+        }
+        else if (index == this.getR5()) {
+            limite = 1+(this.getR5() - this.getR4());
+
+        }
+        else if (index == this.getR6()) {
+            limite = 1+(this.getR6() - this.getR5());
+
+        }
+        else if (index == this.getR7()) {
+            limite = 1+(this.getR7() - this.getR6());
+
+        }
+        else if (index == this.getR8()) {
+            limite = 1+(this.getR8() - this.getR7());
+
+        }
+        else if (index == this.getR9()) {
+            limite = 1+(this.getR9() - this.getR8());
+
+        }
+
+        return limite;
+    }
 }
