@@ -91,6 +91,7 @@
                      <children>
                         <Button fx:id="botaoInput" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoInput" prefHeight="25.0" prefWidth="220.0" text="Importar arquivo de extrato" />
                         <Button fx:id="botaoGerarDespacho" disable="true" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoGerarDespacho" prefHeight="25.0" prefWidth="220.0" text="Gerar Despacho" />
+                         <Button fx:id="botaoLimparDespacho" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoLimparDespacho" prefHeight="25.0" prefWidth="220.0" text="Limpar Despacho" />
                      </children>
                      <opaqueInsets>
                         <Insets />

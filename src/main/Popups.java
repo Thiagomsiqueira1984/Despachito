@@ -58,7 +58,7 @@ public class Popups {
         janelinha.setMinWidth(250);
 
         Label label1 = new Label();
-        label1.setText("Versão: 1.4");
+        label1.setText("Versão: 1.5");
         Label label2 = new Label();
         label2.setText("Desenvolvedor: Thiago de Morais Siqueira");
         Button botao = new Button("Fechar");

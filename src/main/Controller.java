@@ -128,7 +128,12 @@ public class Controller implements Initializable {
         this.botaoCopy.setDisable(false);
     }
 
-
+    /*
+    Limpa a área de despacho
+     */
+    public void acaoLimparDespacho() {
+        caixaDespacho.clear();
+    }
 
     /*
     Copia a despacho para a área de transferência

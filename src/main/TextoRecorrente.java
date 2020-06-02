@@ -44,18 +44,25 @@ public class TextoRecorrente {
     Texto inicial para o arquivo de database de texto recorrente
      */
     public static String tR1 =
-            "Foram computados todos os vínculos empregatícios que constam no CNIS, realizadas as devidas alterações, confirmações e inclusões conforme a documentação apresentada.";
+            "Foi realizada reafirmação da DER para a data em que completa os requisitos mínimos para a concessão do benefício." + "\n";
 
     public static String tR2 =
-            "Não foram computados os seguintes vínculos empregatícios:" + "\n" + "-";
+            "Não realizada reafirmação da DER pois não seria suficiente para a concessão do benefício." + "\n";
 
     public static String tR3 =
-            "Computados meses de atividade rural como carência por conta da Ação Civil Pública" +
-                    " nº 50382611520154047100/RS.";
+            "Foi computado período de benefício por incapacidade como carência por conta da Ação Civil Pública" +
+                    " nº 02162497720174025101/RJ." + "\n";
 
     public static String tR4 =
-            "Foi computado período de benefício por incapacidade como carência por conta da Ação Civil Pública" +
-                    " nº 02162497720174025101/RJ.";
+            "Computados meses de atividade rural como carência por conta da Ação Civil Pública" +
+                    " nº 50382611520154047100/RS." + "\n";
+
+    public static String tR5 =
+            "Foram computados todos os vínculos empregatícios que constam no CNIS, realizadas as devidas alterações, confirmações e inclusões conforme a documentação apresentada." + "\n";
+
+    public static String tR6 =
+            "Não foram computados os seguintes vínculos empregatícios:" + "\n" + "- ";
+
 
     /*
     Métodos
@@ -79,6 +86,8 @@ public class TextoRecorrente {
                 textoRecorrente.add(tR2);
                 textoRecorrente.add(tR3);
                 textoRecorrente.add(tR4);
+                textoRecorrente.add(tR5);
+                textoRecorrente.add(tR6);
                 try {
                     FileWriter f = new FileWriter(tR);
                     for (String str: TextoRecorrente.textoRecorrente) {
