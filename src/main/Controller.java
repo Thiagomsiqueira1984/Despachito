@@ -20,6 +20,8 @@ public class Controller implements Initializable {
     TextoRecorrente cTextoRec = new TextoRecorrente();
 
     public Button config = new Button();
+    public Button info = new Button();
+
     public Button botaoInput = new Button();
     public Button botaoGerarDespacho = new Button();
 
@@ -34,6 +36,13 @@ public class Controller implements Initializable {
      */
     public void abrirConfig() {
         Config.janelaConfig();
+    }
+
+    /*
+    Ação do botão de abrir tela de configurações
+     */
+    public void abrirInfo() {
+        Popups.popupInfo();
     }
 
     /*

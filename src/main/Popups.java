@@ -3,11 +3,16 @@ package main;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.scene.control.*;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Popups {
 
@@ -41,5 +46,107 @@ public class Popups {
 
     }
 
+    /*
+    Abre a janela de informações
+     */
+    public static void popupInfo(){
 
+        Stage janelinha = new Stage();
+
+        janelinha.initModality(Modality.APPLICATION_MODAL);
+        janelinha.setTitle("Informações");
+        janelinha.setMinWidth(250);
+
+        Label label1 = new Label();
+        label1.setText("Versão: 1.4");
+        Label label2 = new Label();
+        label2.setText("Desenvolvedor: Thiago de Morais Siqueira");
+        Button botao = new Button("Fechar");
+        botao.setPrefWidth(75);
+        botao.setOnAction(e -> janelinha.close());
+
+        VBox layout = new VBox();
+        layout.getChildren().addAll(label1, label2, botao);
+        layout.setAlignment(Pos.CENTER);
+        layout.setSpacing(10);
+        layout.setPadding(new Insets(5,5,15,5));
+
+        Scene cena = new Scene(layout);
+        janelinha.setScene(cena);
+        janelinha.setResizable(false);
+        janelinha.showAndWait();
+
+    }
+
+    /*
+    Abre a popup de adição ou edição de OL
+     */
+    public static String popupAdicOL(String titulo){
+
+        AtomicReference<String> novoOL = new AtomicReference<>(" ");
+
+        Stage janelinha = new Stage();
+
+        janelinha.initModality(Modality.APPLICATION_MODAL);
+        janelinha.setTitle(titulo);
+        janelinha.setMinWidth(400);
+
+        Label labelCodOL = new Label();
+        labelCodOL.setText("Código da OL");
+        TextField campoCodOL = new TextField();
+        campoCodOL.setPromptText("00.000.00");
+        campoCodOL.setPrefWidth(100);
+        VBox paneCodOL = new VBox();
+        paneCodOL.getChildren().addAll(labelCodOL, campoCodOL);
+
+        Label labelNomeOL = new Label();
+        labelNomeOL.setText("Nome da OL");
+        TextField campoNomeOL = new TextField();
+        campoNomeOL.setPromptText("Agência da Previdência Social Cidade");
+        campoNomeOL.setPrefWidth(600);
+        VBox paneNomeOL = new VBox();
+        paneNomeOL.getChildren().addAll(labelNomeOL, campoNomeOL);
+        HBox hb1 = new HBox();
+        hb1.getChildren().addAll(paneCodOL, paneNomeOL);
+        hb1.setSpacing(15);
+
+        Label msgErro = new Label("Campos código do OL e nome do OL devem ser preenchidos");
+        msgErro.setTextFill(Color.web("#db0b2f"));
+        msgErro.setVisible(false);
+
+
+        Button botaoOk = new Button("Ok");
+        botaoOk.setPrefWidth(75);
+        botaoOk.setOnAction(event -> {
+            if (campoCodOL.getText().isEmpty() | campoNomeOL.getText().isEmpty()) {
+                msgErro.setVisible(true);
+            }
+            else {
+                novoOL.set(campoCodOL.getText() + campoNomeOL.getText());
+                janelinha.close();
+            }
+        });
+        Button botaoCancelar = new Button("Cancelar");
+        botaoCancelar.setPrefWidth(75);
+        botaoCancelar.setOnAction(e -> janelinha.close());
+
+        HBox hb2 = new HBox();
+        hb2.getChildren().addAll(botaoCancelar, botaoOk);
+        hb2.setSpacing(15);
+        hb2.setAlignment(Pos.CENTER);
+
+
+        VBox layout = new VBox();
+        layout.getChildren().addAll(hb1, msgErro, hb2);
+        layout.setAlignment(Pos.CENTER);
+        layout.setSpacing(10);
+        layout.setPadding(new Insets(5,10,15,10));
+
+        Scene cena = new Scene(layout);
+        janelinha.setScene(cena);
+        janelinha.setResizable(false);
+        janelinha.showAndWait();
+
+        return novoOL.get();
+    }
 }

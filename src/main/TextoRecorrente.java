@@ -55,7 +55,7 @@ public class TextoRecorrente {
 
     public static String tR4 =
             "Foi computado período de benefício por incapacidade como carência por conta da Ação Civil Pública" +
-                    " nº 200971000041034/RS.";
+                    " nº 02162497720174025101/RJ.";
 
     /*
     Métodos
