@@ -27,7 +27,9 @@ public class Segurado {
     private String stringDataNasc; //Data de nascimento do segurado formatada e como String
     private Date DER; //Data de entrada do requerimento
     private String stringDER;//Data de entrada do requerimento formatada e como String
-    private String[] idadeDER; //Idade do segurado na DER
+    private Date DIB; //Data de início do benefício
+    private String stringDIB;//Data de entrada do requerimento formatada e como String
+    private String[] idadeDIB; //Idade do segurado na DIB
     private Date dataFilia; //Data de filiação ao RGPS
     private String stringDataFiliaAs; //Data de filiação ao RGPS formatada e como String
     private boolean filiaAteEC; //main.Segurado filiado até 13/11/2019?
@@ -180,12 +182,28 @@ public class Segurado {
         this.stringDER = stringDER;
     }
 
-    public String[] getIdadeDER() {
-        return idadeDER;
+    public Date getDIB() {
+        return DIB;
     }
 
-    public void setIdadeDER(String[] idadeDER) {
-        this.idadeDER = idadeDER;
+    public void setDIB(Date DIB) {
+        this.DIB = DIB;
+    }
+
+    public String getStringDIB() {
+        return stringDIB;
+    }
+
+    public void setStringDIB(String stringDIB) {
+        this.stringDIB = stringDIB;
+    }
+
+    public String[] getIdadeDIB() {
+        return idadeDIB;
+    }
+
+    public void setIdadeDIB(String[] idadeDIB) {
+        this.idadeDIB = idadeDIB;
     }
 
     public Date getDataFilia() {
@@ -573,19 +591,42 @@ public class Segurado {
     }
 
     /*
-    Parse da idade e conversão para um array de String
+    Parse da DIB como String
      */
-    public String[] parseIdadeDER(){
-        String achaIdadeDER = this.getExtrato();
-        achaIdadeDER = achaIdadeDER.split("Analise do direito em " + this.getStringDER())[2];
-        achaIdadeDER = achaIdadeDER.split("Idade\\s+: ")[1];
-        achaIdadeDER = achaIdadeDER.split("Soma")[0].trim();
-        String[] arrayIdadeDER;
-        arrayIdadeDER = achaIdadeDER.split(", ");
-        arrayIdadeDER[0] = arrayIdadeDER[0].split("a")[0];
-        arrayIdadeDER[1] = arrayIdadeDER[1].split("m")[0];
-        arrayIdadeDER[2] = arrayIdadeDER[2].split("d")[0];
-        return arrayIdadeDER;
+    public String lerDIBString(){
+        String DIBString = this.getExtrato();
+        DIBString = DIBString.split("DIB\\S+: ")[1];
+        DIBString = DIBString.split("\n")[0].trim();
+        return DIBString;
+    }
+
+    /*
+    Converte a DIB para date
+     */
+    public Date DIBtoDate(){
+        Calendar aDate = Calendar.getInstance();
+        aDate.set(2019, 11, 31);
+        Date DIBdate = aDate.getTime();
+        try{
+            DIBdate = new SimpleDateFormat("dd/MM/yyyy").parse(this.getStringDIB());
+        } catch (Exception ex){}
+        return DIBdate;
+    }
+
+    /*
+    Parse da idade na DIB e conversão para um array de String
+     */
+    public String[] parseIdadeDIB(){
+        String achaIdadeDIB = this.getExtrato();
+        achaIdadeDIB = achaIdadeDIB.split("Analise do direito em " + this.getStringDIB())[2];
+        achaIdadeDIB = achaIdadeDIB.split("Idade\\s+: ")[1];
+        achaIdadeDIB = achaIdadeDIB.split("Soma")[0].trim();
+        String[] arrayIdadeDIB;
+        arrayIdadeDIB = achaIdadeDIB.split(", ");
+        arrayIdadeDIB[0] = arrayIdadeDIB[0].split("a")[0];
+        arrayIdadeDIB[1] = arrayIdadeDIB[1].split("m")[0];
+        arrayIdadeDIB[2] = arrayIdadeDIB[2].split("d")[0];
+        return arrayIdadeDIB;
     }
 
     /*
@@ -675,7 +716,7 @@ public class Segurado {
         String data = this.getExtrato();
 
     if (index == this.r1) {
-            data = this.getStringDER();
+            data = this.getStringDIB();
 
         } else if (index == this.r2 | index == this.getR4() | index == this.getR5()) {
             data = "13/11/2019";
@@ -814,7 +855,11 @@ public class Segurado {
             tcpInt = Stream.of(tempComp).mapToInt(Integer::parseInt).toArray();
             ped = Stream.of(pedagio).mapToInt(Integer::parseInt).toArray();
             for(int i = 0; i < tcpInt.length; i++){
-                l.add(Integer.toString(tcpInt[i] + ped[i]));
+                if ((tcpInt[i] + ped[i]) < 10) {
+                    l.add("0" + Integer.toString(tcpInt[i] + ped[i]));
+                } else {
+                    l.add(Integer.toString(tcpInt[i] + ped[i]));
+                }
             }
             PedagioTempComp = l.toArray(PedagioTempComp);
         }

@@ -44,18 +44,18 @@ public class TextoRecorrente {
     Texto inicial para o arquivo de database de texto recorrente
      */
     public static String tR1 =
-            "Foi realizada reafirmação da DER para a data em que completa os requisitos mínimos para a concessão do benefício." + "\n";
+            "Foi realizada reafirmação da DER para a data em que completa os requisitos mínimos para a concessão do benefício.";
 
     public static String tR2 =
-            "Não realizada reafirmação da DER pois não seria suficiente para a concessão do benefício." + "\n";
+            "Não realizada reafirmação da DER pois não seria suficiente para a concessão do benefício.";
 
     public static String tR3 =
             "Foi computado período de benefício por incapacidade como carência por conta da Ação Civil Pública" +
-                    " nº 02162497720174025101/RJ." + "\n";
+                    " nº 02162497720174025101/RJ.";
 
     public static String tR4 =
             "Computados meses de atividade rural como carência por conta da Ação Civil Pública" +
-                    " nº 50382611520154047100/RS." + "\n";
+                    " nº 50382611520154047100/RS.";
 
     public static String tR5 =
             "Foram computados todos os vínculos empregatícios que constam no CNIS, realizadas as devidas alterações, confirmações e inclusões conforme a documentação apresentada." + "\n";
@@ -113,7 +113,7 @@ public class TextoRecorrente {
     /*
     grupo de controles para texto recorrente
      */
-    public VBox fazerblocoTR(int index, Controller cont) {
+    public VBox fazerblocoTR(int index, Controller cont, VBox vBoxParent) {
         AtomicBoolean alteraTR = new AtomicBoolean(false);
 
         VBox blocoTR = new VBox();
@@ -121,6 +121,7 @@ public class TextoRecorrente {
         TextArea areaTexto = new TextArea();
         areaTexto.setWrapText(true);
         areaTexto.setEditable(false);
+        areaTexto.setPrefHeight(100);
         if (index < textoRecorrente.size()) {
             areaTexto.setText(textoRecorrente.get(index));
         } else {
@@ -135,7 +136,26 @@ public class TextoRecorrente {
         h.setAlignment(Pos.TOP_RIGHT);
 
         /*
-        Chama popupu para editar o texto recorrente, atualizando a lista e o campo correspondente em caso de alteração
+        Exclui o bloco de texto recorrente e tira texto da lista e do arquivo database de textoRecorrente
+         */
+        Button bExcluir = new Button("Excluir");
+        bExcluir.setOnAction(e -> {
+            TextoRecorrente.textoRecorrente.remove(index);
+            vBoxParent.getChildren().remove(blocoTR);
+            try {
+                File tRfolder = new File(System.getProperty("user.home"), "Despachito");
+                FileWriter f = new FileWriter(new File(tRfolder, "TextoRecorrente.dpch"));
+                for (String str: TextoRecorrente.textoRecorrente) {
+                    if (!str.trim().isEmpty()) {
+                        f.write(str + divisor);
+                    }
+                }
+                f.close();
+            } catch (Exception ex) {}
+        });
+
+        /*
+        Chama popup para editar o texto recorrente, atualizando a lista e o campo correspondente em caso de alteração
          */
         Button bEditar = new Button("Editar");
         bEditar.setOnAction(e -> {
@@ -154,6 +174,7 @@ public class TextoRecorrente {
                 } catch (Exception ex) {}
             }
         });
+
         Button bAdicionar = new Button("Adicionar >>");
         bAdicionar.setOnAction(e -> {
                     if (!areaTexto.getText().trim().isEmpty()) {
@@ -162,7 +183,7 @@ public class TextoRecorrente {
                     }
                 });
 
-        h.getChildren().addAll(bEditar, bAdicionar);
+        h.getChildren().addAll(bExcluir, bEditar, bAdicionar);
 
 
         blocoTR.getChildren().addAll(h, areaTexto);

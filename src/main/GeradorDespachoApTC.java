@@ -437,19 +437,20 @@ public class GeradorDespachoApTC {
     /*
     Método para escrever em String a parte 1 do despacho - Parte fixa com cabeçalho e dados básicos
      */
-    public String escreverParte1(Segurado segur) {
+    public String escreverParte1(Segurado segurado) {
         return
                 Config.getOLatual() + "\n\n" +
-                        "Nome d" + segur.getArtGenero() + " requerente: " + segur.getNome() + "\n\n" +
-                        "Número do requerimento benefício: " + segur.getNB() + "\n\n" +
-                        "Trata-se de requerimento de " + segur.getEspecieBeneficio() + "." + "\n\n" +
-                        "A data de nascimento d" + segur.getArtGenero() + " requerente é " + segur.getStringDataNasc() +
+                        "Nome d" + segurado.getArtGenero() + " requerente: " + segurado.getNome() + "\n\n" +
+                        "Número do requerimento benefício: " + segurado.getNB() + "\n\n" +
+                        "Trata-se de requerimento de " + segurado.getEspecieBeneficio() + "." + "\n\n" +
+                        "A data de nascimento d" + segurado.getArtGenero() + " requerente é " + segurado.getStringDataNasc() +
                         ". A data de entrada do requerimento - DER é " +
-                        segur.getStringDER() + ". Portanto, a idade na DER é de " +
-                        segur.getIdadeDER()[0] + " anos, " + segur.getIdadeDER()[1] + " meses e " + segur.getIdadeDER()[2] + " dias" + ".\n\n" +
-                        "Trata-se de requerente do sexo " + segur.getSexo() + ".\n\n" +
-                        "O ingresso no RGPS ocorreu em " + segur.getStringDataFiliaAs() + ", " + segur.getAntesDepoisEC() +
-                        " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segur.getAtendeNaoAtEC() +
+                        segurado.getStringDER() + ". A data de início do benefício - DIB, se for reconhecido o direito à concessão, é " +
+                        segurado.getStringDIB() + ". Portanto, a idade na DIB é de " +
+                        segurado.getIdadeDIB()[0] + " anos, " + segurado.getIdadeDIB()[1] + " meses e " + segurado.getIdadeDIB()[2] + " dias" + ".\n\n" +
+                        "Trata-se de requerente do sexo " + segurado.getSexo() + ".\n\n" +
+                        "O ingresso no RGPS ocorreu em " + segurado.getStringDataFiliaAs() + ", " + segurado.getAntesDepoisEC() +
+                        " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segurado.getAtendeNaoAtEC() +
                         " ao primeiro requisito para análise quanto à concessão por direito adquirido à aposentadoria antes da publicação da " +
                         "Emenda Constitucional 103/2019 e/ou pela regras transitórias dos arts. 15, 16, 17 e 20 da citada emenda." + "\n";
 
@@ -461,21 +462,23 @@ public class GeradorDespachoApTC {
     public String escreverParagrafoAnaliseDireito(Segurado segurado, int index) {
         return
                 this.textoRegraAnaliseDireito(segurado, index) + "considerado até " +
-                        segurado.getStringDataBase(index) + ", são necessários, cumulativamente, " +
-                        segurado.getCarenciaExigida(index) + " contribuições para fins de carência, " +
-                        segurado.getTempCompExigido(index)[0] + " anos, " +
+                        segurado.getStringDataBase(index) + ", são necessários, cumulativamente" +
+                        this.testaTCateECexigido(segurado, index) +
+                        ", " + segurado.getTempCompExigido(index)[0] + " anos, " +
                         segurado.getTempCompExigido(index)[1] + " meses e " +
                         segurado.getTempCompExigido(index)[2] + " dias de tempo de contribuição" +
                         this.testaPedagio(segurado, index) +
                         this.testaIdadeExigida(segurado, index) +
                         this.testaPontuacaoExigida(segurado, index) +
-                        "Foram apuradas " +
-                        segurado.getCarenciaEfetiva(index) + " contribuições para fins de carência, com " +
-                        segurado.getTempCompEfetivo(index)[0] + " anos, " +
+                        " e " + segurado.getCarenciaExigida(index) + " contribuições para fins de carência. " +
+                        "Foram apurados " +
+                        this.testaTCateECefetivo(segurado, index) +
+                        ", " + segurado.getTempCompEfetivo(index)[0] + " anos, " +
                         segurado.getTempCompEfetivo(index)[1] + " meses e " +
-                        segurado.getTempCompEfetivo(index)[2] + " dias de tempo de contribuição " +
+                        segurado.getTempCompEfetivo(index)[2] + " dias de tempo de contribuição" +
                         this.testaIdadeEfetiva(segurado, index) +
                         this.testaPontuacaoEfetiva(segurado, index) +
+                        " e " + segurado.getCarenciaEfetiva(index) + " contribuições para fins de carência. " +
                         " Portanto, " +
                         segurado.getRecDireitoDataBase(index) + " direito à aposentadoria por esta regra até " +
                         segurado.getStringDataBase(index) + "." + "\n";
@@ -505,11 +508,38 @@ public class GeradorDespachoApTC {
     }
 
     /*
+    Testa se a regra a ser impressa leva em consideração o tempo de contribuição exigido até 13/11/2019
+     */
+    public String testaTCateECexigido(Segurado segurado, int index) {
+        if (index == segurado.getR8()) {
+            if (segurado.getSexo().equals("masculino")) {
+                return "33 anos de contribuição completos até 13/11/2019";
+            } else {
+                return "28 anos de contribuição completos até 13/11/2019";
+            }
+        }
+        else {return "";}
+    }
+
+    /*
+    Testa se a regra a ser impressa leva em consideração o tempo de contribuição efetivo até 13/11/2019
+     */
+    public String testaTCateECefetivo(Segurado segurado, int index) {
+        if (index == segurado.getR8()) {
+            return
+                    segurado.getTempCompEfetivo(1)[0] + " anos, " +
+                            segurado.getTempCompEfetivo(1)[1] + " meses e " +
+                            segurado.getTempCompEfetivo(1)[2] + " dias de contribuição completos até 13/11/2019";
+        }
+        else {return "";}
+    }
+
+    /*
     Testa se a regra a ser impressa leva em consideração a idade e retorna texto da idade EXIGIDA
      */
     public String testaIdadeExigida(Segurado segurado, int index) {
         if (index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
-            return " e " + segurado.getIdadeExigida(index) + " de idade";
+            return ", " + segurado.getIdadeExigida(index) + " de idade";
         } else {
             return "";
         }
@@ -521,7 +551,7 @@ public class GeradorDespachoApTC {
     public String testaIdadeEfetiva(Segurado segurado, int index) {
         if (index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
             return
-                    " e " + segurado.getIdadeEfetiva(index)[0] + " anos, " +
+                    ", " + segurado.getIdadeEfetiva(index)[0] + " anos, " +
                             segurado.getIdadeEfetiva(index)[1] + " meses e " +
                             segurado.getIdadeEfetiva(index)[2] + " dias de idade";
         } else { return "";
@@ -549,10 +579,10 @@ public class GeradorDespachoApTC {
      */
     public String testaPontuacaoExigida(Segurado segurado, int index) {
         if (index > segurado.getR5() && index <= segurado.getR6()) {
-            return " e " + segurado.getPontuacaoExigida(index) + " de pontuação correspondente à soma de idade" +
-                    " e tempo de contribuição. ";
+            return ", " + segurado.getPontuacaoExigida(index) + " de pontuação correspondente à soma de idade" +
+                    " e tempo de contribuição";
         } else {
-            return ". ";
+            return "";
         }
     }
 
@@ -562,11 +592,11 @@ public class GeradorDespachoApTC {
     public String testaPontuacaoEfetiva(Segurado segurado, int index) {
         if (index > segurado.getR5() && index <= segurado.getR6()) {
             return
-                    "e pontuação correspondente a " +
+                    ", pontuação correspondente a " +
                             segurado.getPontuacaoEfetiva(index)[0] + " anos, " +
                             segurado.getPontuacaoEfetiva(index)[1] + " meses e " +
-                            segurado.getPontuacaoEfetiva(index)[2] + " dias. ";
-        } else { return ". ";
+                            segurado.getPontuacaoEfetiva(index)[2] + " dias";
+        } else { return "";
         }
     }
 
@@ -575,9 +605,9 @@ public class GeradorDespachoApTC {
      */
     public String escreverParteFinal(Segurado segurado) {
 
-        String tFinalCarencia = "apurada carência suficiente na DER para análise quanto aos demais requisitos para " +
+        String tFinalCarencia = "apurada carência suficiente na DIB para análise quanto aos demais requisitos para " +
                 "concessão de aposentadoria por idade. ";
-        String tFinalIdade = "idade suficiente na DER para análise quanto aos demais requisitos para " +
+        String tFinalIdade = "idade suficiente na DIB para análise quanto aos demais requisitos para " +
                 "concessão de aposentadoria por idade. " + "\n\n";
         String tFinal =
                 "Pelo exposto, " + segurado.getRecDireitoFinalTC() +

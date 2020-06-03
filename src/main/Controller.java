@@ -49,7 +49,7 @@ public class Controller implements Initializable {
     Ação do botão de adicionar bloco de texto recorrente
      */
     public void acaoBotaoNovoTR() {
-        VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size(), this);
+        VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size(), this, painelTextoRecorrente);
         painelTextoRecorrente.getChildren().add(novoBloco);
         novoBloco.setVisible(true);
         botaoNovoTR.toFront();
@@ -167,7 +167,6 @@ public class Controller implements Initializable {
         String nb = cSegur.parseNB();
         cSegur.setNB(nb);
 
-
         String sexo = cSegur.parseSexo();
         cSegur.setSexo(sexo);
 
@@ -186,8 +185,14 @@ public class Controller implements Initializable {
         Date DERDate = cSegur.DERtoDate();
         cSegur.setDER(DERDate);
 
-        String[] arrayIdadeDER = cSegur.parseIdadeDER();
-        cSegur.setIdadeDER(arrayIdadeDER);
+        String DIBString = cSegur.lerDIBString();
+        cSegur.setStringDIB(DIBString);
+
+        Date DIBDate = cSegur.DIBtoDate();
+        cSegur.setDIB(DIBDate);
+
+        String[] arrayIdadeDIB = cSegur.parseIdadeDIB();
+        cSegur.setIdadeDIB(arrayIdadeDIB);
 
         String filiaString = cSegur.parseFiliaString();
         cSegur.setStringDataFiliaAs(filiaString);
@@ -270,7 +275,7 @@ public class Controller implements Initializable {
         Cria os blocos de texto recorrente na GUI com o conteúdo da lista textoRecorrente
          */
         for (int i = 0; i< TextoRecorrente.textoRecorrente.size(); i++) {
-            VBox novoBloco = cTextoRec.fazerblocoTR(i, this);
+            VBox novoBloco = cTextoRec.fazerblocoTR(i, this, painelTextoRecorrente);
             painelTextoRecorrente.getChildren().add(novoBloco);
             novoBloco.setVisible(true);
             botaoNovoTR.toFront();

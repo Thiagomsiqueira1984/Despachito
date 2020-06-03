@@ -160,11 +160,11 @@ public class GeradorDespachoApIdade {
             String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR3());
             segurado.addRecDireitoDataBase(recDireitoDataBase);
 
-            if (segurado.getDateDataBase(segurado.getR3()).compareTo(segurado.getDER()) < 0) {
+            if (segurado.getDateDataBase(segurado.getR3()).compareTo(segurado.getDIB()) < 0) {
                 segurado.setR3(segurado.getR3() + 1);
             } else {break;}
 
-        } while (segurado.getDateDataBase(segurado.getR3() - 1).compareTo(segurado.getDER())<0);
+        } while (segurado.getDateDataBase(segurado.getR3() - 1).compareTo(segurado.getDIB())<0);
 
         segurado.setR3(segurado.getR3() - 1);
     }
@@ -180,8 +180,9 @@ public class GeradorDespachoApIdade {
                         "Trata-se de requerimento de " + segurado.getEspecieBeneficio() + "." + "\n\n" +
                         "A data de nascimento d" + segurado.getArtGenero() + " requerente é " + segurado.getStringDataNasc() +
                         ". A data de entrada do requerimento - DER é " +
-                        segurado.getStringDER() + ". Portanto, a idade na DER é de " +
-                        segurado.getIdadeDER()[0] + " anos, " + segurado.getIdadeDER()[1] + " meses e " + segurado.getIdadeDER()[2] + " dias" + ".\n\n" +
+                        segurado.getStringDER() + ". A data de início do benefício - DIB, se for reconhecido o direito à concessão, é " +
+                        segurado.getStringDIB() + ". Portanto, a idade na DIB é de " +
+                        segurado.getIdadeDIB()[0] + " anos, " + segurado.getIdadeDIB()[1] + " meses e " + segurado.getIdadeDIB()[2] + " dias" + ".\n\n" +
                         "Trata-se de requerente do sexo " + segurado.getSexo() + ".\n\n" +
                         "O ingresso no RGPS ocorreu em " + segurado.getStringDataFiliaAs() + ", " + segurado.getAntesDepoisEC() +
                         " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segurado.getAtendeNaoAtEC() +
@@ -259,9 +260,9 @@ public class GeradorDespachoApIdade {
      */
     public String escreverParteFinal(Segurado segurado) {
 
-        String tFinalCarencia = "apurada carência suficiente na DER para análise quanto aos demais requisitos para " +
+        String tFinalCarencia = "apurada carência suficiente na DIB para análise quanto aos demais requisitos para " +
                 "concessão de aposentadoria por tempo de contribuição. ";
-        String tFinalTC = "tempo de contribuição suficiente na DER para análise quanto aos demais requisitos para " +
+        String tFinalTC = "tempo de contribuição suficiente na DIB para análise quanto aos demais requisitos para " +
                 "concessão de aposentadoria por tempo de contribuição. " + "\n\n";
         String tFinal =
                 "Pelo exposto, " + segurado.getRecDireitoFinalIdade() +
@@ -273,7 +274,7 @@ public class GeradorDespachoApIdade {
                 if (segurado.fazPreAnaliseTC()) {
                     tFinalTC = "Também tem  " + tFinalTC;
                 } else {
-                    tFinalTC = "Contudo, não tem" + tFinalTC;
+                    tFinalTC = "Contudo, não tem " + tFinalTC;
                 }
                 tFinalCarencia = tFinalCarencia + tFinalTC;
             } else {
