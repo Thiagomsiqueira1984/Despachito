@@ -6,12 +6,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.scene.control.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Popups {
@@ -47,6 +48,53 @@ public class Popups {
     }
 
     /*
+Popup de ok retorna true e cancela retorna false
+ */
+    public static boolean popupOkCancela(String titulo, String mensagem){
+        AtomicBoolean retorno = new AtomicBoolean(false);
+
+        Stage janelinha = new Stage();
+
+        janelinha.initModality(Modality.APPLICATION_MODAL);
+        janelinha.setTitle(titulo);
+        janelinha.setWidth(800);
+
+        Label label = new Label();
+        label.setText(mensagem);
+        label.setMaxWidth(750);
+        label.setWrapText(true);
+        label.setTextAlignment(TextAlignment.CENTER);
+
+        Button botaoCancela = new Button("Cancela");
+        botaoCancela.setPrefWidth(75);
+        botaoCancela.setOnAction(e -> janelinha.close());
+
+        Button botaoOk = new Button("Ok");
+        botaoOk.setPrefWidth(75);
+        botaoOk.setOnAction(event -> {
+                retorno.set(true);
+                janelinha.close();
+        });
+
+        HBox hB = new HBox();
+        hB.getChildren().addAll(botaoCancela, botaoOk);
+        hB.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox();
+        layout.getChildren().addAll(label, hB);
+        layout.setAlignment(Pos.CENTER);
+        layout.setSpacing(15);
+        layout.setPadding(new Insets(10,5,15,5));
+
+        Scene cena = new Scene(layout);
+        janelinha.setScene(cena);
+        janelinha.setResizable(false);
+        janelinha.showAndWait();
+
+        return retorno.get();
+    }
+
+    /*
     Abre a janela de informações
      */
     public static void popupInfo(){
@@ -58,7 +106,7 @@ public class Popups {
         janelinha.setMinWidth(250);
 
         Label label1 = new Label();
-        label1.setText("Versão: 1.5");
+        label1.setText("Versão: 1.6");
         Label label2 = new Label();
         label2.setText("Desenvolvedor: Thiago de Morais Siqueira");
         Button botao = new Button("Fechar");

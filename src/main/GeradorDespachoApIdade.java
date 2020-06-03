@@ -273,6 +273,7 @@ public class GeradorDespachoApIdade {
                 tFinalCarencia = "Foi  " + tFinalCarencia;
                 if (segurado.fazPreAnaliseTC()) {
                     tFinalTC = "Também tem  " + tFinalTC;
+                    segurado.setCabeAnaliseDtoOutraEspecie(true);
                 } else {
                     tFinalTC = "Contudo, não tem " + tFinalTC;
                 }

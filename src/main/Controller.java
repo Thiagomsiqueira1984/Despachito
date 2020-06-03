@@ -110,11 +110,11 @@ public class Controller implements Initializable {
         int quantParagrafos = cSegur.countRegraAnaliseDireito();
         int contador = 1;
         while (contador < quantParagrafos) {
-            constroiParagrafoAnaliseDireito(contador);
+            constroiParagrafoAnaliseDireito(contador, cSegur.getCodEspecieBeneficio());
             contador++;
         }
         contador = 0;
-        constroiParagrafoAnaliseDireito(contador);
+        constroiParagrafoAnaliseDireito(contador, cSegur.getCodEspecieBeneficio());
 
         constroiParteFinal();
 
@@ -124,6 +124,104 @@ public class Controller implements Initializable {
         } else {
             cDespTC.setStringDespachoCompletoTC(String.join("\n", cDespTC.getDespachoCompletoTC()));
             caixaDespacho.setText(cDespTC.getStringDespachoCompletoTC());
+        }
+
+        /*
+        Analisa se há direito a outra espécie de aposentadoria e gera despacho complementar
+         */
+        if (cSegur.getCabeAnaliseDtoOutraEspecie()) {
+            String mensagem;
+            String nome1 = cSegur.getNome();
+            String especie1 = cSegur.getCodEspecieBeneficio();
+            if (especie1.equals("41")) {
+                mensagem = "Foi reconhecido possível direito a aposentadoria por tempo de contribuição (carência e tc).\n" +
+                        "Deseja importar novo arquivo de extrato de aposentadoria por tempo de contribuição" +
+                        "e adicionar análise referente a esta espécie ao despacho?";
+
+                if (Popups.popupOkCancela("Análise complementar", mensagem)) {
+                    cSegur = new Segurado();
+                    importaArquivo();
+                    if (cSegur.getExtrato() != null) {
+                        String nome2 = cSegur.parseNome();
+                        if (nome1.equals(nome2)) {
+                            String especie2 = cSegur.parseCodEspecie();
+                            if (especie2.equals("42")) {
+                                cSegur.setCodEspecieBeneficio(especie2);
+                                parseAtributosIniciais();
+                                cDespTC.parseAtributosR1(cSegur);
+                                cDespTC.parseAtributosR4(cSegur);
+                                cDespTC.parseAtributosR5(cSegur);
+                                cDespTC.parseAtributosR6(cSegur);
+                                cDespTC.parseAtributosR7(cSegur);
+                                cDespTC.parseAtributosR8(cSegur);
+                                cDespTC.parseAtributosR9(cSegur);
+                                parseAtributosFinais();
+
+                                quantParagrafos = cSegur.countRegraAnaliseDireito();
+                                contador = 1;
+                                while (contador < quantParagrafos) {
+                                    constroiParagrafoAnaliseDireito(contador, "42");
+                                    contador++;
+                                }
+                                cDespTC.addDespachoCompletoTC("Pelo exposto, " + cSegur.getRecDireitoFinalTC() +
+                                        " à concessão da aposentadoria por tempo de contribuição." + "\n\n");
+
+                                cDespTC.setStringDespachoCompletoTC(String.join("\n", cDespTC.getDespachoCompletoTC()));
+                                caixaDespacho.appendText("Passa-se a analisar o direito à aposentadoria por " +
+                                        "tempo de contribuição\n\n" + cDespTC.getStringDespachoCompletoTC());
+                            } else {
+                                Popups.popupAlerta("Alerta", "Arquivo selecionado não é um extrato de " +
+                                        "aposentadoria por tempo de contribuição. Encerrando análise.");
+                            }
+                        } else {
+                            Popups.popupAlerta("Alerta", "Nome divergente do encontrado no primeiro" +
+                                    " extrato. Encerrando análise.");
+                        }
+                    }
+                }
+            } else if (especie1.equals("42")) {
+                mensagem = "Foi reconhecido possível direito a aposentadoria por idade (carência e idade).\n" +
+                        "Deseja importar novo arquivo de extrato de aposentadoria por idade " +
+                        "e adicionar análise referente a esta espécie ao despacho?";
+
+                if (Popups.popupOkCancela("Análise complementar", mensagem)) {
+                    cSegur = new Segurado();
+                    importaArquivo();
+                    if (cSegur.getExtrato() != null) {
+                        String nome2 = cSegur.parseNome();
+                        if (nome1.equals(nome2)) {
+                            String especie2 = cSegur.parseCodEspecie();
+                            if (especie2.equals("41")) {
+                                cSegur.setCodEspecieBeneficio(especie2);
+                                parseAtributosIniciais();
+                                cDespI.parseAtributosR1(cSegur);
+                                cDespI.parseAtributosR2(cSegur);
+                                cDespI.parseAtributosR3(cSegur);
+                                parseAtributosFinais();
+
+                                quantParagrafos = cSegur.countRegraAnaliseDireito();
+                                contador = 1;
+                                while (contador < quantParagrafos) {
+                                    constroiParagrafoAnaliseDireito(contador, "41");
+                                    contador++;
+                                }
+                                cDespI.addDespachoCompletoIdade("Pelo exposto, " + cSegur.getRecDireitoFinalIdade() +
+                                        " à concessão da aposentadoria por idade." + "\n\n");
+
+                                cDespI.setStringDespachoCompletoIdade(String.join("\n", cDespI.getDespachoCompletoIdade()));
+                                caixaDespacho.appendText("Passa-se a analisar o direito à aposentadoria por " +
+                                        "idade\n\n" + cDespI.getStringDespachoCompletoIdade());
+                            } else {
+                                Popups.popupAlerta("Alerta", "Arquivo selecionado não é um extrato de " +
+                                        "aposentadoria por idade. Encerrando análise.");
+                            }
+                        } else {
+                            Popups.popupAlerta("Alerta", "Nome divergente do encontrado no primeiro" +
+                                    " extrato. Encerrando análise.");
+                        }
+                    }
+                }
+            }
         }
         this.botaoCopy.setDisable(false);
     }
@@ -243,8 +341,8 @@ public class Controller implements Initializable {
     /*
     Constrói parágrafo referente às regras de análise de direito no despacho
      */
-    public void constroiParagrafoAnaliseDireito(int index) {
-        if (cSegur.getCodEspecieBeneficio().equals("41")) {
+    public void constroiParagrafoAnaliseDireito(int index, String especie) {
+        if (especie.equals("41")) {
             cDespI.addDespachoCompletoIdade(cDespI.escreverParagrafoAnaliseDireito(cSegur, index));
         } else {
             cDespTC.addDespachoCompletoTC(cDespTC.escreverParagrafoAnaliseDireito(cSegur, index));

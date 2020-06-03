@@ -86,6 +86,8 @@ public class Segurado {
      */
     private String recDireitoFinalTC;
 
+    private Boolean cabeAnaliseDtoOutraEspecie = false;
+
     /*
 
     Getters e Setters
@@ -448,6 +450,14 @@ public class Segurado {
 
     public void setRecDireitoFinalTC(String recDireitoFinalTC) {
         this.recDireitoFinalTC = recDireitoFinalTC;
+    }
+
+    public Boolean getCabeAnaliseDtoOutraEspecie() {
+        return cabeAnaliseDtoOutraEspecie;
+    }
+
+    public void setCabeAnaliseDtoOutraEspecie(Boolean cabeAnaliseDtoOutraEspecie) {
+        this.cabeAnaliseDtoOutraEspecie = cabeAnaliseDtoOutraEspecie;
     }
 
     /*
