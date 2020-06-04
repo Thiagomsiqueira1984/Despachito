@@ -31,19 +31,33 @@ public class Controller implements Initializable {
 
     public TextArea caixaDespacho = new TextArea();
 
+    public ComboBox<String> dropOLAtual = new ComboBox<>();
+
     /*
     Ação do botão de abrir tela de configurações
      */
     public void abrirConfig() {
         Config.janelaConfig();
+        dropOLAtual.getItems().clear();
+        dropOLAtual.getItems().addAll(Config.getListaOL());
+        dropOLAtual.setValue(Config.getListaOL(0));
     }
 
     /*
-    Ação do botão de abrir tela de configurações
+    Ação do botão de abrir tela de informações
      */
     public void abrirInfo() {
         Popups.popupInfo();
     }
+
+    /*
+    Ação da choicebox de seleção de OL atual
+     */
+    public void acaoSelecaoOLAtual() {
+        String OLatual = dropOLAtual.getValue();
+        Config.setOLatual(OLatual);
+    }
+
 
     /*
     Ação do botão de adicionar bloco de texto recorrente
@@ -243,6 +257,8 @@ public class Controller implements Initializable {
         clipboard.setContent(pegaTexto);
     }
 
+
+
     /*
     Chama método lerExtrato e seta
      */
@@ -314,9 +330,9 @@ public class Controller implements Initializable {
     }
 
 
-
-
-
+    /*
+    Inicia parsing de atributos de dados finais do despacho
+     */
     public void parseAtributosFinais() {
         String RecDireitoFinal = cSegur.parseDireitoAposFinal();
         if (cSegur.getCodEspecieBeneficio().equals("41")) {
@@ -379,6 +395,8 @@ public class Controller implements Initializable {
             botaoNovoTR.toFront();
         }
 
+        dropOLAtual.getItems().addAll(Config.getListaOL());
+        dropOLAtual.setValue(Config.getListaOL(0));
     }
 }
 

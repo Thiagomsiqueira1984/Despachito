@@ -68,6 +68,10 @@ public class Config {
         this.pathOL = pathOL;
     }
 
+    public static List<String> getListaOL() {
+        return listaOL;
+    }
+
     public static String getListaOL(int index) {
         return listaOL.get(index);
     }

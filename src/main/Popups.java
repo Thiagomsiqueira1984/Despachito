@@ -106,7 +106,7 @@ Popup de ok retorna true e cancela retorna false
         janelinha.setMinWidth(250);
 
         Label label1 = new Label();
-        label1.setText("Versão: 1.6");
+        label1.setText("Versão: 1.6.1");
         Label label2 = new Label();
         label2.setText("Desenvolvedor: Thiago de Morais Siqueira");
         Button botao = new Button("Fechar");
