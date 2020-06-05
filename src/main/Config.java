@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,6 +31,7 @@ public class Config {
     private static List<String> listaOL = new ArrayList<>();
     private static String OLpadrao;
     private static String OLatual;
+    private static File pathImportaExtrato;
 
 
     /*
@@ -134,10 +136,12 @@ public class Config {
         janelaConfig.setMinWidth(800);
         janelaConfig.setMaxWidth(800);
 
+        /*
+        Parte referente às OL padrão
+         */
         Config.criaListaOL();
 
-        Label etiquetaOL = new Label();
-        etiquetaOL.setText("Órgãos de Lotação - OL:");
+        Label etiquetaOL = new Label("Órgãos de Lotação - OL:");
         Label etiquetaOLpadrao = new Label();
         etiquetaOLpadrao.setText("OL padrão: " + OLpadrao);
 
@@ -157,6 +161,7 @@ public class Config {
         Button tornarPadrao = new Button("Tornar padrão");
         Button excluir = new Button("Excluir");
         HBox botoesOL = new HBox();
+        botoesOL.setPadding(new Insets(-30, 0, 0, 0));
         botoesOL.getChildren().addAll(novo, editar, tornarPadrao, excluir);
         botoesOL.setSpacing(5);
 
@@ -168,13 +173,55 @@ public class Config {
 
         excluir.setOnAction(event -> excluirOL(grupoOL, vBOL, etiquetaOLpadrao, msgErro));
 
+        /*
+        Parte referente ao diretório padrão para importação de arquivos de extrato
+         */
+        Label dirPadraoImp = new Label("Diretório padrão para importação de arquivos de extrato");
+        dirPadraoImp.setPadding(new Insets(10, 0, 0, 0));
+        TextField campoDirPadraoImp = new TextField();
+        campoDirPadraoImp.setText(Config.pathImportaExtrato.toString());
+        campoDirPadraoImp.setEditable(false);
+        Button browseButton = new Button("procurar");
+        HBox hBDir = new HBox();
+        hBDir.getChildren().addAll(campoDirPadraoImp, browseButton);
+
+        browseButton.setOnAction(event ->{
+            DirectoryChooser seletorDirPadr = new DirectoryChooser();
+            seletorDirPadr.setInitialDirectory(Config.pathImportaExtrato);
+            if (seletorDirPadr != null) {
+                File pastaSelecionada = seletorDirPadr.showDialog(null);
+                Config.pathImportaExtrato = pastaSelecionada;
+
+                File home = new File(System.getProperty("user.home"));
+                File dpcFolder = new File(home, "Despachito");
+                Path pathDpcFolder = Paths.get(dpcFolder.getAbsolutePath());
+                if (Files.notExists(pathDpcFolder)) {
+                    dpcFolder.mkdir();
+                }
+                File dP = new File(dpcFolder, "dirPadrao.dpch");
+                Path pathDp = Paths.get(dP.getAbsolutePath());
+                if (Files.notExists(pathDp)) {
+                    try {
+                        dP.createNewFile();
+                    } catch (Exception ex) {}
+                }
+                try {
+                    FileWriter f = new FileWriter(dP);
+                    f.write(Config.pathImportaExtrato.toString());
+                    f.close();
+                } catch (Exception ex) {}
+                campoDirPadraoImp.setText(Config.pathImportaExtrato.toString());
+            }
+        });
+
 
         Button botaoFechar = new Button("Fechar");
         botaoFechar.setPrefWidth(75);
         botaoFechar.setOnAction(e -> janelaConfig.close());
 
         VBox layout = new VBox();
-        layout.getChildren().addAll(etiquetaOL, etiquetaOLpadrao, caixaOL, msgErro, botoesOL, botaoFechar);
+        layout.getChildren().addAll(etiquetaOL, etiquetaOLpadrao, caixaOL, msgErro, botoesOL,
+                dirPadraoImp, hBDir, botaoFechar);
         layout.setAlignment(Pos.TOP_LEFT);
         layout.setSpacing(15);
         layout.setPadding(new Insets(15, 15, 15, 15));
@@ -327,6 +374,37 @@ public class Config {
             Config.constroiListaOLConfig(toggleGroup, vBox);
             Config.setOLatual(Config.getListaOL(0));
         }
+    }
+
+    /*
+    Verificação inicial de direitório padão de importação de arquivos
+     */
+    public static void iniciaDirImporta() {
+        File home = new File(System.getProperty("user.home"));
+        String homeString = Paths.get(home.getAbsolutePath()).toString();
+        File dpcFolder = new File(home, "Despachito");
+        Path pathDpcFolder = Paths.get(dpcFolder.getAbsolutePath());
+        if (Files.notExists(pathDpcFolder)) {
+            dpcFolder.mkdir();
+        }
+        File dP = new File(dpcFolder, "dirPadrao.dpch");
+        Path pathDp = Paths.get(dP.getAbsolutePath());
+        if (Files.notExists(pathDp)) {
+            try {
+                dP.createNewFile();
+                try {
+                    FileWriter f = new FileWriter(dP);
+                    f.write(homeString);
+                    f.close();
+                } catch (Exception ex) {}
+            } catch (Exception ex) {}
+            Config.pathImportaExtrato = new File(homeString);
+        }
+        else //Passa o conteúdo do arquivo de dirPadrao para o diretório padrão de importação
+            try {
+                String p = new String(Files.readAllBytes(dP.toPath()));
+                Config.pathImportaExtrato = new File(p);
+            } catch (Exception ex) {}
     }
 
 }

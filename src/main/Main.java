@@ -23,6 +23,7 @@ public class Main extends Application {
         janelaInicial.setScene(new Scene(root, 1280, 1000));
         janelaInicial.setMinWidth(1000);
         janelaInicial.setMinHeight(800);
+        janelaInicial.getIcons().add(new Image(getClass().getResourceAsStream("Icone.png")));
         janelaInicial.show();
     }
 

@@ -414,6 +414,7 @@ public class Controller implements Initializable {
         TextoRecorrente.iniciaTR("textoRecorrente.dpch", TextoRecorrente.textoRecorrente);
         TextoRecorrente.iniciaTR("exigenciaRecorrente.dpch", TextoRecorrente.exigenciaRecorrente);
         Config.criaListaOL();
+        Config.iniciaDirImporta();
 
         /*
         Cria os blocos de texto recorrente na GUI com o conteúdo da lista textoRecorrente
