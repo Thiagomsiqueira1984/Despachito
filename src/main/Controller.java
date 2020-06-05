@@ -1,5 +1,6 @@
 package main;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.Initializable;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -9,6 +10,7 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 
@@ -18,20 +20,32 @@ public class Controller implements Initializable {
     GeradorDespachoApIdade cDespI = new GeradorDespachoApIdade();
     GeradorDespachoApTC cDespTC = new GeradorDespachoApTC();
     TextoRecorrente cTextoRec = new TextoRecorrente();
+    TextoRecorrente cExigenciaRec = new TextoRecorrente();
 
     public Button config = new Button();
     public Button info = new Button();
 
     public Button botaoInput = new Button();
     public Button botaoGerarDespacho = new Button();
-
+    public TextArea caixaDespacho = new TextArea();
     public Button botaoCopy = new Button();
+
+    public ComboBox<String> dropOLAtual = new ComboBox<>();
+
+    public AnchorPane painelEsquerdo = new AnchorPane();
+
+    public TitledPane tPaneTR = new TitledPane();
+    public TitledPane tPaneER = new TitledPane();
+
+    public ToggleGroup grupoTGEsquerdo = new ToggleGroup();
+    public RadioButton tgTR = new RadioButton();
+    public RadioButton tgER = new RadioButton();
+
     public VBox painelTextoRecorrente = new VBox();
     public Button botaoNovoTR = new Button();
 
-    public TextArea caixaDespacho = new TextArea();
-
-    public ComboBox<String> dropOLAtual = new ComboBox<>();
+    public VBox painelExigenciaRecorrente = new VBox();
+    public Button botaoNovaER = new Button();
 
     /*
     Ação do botão de abrir tela de configurações
@@ -63,8 +77,20 @@ public class Controller implements Initializable {
     Ação do botão de adicionar bloco de texto recorrente
      */
     public void acaoBotaoNovoTR() {
-        VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size(), this, painelTextoRecorrente);
+        VBox novoBloco = cTextoRec.fazerblocoTR(TextoRecorrente.textoRecorrente.size(), this, painelTextoRecorrente,
+            "textoRecorrente.dpch", TextoRecorrente.textoRecorrente);
         painelTextoRecorrente.getChildren().add(novoBloco);
+        novoBloco.setVisible(true);
+        botaoNovoTR.toFront();
+    }
+
+    /*
+    Ação do botão de adicionar bloco de exigência recorrente
+     */
+    public void acaoBotaoNovaER() {
+        VBox novoBloco = cExigenciaRec.fazerblocoTR(TextoRecorrente.exigenciaRecorrente.size(), this, painelExigenciaRecorrente,
+            "exigenciaRecorrente.dpch", TextoRecorrente.exigenciaRecorrente);
+        painelExigenciaRecorrente.getChildren().add(novoBloco);
         novoBloco.setVisible(true);
         botaoNovoTR.toFront();
     }
@@ -382,21 +408,60 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        TextoRecorrente.iniciaTR();
+        /*
+        Inicia verificação e criação de arquivos de database e suas listas
+         */
+        TextoRecorrente.iniciaTR("textoRecorrente.dpch", TextoRecorrente.textoRecorrente);
+        TextoRecorrente.iniciaTR("exigenciaRecorrente.dpch", TextoRecorrente.exigenciaRecorrente);
         Config.criaListaOL();
 
         /*
         Cria os blocos de texto recorrente na GUI com o conteúdo da lista textoRecorrente
          */
         for (int i = 0; i< TextoRecorrente.textoRecorrente.size(); i++) {
-            VBox novoBloco = cTextoRec.fazerblocoTR(i, this, painelTextoRecorrente);
+            VBox novoBloco = cTextoRec.fazerblocoTR(i, this, painelTextoRecorrente, "textoRecorrente.dpch", TextoRecorrente.textoRecorrente);
             painelTextoRecorrente.getChildren().add(novoBloco);
             novoBloco.setVisible(true);
             botaoNovoTR.toFront();
         }
 
+        /*
+        Cria os blocos de exigência recorrente na GUI com o conteúdo da lista exigenciaRecorrente
+         */
+        for (int i = 0; i< TextoRecorrente.exigenciaRecorrente.size(); i++) {
+            VBox novoBloco = cTextoRec.fazerblocoTR(i, this, painelExigenciaRecorrente, "exigenciaRecorrente.dpch", TextoRecorrente.exigenciaRecorrente);
+            painelExigenciaRecorrente.getChildren().add(novoBloco);
+            novoBloco.setVisible(true);
+            botaoNovaER.toFront();
+        }
+
+        /*
+        Lança lista de OL na combobox de OL atual
+         */
         dropOLAtual.getItems().addAll(Config.getListaOL());
         dropOLAtual.setValue(Config.getListaOL(0));
+
+
+        tgTR.getStyleClass().remove("radio-button");
+        tgTR.getStyleClass().add("toggle-button");
+        tgER.getStyleClass().remove("radio-button");
+        tgER.getStyleClass().add("toggle-button");
+        tgTR.prefWidthProperty().bind(Bindings.divide(painelEsquerdo.widthProperty(), 2.0));
+        tgER.prefWidthProperty().bind(Bindings.divide(painelEsquerdo.widthProperty(), 2.0));
+        tgTR.setToggleGroup(grupoTGEsquerdo);
+        tgER.setToggleGroup(grupoTGEsquerdo);
+        grupoTGEsquerdo.selectToggle(tgTR);
+        tPaneER.setVisible(false);
+
+        tgTR.setOnAction(event -> {
+            tPaneTR.setVisible(true);
+            tPaneER.setVisible(false);
+        });
+
+        tgER.setOnAction(event -> {
+            tPaneER.setVisible(true);
+            tPaneTR.setVisible(false);
+        });
     }
 }
 

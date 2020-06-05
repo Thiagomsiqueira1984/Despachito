@@ -43,18 +43,21 @@
                   <Label layoutX="56.0" layoutY="6.0" minHeight="25.0" minWidth="70.0" prefWidth="70.0" text="OL Atual:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
-          <AnchorPane maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="300.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+          <AnchorPane fx:id="painelEsquerdo" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="300.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                <children>
-                <TitledPane animated="false" collapsible="false" text="Texto recorrente" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TitledPane fx:id="tPaneTR" animated="false" collapsible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <content>
                     <AnchorPane fx:id="texRecorAnchor" minHeight="0.0" minWidth="0.0">
                            <children>
-                              <ScrollPane fx:id="accordScroll" fitToWidth="true" hbarPolicy="NEVER" layoutY="236.0" minHeight="2073.0" prefHeight="2073.0" prefViewportWidth="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+                              <ScrollPane fx:id="scrollTR" fitToWidth="true" hbarPolicy="NEVER" layoutY="236.0" minHeight="2073.0" prefHeight="2073.0" prefViewportWidth="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
                                  <content>
                                     <VBox fx:id="painelTextoRecorrente" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="200.0" spacing="30.0" SplitPane.resizableWithParent="true">
                                        <children>
-                                          <Button fx:id="botaoNovoTR" mnemonicParsing="false" onAction="#acaoBotaoNovoTR" text="Novo texto recorrente" />
+                                          <Button fx:id="botaoNovoTR" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#acaoBotaoNovoTR" style="-fx-shape: &quot;M257,0C116.39,0,0,114.39,0,255s116.39,257,257,257s255-116.39,255-257S397.61,0,257,0z M392,285H287v107c0,16.54-13.47,30-30,30c-16.54,0-30-13.46-30-30V285H120c-16.54,0-30-13.46-30-30c0-16.54,13.46-30,30-30h107V120c0-16.54,13.46-30,30-30c16.53,0,30,13.46,30,30v105h105c16.53,0,30,13.46,30,30S408.53,285,392,285z&quot;; -fx-border-color: #808080;" />
                                        </children>
+                                       <padding>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </padding>
                                     </VBox>
                                  </content>
                               </ScrollPane>
@@ -62,6 +65,28 @@
                         </AnchorPane>
                   </content>
                 </TitledPane>
+                   <TitledPane fx:id="tPaneER" animated="false" collapsible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                       <content>
+                           <AnchorPane fx:id="exRecorAnchor" minHeight="0.0" minWidth="0.0">
+                               <children>
+                                   <ScrollPane fx:id="scrollER" fitToWidth="true" hbarPolicy="NEVER" layoutY="236.0" minHeight="2073.0" prefHeight="2073.0" prefViewportWidth="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+                                       <content>
+                                           <VBox fx:id="painelExigenciaRecorrente" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="200.0" spacing="30.0" SplitPane.resizableWithParent="true">
+                                               <children>
+                                                   <Button fx:id="botaoNovaER" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#acaoBotaoNovaER" style="-fx-shape: &quot;M257,0C116.39,0,0,114.39,0,255s116.39,257,257,257s255-116.39,255-257S397.61,0,257,0z M392,285H287v107c0,16.54-13.47,30-30,30c-16.54,0-30-13.46-30-30V285H120c-16.54,0-30-13.46-30-30c0-16.54,13.46-30,30-30h107V120c0-16.54,13.46-30,30-30c16.53,0,30,13.46,30,30v105h105c16.53,0,30,13.46,30,30S408.53,285,392,285z&quot;; -fx-border-color: #808080;" />
+                                               </children>
+                                               <padding>
+                                                   <Insets bottom="10.0" top="10.0" />
+                                               </padding>
+                                           </VBox>
+                                       </content>
+                                   </ScrollPane>
+                               </children>
+                           </AnchorPane>
+                       </content>
+                   </TitledPane>
+                  <RadioButton fx:id="tgTR" layoutX="305.0" layoutY="10.0" mnemonicParsing="false" text="Texto recorrente" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <RadioButton fx:id="tgER" mnemonicParsing="false" text="Exigências recorrentes" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
                <opaqueInsets>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
