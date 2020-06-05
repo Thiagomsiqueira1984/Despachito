@@ -35,11 +35,12 @@
                      <effect>
                         <InnerShadow height="10.0" radius="4.5" width="10.0" />
                      </effect></ComboBox>
-                  <TitledPane fx:id="labelOLAtual" animated="false" collapsible="false" expanded="false" layoutX="-87.0" layoutY="-89.0" minWidth="70.0" prefWidth="70.0" style="-fx-background-color: #F5F5F5;" stylesheets="@CSS.css" text="OL Atual:" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TitledPane fx:id="labelOLAtual" animated="false" collapsible="false" disable="true" expanded="false" layoutX="-87.0" layoutY="-89.0" minWidth="70.0" prefWidth="70.0" style="-fx-background-color: #F5F5F5;" stylesheets="@CSS.css" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </TitledPane>
+                  <Label layoutX="56.0" layoutY="6.0" minHeight="25.0" minWidth="70.0" prefWidth="70.0" text="OL Atual:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="300.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
