@@ -92,7 +92,7 @@ public class Controller implements Initializable {
             "exigenciaRecorrente.dpch", TextoRecorrente.exigenciaRecorrente);
         painelExigenciaRecorrente.getChildren().add(novoBloco);
         novoBloco.setVisible(true);
-        botaoNovoTR.toFront();
+        botaoNovaER.toFront();
     }
 
     /*
