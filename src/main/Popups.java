@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -104,20 +105,60 @@ Popup de ok retorna true e cancela retorna false
         janelinha.initModality(Modality.APPLICATION_MODAL);
         janelinha.setTitle("Informações");
         janelinha.setMinWidth(250);
+        janelinha.setMaxWidth(1000);
+
 
         Label label1 = new Label();
-        label1.setText("Versão: 1.8");
+        label1.setText("Despachito versão: 1.8.1");
+        label1.setTextFill(Color.valueOf("#137ccd"));
+        label1.setStyle("-fx-font-weight: bold");
         Label label2 = new Label();
+        label2.setTextFill(Color.valueOf("#137ccd"));
+        label2.setStyle("-fx-font-weight: bold");
         label2.setText("Desenvolvedor: Thiago de Morais Siqueira");
+
+        Label ajuda = new Label();
+        String textoAjuda = "Este programa foi desenvolvido com o intuito de importar arquivos de extrato de tempo de contribuião do programa PRISMA em formato .txt, extrair os dados e gerar automaticamente um despacho de conclusão do processo com base nestes dados.\n" +
+                "\n" +
+                "Antes de iniciar a utilização, verifique na caixa de seleção acima da área de despacho central se a OL atual correta está selecionada. Se for necessária edição ou inclusão de OL, isto pode ser feito no botão de configurações no canto superior esquerdo. No menu de configurações também é possível configurar a pasta padrão onde o programa irá procurar os arquivos de extrato de tempo de contribuição.\n" +
+                "\n" +
+                "Há duas maneiras de gerar o arquivo de extrato de tempo de contribuição necessário para geração do despacho:\n" +
+                "\n" +
+                "A primeira e mais fácil é feita de forma automática pelo programa PrismaPDF ao imprimir um extrato para o formato PDF. Os arquivos txt gerados são salvos na pasta cnilinha onde o programa PrismaPDF foi instalado.\n" +
+                "\n" +
+                "A segunda maneira, para usuários que não usem o PrismaPDF ou que não tenham os arquivos de extrato gerados automaticamente por outros motivos é utilizando a opção de captura do PRISMA. Para capturar o extrato de tempo contribuição do PRISMA (AccuTerm versão 7) em formato de texto é necessário clicar no menu Tools > Capture, marcar as opções \"capture to Clipboard\" e \"Printer Data\" e clicar em \"Start Capture\", digitar a opção \"11 Extrato T.C.\" dentro do benefício e, após concluída a emissão do extrato, clicar novamente no menu Tools > Capture e clicar em \"End Capture\". Essa operação copia o extrato em formato de texto para a área de transferência. Abrir o bloco de notas do Windows, colar o texto copiado e salvar o arquivo na pasta desejada. Importante: a configuração da impressora no PRISMA não pode estar na opção \"Documento PDF\". Qualquer impressora do tipo escrava deve funcionar (LASERJET, HP-DESKJET, entre outras).\n" +
+                "\n" +
+                "Para importar um arquivo extrato de tempo de contribuição, clique no botão \"Importar arquivo de extrato\" e selecione o arquivo que deseja importar. Depois clique no botão \"Gerar despacho\".\n" +
+                "\n" +
+                "O despacho pode ser editado na caixa central de despacho. Também é possível incluir textos recorrentes que constam no painel \"Texto recorrente\" na parte esquerda. Estes textos podem ser editados e também é possível incluir novas caixas com textos personalizados no botão \"+\" abaixo das caixas existentes.\n" +
+                "\n" +
+                "O programa foi desenvolvido para geração de despachos de aposentadoria por idade urbana e aposentadoria por tempo de contribuição. Não suporta outras espécies de benfício.\n" +
+                "\n" +
+                "Ao final da geração do despacho de aposentadoria por idade, é feita uma pré análise quanto a existência de  requisitos mínimos para análise dde aposentadoria por tempo de contribuição (carência e tempo de contribuição). Caso seja constatado que há os requisitos mínimos, será oportunizada a importação de novo arquivo com extrato de aposentadoria por tempo de contribuição, com subsequente geração de despacho com os dados da análise quanto a esta espécie. O mesmo ocorre em análises de aposentadoria por tempo de contribuição, com pré análise dos requisitos para aposentadoria por idade (carência e idade).\n" +
+                "\n" +
+                "Atenção: o uso desta ferramenta não dispensa o servidor da realização da devida análise do processo, conferência dos dados do despacho com o extrato de tempo de contribuição utilizado e com os dados do processo." +
+                "\n";
+        ajuda.setText(textoAjuda);
+        ajuda.setTextAlignment(TextAlignment.JUSTIFY);
+        ajuda.setMaxWidth(950);
+        ajuda.setWrapText(true);
+
         Button botao = new Button("Fechar");
         botao.setPrefWidth(75);
         botao.setOnAction(e -> janelinha.close());
 
+        ScrollPane sp = new ScrollPane();
+        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        sp.setContent(ajuda);
+
         VBox layout = new VBox();
-        layout.getChildren().addAll(label1, label2, botao);
+        layout.getChildren().addAll(label1, label2, sp, botao);
         layout.setAlignment(Pos.CENTER);
         layout.setSpacing(10);
         layout.setPadding(new Insets(5,5,15,5));
+
+
 
         Scene cena = new Scene(layout);
         janelinha.setScene(cena);

@@ -245,7 +245,6 @@ public class Config {
             try {
                 Config.getOL().createNewFile();
                 Config.addListaOL("23.001.820 - Central Especializada de Alta Performance Aposentadoria por Idade");
-                Config.addListaOL("14.022.070 - APS Londrina Shagri-lá");
                 Config.setOLatual(Config.getListaOL(0));
                 Config.setOLpadrao(Config.getListaOL(0));
                 Config.listaParaArquivoOL(Config.getOL());
@@ -403,7 +402,13 @@ public class Config {
         else //Passa o conteúdo do arquivo de dirPadrao para o diretório padrão de importação
             try {
                 String p = new String(Files.readAllBytes(dP.toPath()));
-                Config.pathImportaExtrato = new File(p);
+                File fp = new File(p);
+                Path pp = Paths.get(fp.getAbsolutePath());
+                if (Files.exists(pp)) {
+                    Config.pathImportaExtrato = new File(p);
+                } else {
+                    fp.mkdir();
+                }
             } catch (Exception ex) {}
     }
 
