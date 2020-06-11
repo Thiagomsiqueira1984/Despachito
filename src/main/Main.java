@@ -11,7 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
+import javafx.stage.StageStyle;
 
 
 public class Main extends Application {
@@ -20,9 +20,10 @@ public class Main extends Application {
     public void start(Stage janelaInicial) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         janelaInicial.setTitle("Despachito");
-        janelaInicial.setScene(new Scene(root, 1280, 1000));
-        janelaInicial.setMinWidth(1000);
-        janelaInicial.setMinHeight(800);
+        janelaInicial.setScene(new Scene(root, 1000, 600));
+        janelaInicial.setMaximized(true);
+        janelaInicial.setMinWidth(800);
+        janelaInicial.setMinHeight(600);
         janelaInicial.getIcons().add(new Image(getClass().getResourceAsStream("Icone.png")));
         janelaInicial.show();
     }

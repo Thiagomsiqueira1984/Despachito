@@ -218,7 +218,7 @@ public class GeradorDespachoApIdade {
         if (index == segurado.getR1()) {
             texto = "Quanto à regra de aposentadoria programada art. 19 da Emenda Constitucional 103/2019, ";
         } else if (index == segurado.getR2()) {
-            texto = "Quanto à regra de direito adquirido antes da Emenda Constitucional 103/2019, ";
+            texto = "Quanto à regra de direito adquirido antes da Emenda Constitucional 103/2019, art. 48 da Lei 8.213/91, ";
         } else {
             texto = "Quanto à regra transitória do art. 18 da Emenda Constitucional 103/2019, ";
         }

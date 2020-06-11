@@ -3,6 +3,7 @@ package main;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -12,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.scene.control.*;
+import javafx.stage.StageStyle;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -28,6 +30,7 @@ public class Popups {
         janelinha.initModality(Modality.APPLICATION_MODAL);
         janelinha.setTitle(titulo);
         janelinha.setMinWidth(250);
+        janelinha.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         Label label = new Label();
         label.setText(mensagem);
@@ -59,6 +62,7 @@ Popup de ok retorna true e cancela retorna false
         janelinha.initModality(Modality.APPLICATION_MODAL);
         janelinha.setTitle(titulo);
         janelinha.setWidth(800);
+        janelinha.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         Label label = new Label();
         label.setText(mensagem);
@@ -106,10 +110,10 @@ Popup de ok retorna true e cancela retorna false
         janelinha.setTitle("Informações");
         janelinha.setMinWidth(250);
         janelinha.setMaxWidth(1000);
-
+        janelinha.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         Label label1 = new Label();
-        label1.setText("Despachito versão: 1.8.1");
+        label1.setText("Despachito versão: 1.8.4");
         label1.setTextFill(Color.valueOf("#137ccd"));
         label1.setStyle("-fx-font-weight: bold");
         Label label2 = new Label();
@@ -134,7 +138,7 @@ Popup de ok retorna true e cancela retorna false
                 "\n" +
                 "O programa foi desenvolvido para geração de despachos de aposentadoria por idade urbana e aposentadoria por tempo de contribuição. Não suporta outras espécies de benfício.\n" +
                 "\n" +
-                "Ao final da geração do despacho de aposentadoria por idade, é feita uma pré análise quanto a existência de  requisitos mínimos para análise dde aposentadoria por tempo de contribuição (carência e tempo de contribuição). Caso seja constatado que há os requisitos mínimos, será oportunizada a importação de novo arquivo com extrato de aposentadoria por tempo de contribuição, com subsequente geração de despacho com os dados da análise quanto a esta espécie. O mesmo ocorre em análises de aposentadoria por tempo de contribuição, com pré análise dos requisitos para aposentadoria por idade (carência e idade).\n" +
+                "Ao final da geração do despacho de aposentadoria por idade, é feita uma pré análise quanto a existência de requisitos mínimos para análise de aposentadoria por tempo de contribuição (carência e tempo de contribuição). Caso seja constatado que há os requisitos mínimos, será oportunizada a importação de novo arquivo com extrato de aposentadoria por tempo de contribuição, com subsequente geração de despacho com os dados da análise quanto a esta espécie. O mesmo ocorre em análises de aposentadoria por tempo de contribuição, com pré análise dos requisitos para aposentadoria por idade (carência e idade).\n" +
                 "\n" +
                 "Atenção: o uso desta ferramenta não dispensa o servidor da realização da devida análise do processo, conferência dos dados do despacho com o extrato de tempo de contribuição utilizado e com os dados do processo." +
                 "\n";
@@ -179,6 +183,7 @@ Popup de ok retorna true e cancela retorna false
         janelinha.initModality(Modality.APPLICATION_MODAL);
         janelinha.setTitle(titulo);
         janelinha.setMinWidth(400);
+        janelinha.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         Label labelCodOL = new Label();
         labelCodOL.setText("Código da OL");

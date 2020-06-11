@@ -4,11 +4,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -135,6 +137,7 @@ public class Config {
         janelaConfig.setTitle("Configurações");
         janelaConfig.setMinWidth(800);
         janelaConfig.setMaxWidth(800);
+        janelaConfig.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         /*
         Parte referente às OL padrão
@@ -402,6 +405,9 @@ public class Config {
         else //Passa o conteúdo do arquivo de dirPadrao para o diretório padrão de importação
             try {
                 String p = new String(Files.readAllBytes(dP.toPath()));
+                if (p.trim().isEmpty()) {
+                    p = homeString;
+                }
                 File fp = new File(p);
                 Path pp = Paths.get(fp.getAbsolutePath());
                 if (Files.exists(pp)) {

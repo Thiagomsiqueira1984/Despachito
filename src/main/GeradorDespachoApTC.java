@@ -492,9 +492,9 @@ public class GeradorDespachoApTC {
         if (index == segurado.getR1()) {
             texto = "Quanto à regra de aposentadoria programada art. 19 da Emenda Constitucional 103/2019, ";
         } else if (index == segurado.getR4()) {
-            texto = "Quanto à regra de direito adquirido à aposentadoria integral antes da Emenda Constitucional 103/2019, ";
+            texto = "Quanto à regra de direito adquirido à aposentadoria integral antes da Emenda Constitucional 103/2019, art. 52 e inciso II do art. 53 da Lei 8.213/91, ";
         } else if (index == segurado.getR5()) {
-            texto = "Quanto à regra de direito adquirido à aposentadoria proporcional antes da Emenda Constitucional 103/2019, ";
+            texto = "Quanto à regra de direito adquirido à aposentadoria proporcional antes da Emenda Constitucional 103/2019, art. 9º da Emenda Constitucional 20/1998, ";
         } else if (index > segurado.getR5() && index <= segurado.getR6()) {
             texto = "Quanto à regra transitória do art. 15 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com soma de idade e tempo, ";
         } else if (index > segurado.getR6() && index <= segurado.getR7()) {
@@ -538,7 +538,7 @@ public class GeradorDespachoApTC {
     Testa se a regra a ser impressa leva em consideração a idade e retorna texto da idade EXIGIDA
      */
     public String testaIdadeExigida(Segurado segurado, int index) {
-        if (index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
+        if (index == segurado.getR5() | index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
             return ", " + segurado.getIdadeExigida(index) + " de idade";
         } else {
             return "";
@@ -549,7 +549,7 @@ public class GeradorDespachoApTC {
     Testa se a regra a ser impressa leva em consideração a idade e retorna texto da idade EFETIVA
      */
     public String testaIdadeEfetiva(Segurado segurado, int index) {
-        if (index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
+        if (index == segurado.getR5() | index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
             return
                     ", " + segurado.getIdadeEfetiva(index)[0] + " anos, " +
                             segurado.getIdadeEfetiva(index)[1] + " meses e " +
