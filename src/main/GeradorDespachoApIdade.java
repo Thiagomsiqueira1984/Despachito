@@ -178,17 +178,23 @@ public class GeradorDespachoApIdade {
                         "Nome d" + segurado.getArtGenero() + " requerente: " + segurado.getNome() + "\n\n" +
                         "Número do requerimento benefício: " + segurado.getNB() + "\n\n" +
                         "Trata-se de requerimento de " + segurado.getEspecieBeneficio() + "." + "\n\n" +
-                        "A data de nascimento d" + segurado.getArtGenero() + " requerente é " + segurado.getStringDataNasc() +
+                        "A data de nascimento d" + segurado.getArtGenero() + " requerente é " +
+                        segurado.getStringDataNasc() +
                         ". A data de entrada do requerimento - DER é " +
-                        segurado.getStringDER() + ". A data de início do benefício - DIB, se for reconhecido o direito à concessão, é " +
+                        segurado.getStringDER() + ". A data de início do benefício - DIB, se for reconhecido " +
+                        "o direito à concessão, é " +
                         segurado.getStringDIB() + ". Portanto, a idade na DIB é de " +
-                        segurado.getIdadeDIB()[0] + " anos, " + segurado.getIdadeDIB()[1] + " meses e " + segurado.getIdadeDIB()[2] + " dias" + ".\n\n" +
+                        segurado.getIdadeDIB()[0] + " anos, " + segurado.getIdadeDIB()[1] + " meses e " +
+                        segurado.getIdadeDIB()[2] + " dias" + ".\n\n" +
                         "Trata-se de requerente do sexo " + segurado.getSexo() + ".\n\n" +
-                        "O ingresso no RGPS ocorreu em " + segurado.getStringDataFiliaAs() + ", " + segurado.getAntesDepoisEC() +
-                        " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " + segurado.getAtendeNaoAtEC() +
-                        " ao primeiro requisito para análise quanto à concessão por direito adquirido à aposentadoria antes da publicação da " +
-                        "Emenda Constitucional 103/2019 e/ou pela regra transitória do art. 18 da citada emenda." + "\n";
-
+                        "O ingresso no RGPS ocorreu em " + segurado.getStringDataFiliaAs() + ", " +
+                        segurado.getAntesDepoisEC() +
+                        " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " +
+                        segurado.getAtendeNaoAtEC() +
+                        " ao primeiro requisito para análise quanto à concessão por direito adquirido à " +
+                        "aposentadoria antes da publicação da " +
+                        "Emenda Constitucional 103/2019 e/ou pela regra transitória do art. 18 da citada emenda.\n\n" +
+                        "Segue a análise do direito quanto às regras para concessão do benefício:\n";
     }
 
     /*

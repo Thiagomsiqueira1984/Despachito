@@ -1,14 +1,15 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class GeradorDespachoApTC {
+public class GeradorDespachoTopicos {
 
     /*
-    Atributos
-     */
+        Atributos
+         */
     private List<String> despachoCompletoTC = new ArrayList<>(); //Texto completo do despacho
     private String stringDespachoCompletoTC; //Texto completo do despacho
 
@@ -204,47 +205,47 @@ public class GeradorDespachoApTC {
         do {
 
 
-        String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR6());
-        segurado.addRegraAnaliseDireito(regra);
+            String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR6());
+            segurado.addRegraAnaliseDireito(regra);
 
-        String stringDataBase = segurado.parseDataBase(segurado.getR6());
-        segurado.addStringDataBase(stringDataBase);
+            String stringDataBase = segurado.parseDataBase(segurado.getR6());
+            segurado.addStringDataBase(stringDataBase);
 
-        Date dateDatabase = segurado.converteDataBaseDate(segurado.getR6());
-        segurado.addDateDataBase(dateDatabase);
+            Date dateDatabase = segurado.converteDataBaseDate(segurado.getR6());
+            segurado.addDateDataBase(dateDatabase);
 
-        String idadeExigida = segurado.parseIdadeExigida(segurado.getR6());
-        segurado.addIdadeExigida(idadeExigida);
+            String idadeExigida = segurado.parseIdadeExigida(segurado.getR6());
+            segurado.addIdadeExigida(idadeExigida);
 
-        String carenciaExigida = segurado.parseCarenciaExigida(segurado.getR6());
-        segurado.addCarenciaExigida(carenciaExigida);
+            String carenciaExigida = segurado.parseCarenciaExigida(segurado.getR6());
+            segurado.addCarenciaExigida(carenciaExigida);
 
-        String[] pedagio = segurado.parsePedagio(segurado.getR6());
-        segurado.addPedagio(pedagio);
+            String[] pedagio = segurado.parsePedagio(segurado.getR6());
+            segurado.addPedagio(pedagio);
 
-        String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR6());
-        segurado.addTempCompExigido(tempCompExigido);
+            String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR6());
+            segurado.addTempCompExigido(tempCompExigido);
 
-        String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR6());
-        segurado.addPontuacaoExigida(pontuacaoExigida);
+            String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR6());
+            segurado.addPontuacaoExigida(pontuacaoExigida);
 
-        String[] idadeEfetiva = segurado.parseIdadeEfetiva(segurado.getR6());
-        segurado.addIdadeEfetiva(idadeEfetiva);
+            String[] idadeEfetiva = segurado.parseIdadeEfetiva(segurado.getR6());
+            segurado.addIdadeEfetiva(idadeEfetiva);
 
-        String carenciaEfetiva = segurado.parseCarenciaEfetiva(segurado.getR6());
-        segurado.addCarenciaEfetiva(carenciaEfetiva);
+            String carenciaEfetiva = segurado.parseCarenciaEfetiva(segurado.getR6());
+            segurado.addCarenciaEfetiva(carenciaEfetiva);
 
-        String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR6());
-        segurado.addTempCompEfetivo(tempCompEfetivo);
+            String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR6());
+            segurado.addTempCompEfetivo(tempCompEfetivo);
 
-        String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR6());
-        segurado.addTempCompPedagio(tempCompPedagio);
+            String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR6());
+            segurado.addTempCompPedagio(tempCompPedagio);
 
-        String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR6());
-        segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
+            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR6());
+            segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
-        String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR6());
-        segurado.addRecDireitoDataBase(recDireitoDataBase);
+            String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR6());
+            segurado.addRecDireitoDataBase(recDireitoDataBase);
 
             if (segurado.getDateDataBase(segurado.getR6()).compareTo(segurado.getDER()) < 0) {
                 segurado.setR6(segurado.getR6() + 1);
@@ -467,29 +468,84 @@ public class GeradorDespachoApTC {
     Método para escrever os parágrafos de reconhecimento de direito a partir do número de índice fornecido
      */
     public String escreverParagrafoAnaliseDireito(Segurado segurado, int index) {
-        return
-                this.textoRegraAnaliseDireito(segurado, index) + "considerado até " +
-                        segurado.getStringDataBase(index) + ", são necessários, cumulativamente" +
-                        this.testaTCateECexigido(segurado, index) +
-                        ", " + segurado.getTempCompExigido(index)[0] + " anos, " +
-                        segurado.getTempCompExigido(index)[1] + " meses e " +
-                        segurado.getTempCompExigido(index)[2] + " dias de tempo de contribuição" +
-                        this.testaPedagio(segurado, index) +
-                        this.testaIdadeExigida(segurado, index) +
-                        this.testaPontuacaoExigida(segurado, index) +
-                        " e " + segurado.getCarenciaExigida(index) + " contribuições para fins de carência. " +
-                        "Foram apurados " +
-                        this.testaTCateECefetivo(segurado, index) +
-                        ", " + segurado.getTempCompEfetivo(index)[0] + " anos, " +
-                        segurado.getTempCompEfetivo(index)[1] + " meses e " +
-                        segurado.getTempCompEfetivo(index)[2] + " dias de tempo de contribuição" +
-                        this.testaIdadeEfetiva(segurado, index) +
-                        this.testaPontuacaoEfetiva(segurado, index) +
-                        " e " + segurado.getCarenciaEfetiva(index) + " contribuições para fins de carência. " +
-                        " Portanto, " +
-                        segurado.getRecDireitoDataBase(index) + " direito à aposentadoria por esta regra até " +
-                        segurado.getStringDataBase(index) + "." + "\n";
+
+        String pad = "";
+
+        Integer[] paragrafosDeRegras = {segurado.getR1(), segurado.getR4(), segurado.getR5(), segurado.getR6(),
+                segurado.getR7(), segurado.getR8(), segurado.getR9(), };
+        boolean cabecalhoRegra = true;
+        int nivelAtual = Arrays.asList(paragrafosDeRegras).indexOf(index);
+
+        if (nivelAtual > 0) {
+            if (paragrafosDeRegras[nivelAtual] > (paragrafosDeRegras[nivelAtual-1]+1)) {
+                cabecalhoRegra = false;
+            }
+        }
+
+        if (cabecalhoRegra) {
+            pad = textoRegraAnaliseDireito(segurado, index) + "\n\n";
+        }
+
+        pad = pad + "Até " + segurado.getStringDataBase(index) + " foram apurados:\n\n";
+
+        pad = pad + "Carência exigida: " + segurado.getCarenciaExigida(index) + " contribuições;\n" +
+                    "Carência efetiva: " + segurado.getCarenciaEfetiva(index) + " contribuições.\n";
+
+        if (index == segurado.getR1() | index == segurado.getR5() | index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
+            pad = pad + "\nIdade exigida: " + segurado.getIdadeExigida(index) + ";\n" +
+                        "Idade efetiva: " +
+                        segurado.getIdadeEfetiva(index)[0] + " anos, " +
+                        segurado.getIdadeEfetiva(index)[1] + " meses e " +
+                        segurado.getIdadeEfetiva(index)[2] + " dias.\n";
+        }
+
+        if (index == segurado.getR8()) {
+            if (segurado.getSexo().equals("masculino")) {
+                pad = pad + "\nTempo de contribuição exigido até 13/11/2019: 33 anos;\n";
+            } else {
+                pad = pad + "\nTempo de contribuição exigido até 13/11/2019: 28 anos;\n";
+            }
+            pad = pad + "Tempo de contribuição efetivo até 13/11/2019: " +
+                        segurado.getTempCompEfetivo(1)[0] + " anos, " +
+                        segurado.getTempCompEfetivo(1)[1] + " meses e " +
+                        segurado.getTempCompEfetivo(1)[2] + " dias.\n";
+        }
+
+        pad = pad + "\nTempo de contribuição exigido: " +
+                    segurado.getTempCompExigido(index)[0] + " anos, " +
+                    segurado.getTempCompExigido(index)[1] + " meses e " +
+                    segurado.getTempCompExigido(index)[2] + " dias.\n";
+        if (index == segurado.getR5() | index > segurado.getR7() && index <= segurado.getR9()) {
+            pad = pad + "Pedágio: " +
+                        segurado.getPedagio(index)[0] + " anos, " +
+                        segurado.getPedagio(index)[1] + " meses e " +
+                        segurado.getPedagio(index)[2] + " dias.\n";
+            pad = pad + "Tempo de contribuição exigido com pedágio: " +
+                        segurado.getTempCompPedagio(index)[0] + " anos, " +
+                        segurado.getTempCompPedagio(index)[1] + " meses e " +
+                        segurado.getTempCompPedagio(index)[2] + " dias.\n";
+        }
+        pad = pad + "Tempo de contribuição efetivo: " +
+                segurado.getTempCompEfetivo(index)[0] + " anos, " +
+                segurado.getTempCompEfetivo(index)[1] + " meses e " +
+                segurado.getTempCompEfetivo(index)[2] + " dias.\n";
+
+        if (index > segurado.getR5() && index <= segurado.getR6()) {
+            pad = pad + "\nPontuação exigida: " + segurado.getPontuacaoExigida(index) + ";\n" +
+                        "Pontuação efetiva: " +
+                        segurado.getPontuacaoEfetiva(index)[0] + " anos, " +
+                        segurado.getPontuacaoEfetiva(index)[1] + " meses e " +
+                        segurado.getPontuacaoEfetiva(index)[2] + " dias.\n";
+        }
+
+
+        pad = pad + "\nPortanto, " +
+        segurado.getRecDireitoDataBase(index) + " direito à aposentadoria por esta regra até " +
+        segurado.getStringDataBase(index) + "." + "\n";
+
+        return pad;
     }
+
 
     /*
     Retorna o texto com o nome da regra de análise do direito formatado para o despacho
@@ -497,117 +553,38 @@ public class GeradorDespachoApTC {
     public String textoRegraAnaliseDireito(Segurado segurado, int index) {
         String texto = "";
         if (index == segurado.getR1()) {
-            texto = "Quanto à regra de aposentadoria programada art. 19 da Emenda Constitucional 103/2019, ";
+            texto = "- Regra de aposentadoria programada art. 19 da Emenda Constitucional 103/2019:\n\n" +
+                    "Os requisitos cumulativos para reconhecimento do direito ao benefício por esta regra são " +
+                    "carência, idade e tempo de contribuição.";
         } else if (index == segurado.getR4()) {
-            texto = "Quanto à regra de direito adquirido à aposentadoria integral antes da Emenda Constitucional 103/2019, art. 52 e inciso II do art. 53 da Lei 8.213/91, ";
+            texto = "- Regra de direito adquirido à aposentadoria integral antes da Emenda Constitucional 103/2019, art. 52 e inciso II do art. 53 da Lei 8.213/91:\n\n" +
+                    "Os requisitos cumulativos para reconhecimento do direito ao benefício por esta regra são " +
+                    "carência e tempo de contribuição.";
         } else if (index == segurado.getR5()) {
-            texto = "Quanto à regra de direito adquirido à aposentadoria proporcional antes da Emenda Constitucional 103/2019, art. 9º da Emenda Constitucional 20/1998, ";
+            texto = "- Regra de direito adquirido à aposentadoria proporcional antes da Emenda Constitucional 103/2019, art. 9º da Emenda Constitucional 20/1998:\n\n" +
+                    "Os requisitos cumulativos para reconhecimento do direito ao benefício por esta regra são " +
+                    "carência, idade e tempo de contribuição.";
         } else if (index > segurado.getR5() && index <= segurado.getR6()) {
-            texto = "Quanto à regra transitória do art. 15 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com soma de idade e tempo, ";
+            texto = "- Regra transitória do art. 15 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com soma de idade e tempo:\n\n" +
+                    "Os requisitos cumulativos para reconhecimento do direito ao benefício por esta regra são " +
+                    "carência, tempo de contribuição e pontuação(tempo de contribuição + idade).";
         } else if (index > segurado.getR6() && index <= segurado.getR7()) {
-            texto = "Quanto à regra transitória do art. 16 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com idade mínima, ";
+            texto = "- Regra transitória do art. 16 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com idade mínima:\n\n" +
+                    "Os requisitos cumulativos para reconhecimento do direito ao benefício por esta regra são " +
+                    "carência, idade e tempo de contribuição.";
         } else if (index == segurado.getR8()) {
-            texto = "Quanto à regra transitória do art. 17 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com pedagio de 50%, ";
+            texto = "- Regra transitória do art. 17 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com pedagio de 50%:\n\n" +
+                    "Os requisitos cumulativos para reconhecimento do direito ao benefício por esta regra são " +
+                    "carência, tempo de contribuição até 13/11/2019 e tempo de contribuição total acrescido 50% do tempo que faltava para aposentadoria integral em 13/11/2019(pedágio).";
         } else if (index == segurado.getR9()) {
-            texto = "Quanto à regra transitória do art. 20 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com pedagio de 100%, ";
+            texto = "- Regra transitória do art. 20 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com pedagio de 100%:\n\n" +
+                    "Os requisitos cumulativos para reconhecimento do direito ao benefício por esta regra são " +
+                    "carência, idade e tempo de contribuição total acrescido 100% do tempo que faltava para aposentadoria integral em 13/11/2019(pedágio).";
         }
         return texto;
     }
 
-    /*
-    Testa se a regra a ser impressa leva em consideração o tempo de contribuição exigido até 13/11/2019
-     */
-    public String testaTCateECexigido(Segurado segurado, int index) {
-        if (index == segurado.getR8()) {
-            if (segurado.getSexo().equals("masculino")) {
-                return "33 anos de contribuição completos até 13/11/2019";
-            } else {
-                return "28 anos de contribuição completos até 13/11/2019";
-            }
-        }
-        else {return "";}
-    }
 
-    /*
-    Testa se a regra a ser impressa leva em consideração o tempo de contribuição efetivo até 13/11/2019
-     */
-    public String testaTCateECefetivo(Segurado segurado, int index) {
-        if (index == segurado.getR8()) {
-            return
-                    segurado.getTempCompEfetivo(1)[0] + " anos, " +
-                            segurado.getTempCompEfetivo(1)[1] + " meses e " +
-                            segurado.getTempCompEfetivo(1)[2] + " dias de contribuição completos até 13/11/2019";
-        }
-        else {return "";}
-    }
-
-    /*
-    Testa se a regra a ser impressa leva em consideração a idade e retorna texto da idade EXIGIDA
-     */
-    public String testaIdadeExigida(Segurado segurado, int index) {
-        if (index == segurado.getR1() | index == segurado.getR5() |
-                index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
-            return ", " + segurado.getIdadeExigida(index) + " de idade";
-        } else {
-            return "";
-        }
-    }
-
-    /*
-    Testa se a regra a ser impressa leva em consideração a idade e retorna texto da idade EFETIVA
-     */
-    public String testaIdadeEfetiva(Segurado segurado, int index) {
-        if (index == segurado.getR1() | index == segurado.getR5() |
-                index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
-            return
-                    ", " + segurado.getIdadeEfetiva(index)[0] + " anos, " +
-                            segurado.getIdadeEfetiva(index)[1] + " meses e " +
-                            segurado.getIdadeEfetiva(index)[2] + " dias de idade";
-        } else { return "";
-        }
-    }
-
-    /*
-    Testa se a regra a ser impressa leva em consideração o pedágio e retorna pedágio e tempo + pedágio
-     */
-    public String testaPedagio(Segurado segurado, int index) {
-        if (index == segurado.getR5() | index > segurado.getR7() && index <= segurado.getR9()) {
-            return ", acrescidos de " +
-                    segurado.getPedagio(index)[0] + " anos, " +
-                    segurado.getPedagio(index)[1] + " meses e " +
-                    segurado.getPedagio(index)[2] + " dias de pedágio, totalizando " +
-                    segurado.getTempCompPedagio(index)[0] + " anos, " +
-                    segurado.getTempCompPedagio(index)[1] + " meses e " +
-                    segurado.getTempCompPedagio(index)[2] + " dias de tempo de contribuição exigido";
-        }
-        else {return "";}
-    }
-
-    /*
-    Testa se a regra a ser impressa leva em consideração a pontuação e retorna texto da pontuação EXIGIDA
-     */
-    public String testaPontuacaoExigida(Segurado segurado, int index) {
-        if (index > segurado.getR5() && index <= segurado.getR6()) {
-            return ", " + segurado.getPontuacaoExigida(index) + " de pontuação correspondente à soma de idade" +
-                    " e tempo de contribuição";
-        } else {
-            return "";
-        }
-    }
-
-    /*
-    Testa se a regra a ser impressa leva em consideração a pontuação e retorna texto da pontuação EFETIVA
-     */
-    public String testaPontuacaoEfetiva(Segurado segurado, int index) {
-        if (index > segurado.getR5() && index <= segurado.getR6()) {
-            return
-                    ", pontuação correspondente a " +
-                            segurado.getPontuacaoEfetiva(index)[0] + " anos, " +
-                            segurado.getPontuacaoEfetiva(index)[1] + " meses e " +
-                            segurado.getPontuacaoEfetiva(index)[2] + " dias";
-        } else { return "";
-        }
-    }
 
     /*
     Método para escrever a parte final do despacho - reconhecimento de direito à aposentadoria por qualquer uma das regras
@@ -620,7 +597,7 @@ public class GeradorDespachoApTC {
                 "concessão de aposentadoria por idade. " + "\n\n";
         String tFinal =
                 "Pelo exposto, " + segurado.getRecDireitoFinalTC() +
-                " à concessão da aposentadoria por tempo de contribuição." + "\n\n";
+                        " à concessão da aposentadoria por tempo de contribuição." + "\n\n";
         if (segurado.getRecDireitoFinalTC().startsWith("não")) {
             if (segurado.fazPreAnaliseCarencia()) {
                 tFinalCarencia = "Foi  " + tFinalCarencia;
@@ -640,3 +617,6 @@ public class GeradorDespachoApTC {
         return tFinal;
     }
 }
+
+
+

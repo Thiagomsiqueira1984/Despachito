@@ -12,6 +12,7 @@ import java.util.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import org.fxmisc.richtext.StyledTextArea;
 
 
 public class Controller implements Initializable {
@@ -142,8 +143,6 @@ public class Controller implements Initializable {
      */
     public void acaoGerarDespacho() {
 
-        //todo adaptar a impressao de aposentadoria por tempo de contribuição
-
         cDespI = new GeradorDespachoApIdade();
         cDespTC = new GeradorDespachoApTC();
         constroiParteInicial();
@@ -153,8 +152,18 @@ public class Controller implements Initializable {
             constroiParagrafoAnaliseDireito(contador, cSegur.getCodEspecieBeneficio());
             contador++;
         }
-        contador = 0;
-        constroiParagrafoAnaliseDireito(contador, cSegur.getCodEspecieBeneficio());
+        if (cSegur.getCodEspecieBeneficio().equals("41")) {
+            contador = 0;
+            constroiParagrafoAnaliseDireito(contador, cSegur.getCodEspecieBeneficio());
+        } else {
+            if (cSegur.getRecDireitoFinalTC().equals("foi reconhecido o direito")) {
+                contador = 0;
+                constroiParagrafoAnaliseDireito(contador, cSegur.getCodEspecieBeneficio());
+            } else if (cSegur.getRecDireitoFinalTC().equals("não foi reconhecido o direito") && !cSegur.getCabeAnaliseDtoOutraEspecie()) {
+                contador = 0;
+                constroiParagrafoAnaliseDireito(contador, cSegur.getCodEspecieBeneficio());
+            }
+        }
 
         constroiParteFinal();
 

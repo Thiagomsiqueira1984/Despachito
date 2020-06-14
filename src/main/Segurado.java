@@ -990,10 +990,16 @@ public class Segurado {
             if (this.getSexo().equals("masculino")) {
                 if (id >= 65 && car >= 180 && tc >= 20) {
                     recDireitoDataBase = "s";
+                    if (this.getCodEspecieBeneficio().equals("42")) {
+                        this.setCabeAnaliseDtoOutraEspecie(true);
+                    }
                 }
             } else {
                 if (id >= 62 && car >= 180 && tc >= 15) {
                     recDireitoDataBase = "s";
+                    if (this.getCodEspecieBeneficio().equals("42")) {
+                        this.setCabeAnaliseDtoOutraEspecie(true);
+                    }
                 }
             }
         }
