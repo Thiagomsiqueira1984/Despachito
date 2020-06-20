@@ -12,6 +12,7 @@ import java.util.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import org.fxmisc.richtext.StyledTextArea;
 
 
@@ -47,6 +48,8 @@ public class Controller implements Initializable {
 
     public VBox painelExigenciaRecorrente = new VBox();
     public Button botaoNovaER = new Button();
+
+    public Label banner;
 
     /*
     Ação do botão de abrir tela de configurações
@@ -416,6 +419,8 @@ public class Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        banner.setFont(Font.loadFont(getClass().getResource("Rubik-Black.ttf").toExternalForm(), 40));
 
         /*
         Inicia verificação e criação de arquivos de database e suas listas

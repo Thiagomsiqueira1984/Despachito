@@ -113,7 +113,7 @@ Popup de ok retorna true e cancela retorna false
         janelinha.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         Label label1 = new Label();
-        label1.setText("Despachito versão: 1.8.5");
+        label1.setText("Despachito versão: 1.8.5b");
         label1.setTextFill(Color.valueOf("#137ccd"));
         label1.setStyle("-fx-font-weight: bold");
         Label label2 = new Label();
@@ -122,7 +122,7 @@ Popup de ok retorna true e cancela retorna false
         label2.setText("Desenvolvedor: Thiago de Morais Siqueira");
 
         Label ajuda = new Label();
-        String textoAjuda = "Este programa foi desenvolvido com o intuito de importar arquivos de extrato de tempo de contribuião do programa PRISMA em formato .txt, extrair os dados e gerar automaticamente um despacho de conclusão do processo com base nestes dados.\n" +
+        String textoAjuda = "Este programa foi desenvolvido com o intuito de importar arquivos de extrato de tempo de contribuição do programa PRISMA em formato .txt, extrair os dados e gerar automaticamente um despacho de conclusão do processo com base nestes dados.\n" +
                 "\n" +
                 "Antes de iniciar a utilização, verifique na caixa de seleção acima da área de despacho central se a OL atual correta está selecionada. Se for necessária edição ou inclusão de OL, isto pode ser feito no botão de configurações no canto superior esquerdo. No menu de configurações também é possível configurar a pasta padrão onde o programa irá procurar os arquivos de extrato de tempo de contribuição.\n" +
                 "\n" +

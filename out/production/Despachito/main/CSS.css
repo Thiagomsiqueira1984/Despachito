@@ -1,3 +1,7 @@
+@font-face {
+  src: url('Rubik-Black.ttf');
+}
+
 .combo-box .list-cell{
     -fx-alignment: center;
 }

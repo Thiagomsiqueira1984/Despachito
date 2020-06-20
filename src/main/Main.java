@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -25,6 +26,8 @@ public class Main extends Application {
         janelaInicial.setMinWidth(800);
         janelaInicial.setMinHeight(600);
         janelaInicial.getIcons().add(new Image(getClass().getResourceAsStream("Icone.png")));
+        Font.loadFont(getClass().getResource("Rubik-Black.ttf").toExternalForm(), 40);
+        System.setProperty("prism.lcdtext", "false");
         janelaInicial.show();
     }
 
