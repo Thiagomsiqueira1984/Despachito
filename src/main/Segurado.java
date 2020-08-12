@@ -806,7 +806,7 @@ public class Segurado {
             pedagio = pedagio.split(this.getRegraAnaliseDireito(index), 2)[1];
             pedagio = pedagio.split("Analise do direito em " + this.getStringDataBase(index))[1];
             pedagio = pedagio.split("Tempo de pedagio\\s+: ")[1];
-            pedagio = pedagio.split("Total de tempo considerado")[0].trim();
+            pedagio = pedagio.split("\\n")[0].trim();
             arrayPedagio = pedagio.split(", ");
             arrayPedagio[0] = arrayPedagio[0].split("a")[0];
             arrayPedagio[1] = arrayPedagio[1].split("m")[0];
@@ -921,7 +921,7 @@ public class Segurado {
         String carenciaEfetiva = this.getExtrato();
         carenciaEfetiva = carenciaEfetiva.split("Analise do direito em " + this.getStringDataBase(index))[1];
         carenciaEfetiva = carenciaEfetiva.split("Quantidade de carencia\\s+: ")[1];
-        carenciaEfetiva = carenciaEfetiva.split("Idade")[0].trim();
+        carenciaEfetiva = carenciaEfetiva.split("\\n")[0].trim();
         return carenciaEfetiva;
     }
 
@@ -933,8 +933,8 @@ public class Segurado {
         if (this.getCodEspecieBeneficio().equals("42") && index==this.getR1()) {
             tempCompEfetivo = tempCompEfetivo.split("Regra transitoria do Art.15", 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
-            tempCompEfetivo = tempCompEfetivo.split("Total de tempo considerado\\s+: ")[1];
-            tempCompEfetivo = tempCompEfetivo.split("Quantidade de carencia")[0].trim();
+            tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao\\s+: ")[1];
+            tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
         }
         else {
             tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
@@ -942,12 +942,12 @@ public class Segurado {
             if (index == this.getR5() |
                 index == this.getR8() |
                 index == this.getR9()){
-                tempCompEfetivo = tempCompEfetivo.split("Tempo s/ descontar pedagio\\s+: ")[1];
-                tempCompEfetivo = tempCompEfetivo.split("Tempo de pedagio")[0].trim();
+                tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao \\(bruto\\)\\s+: ")[1];
+                tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
             }
             else {
-                tempCompEfetivo = tempCompEfetivo.split("Total de tempo considerado\\s+: ")[1];
-                tempCompEfetivo = tempCompEfetivo.split("Quantidade de carencia")[0].trim();
+                tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao\\s+: ")[1];
+                tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
             }
 
         }
