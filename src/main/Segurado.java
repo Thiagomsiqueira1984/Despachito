@@ -801,7 +801,7 @@ public class Segurado {
      */
     public String[] parsePedagio(int index) {
         String[] arrayPedagio = new String[]{"00", "00", "00"};
-        if (index == this.getR5()|index == this.getR8()|index == this.getR9()) {
+        if (index == this.getR5()) {
             String pedagio = this.getExtrato();
             pedagio = pedagio.split(this.getRegraAnaliseDireito(index), 2)[1];
             pedagio = pedagio.split("Analise do direito em " + this.getStringDataBase(index))[1];
@@ -840,13 +840,35 @@ public class Segurado {
             }
         }
 
-        else if (index == this.getR4() | index == this.getR6() | index == this.getR7() |
-                index == this.getR8() | index == this.getR9()) {
+        else if (index == this.getR4() | index == this.getR6() | index == this.getR7()) {
             if (this.getSexo().equals("masculino")) {
                 tempCompExigido = new String[]{"35", "00", "00"};
             } else {
                 tempCompExigido = new String[]{"30", "00", "00"};
             }
+        }
+
+        else if (index == this.getR8() | index == this.getR9()) {
+            String tempoExigido = this.getExtrato();
+            tempoExigido = tempoExigido.split(this.getRegraAnaliseDireito(index), 2)[1];
+            tempoExigido = tempoExigido.split("Tempo exigido:\\s")[1];
+            tempoExigido = tempoExigido.split("\\n")[0].trim();
+
+            String anos = tempoExigido.split("\\s anos")[0];
+            String meses = "00";
+            String dias = "00";
+
+            if (tempoExigido.indexOf("meses") != -1) {
+                meses = tempoExigido.split("\\s meses")[0];
+                meses = meses.substring(meses.length() - 2);
+            }
+
+            if (tempoExigido.indexOf("dias") != -1) {
+                dias = tempoExigido.split("\\s dias")[0];
+                dias = dias.substring(dias.length() - 2);
+            }
+
+            tempCompExigido = new String[]{anos, meses, dias};
         }
         return tempCompExigido;
     }
@@ -861,7 +883,7 @@ public class Segurado {
         String[] pedagio = this.getPedagio(index);
         int[] ped;
         List<String> l = new ArrayList<>();
-        if (index == this.getR5()|index == this.getR8()|index == this.getR9()) {
+        if (index == this.getR5()) {
             tcpInt = Stream.of(tempComp).mapToInt(Integer::parseInt).toArray();
             ped = Stream.of(pedagio).mapToInt(Integer::parseInt).toArray();
             for(int i = 0; i < tcpInt.length; i++){
@@ -939,9 +961,7 @@ public class Segurado {
         else {
             tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
-            if (index == this.getR5() |
-                index == this.getR8() |
-                index == this.getR9()){
+            if (index == this.getR5()){
                 tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao \\(bruto\\)\\s+: ")[1];
                 tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
             }

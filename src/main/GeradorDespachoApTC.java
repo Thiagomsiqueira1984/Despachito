@@ -520,9 +520,9 @@ public class GeradorDespachoApTC {
     public String testaTCateECexigido(Segurado segurado, int index) {
         if (index == segurado.getR8()) {
             if (segurado.getSexo().equals("masculino")) {
-                return "33 anos de contribuição completos até 13/11/2019";
+                return ", 33 anos de contribuição completos até 13/11/2019";
             } else {
-                return "28 anos de contribuição completos até 13/11/2019";
+                return ", 28 anos de contribuição completos até 13/11/2019";
             }
         }
         else {return "";}
@@ -571,7 +571,7 @@ public class GeradorDespachoApTC {
     Testa se a regra a ser impressa leva em consideração o pedágio e retorna pedágio e tempo + pedágio
      */
     public String testaPedagio(Segurado segurado, int index) {
-        if (index == segurado.getR5() | index > segurado.getR7() && index <= segurado.getR9()) {
+        if (index == segurado.getR5()) {
             return ", acrescidos de " +
                     segurado.getPedagio(index)[0] + " anos, " +
                     segurado.getPedagio(index)[1] + " meses e " +
