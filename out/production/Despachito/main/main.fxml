@@ -123,8 +123,8 @@
                   <HBox alignment="CENTER" layoutX="420.0" layoutY="9.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #F5F5F5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="0.0" GridPane.rowIndex="1">
                      <children>
                         <Button fx:id="botaoInput" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoInput" prefHeight="25.0" prefWidth="220.0" text="Importar arquivo de extrato" />
-                        <Button fx:id="botaoGerarDespacho" disable="true" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoGerarDespacho" prefHeight="25.0" prefWidth="220.0" text="Gerar Despacho" />
-                         <Button fx:id="botaoLimparDespacho" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoLimparDespacho" prefHeight="25.0" prefWidth="220.0" text="Limpar Despacho" />
+                        <Button fx:id="botaoGerarDespacho" disable="true" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoGerarDespacho" prefHeight="25.0" prefWidth="220.0" text="Gerar despacho" />
+                         <Button fx:id="botaoLimparDespacho" maxHeight="25.0" maxWidth="220.0" minHeight="25.0" minWidth="220.0" onAction="#acaoLimparDespacho" prefHeight="25.0" prefWidth="220.0" text="Limpar despacho" />
                      </children>
                      <opaqueInsets>
                         <Insets />

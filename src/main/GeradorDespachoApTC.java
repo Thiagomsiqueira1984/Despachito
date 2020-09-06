@@ -439,10 +439,10 @@ public class GeradorDespachoApTC {
      */
     public String escreverParte1(Segurado segurado) {
         return
-                Config.getOLatual() + "\n\n" +
-                        "Nome d" + segurado.getArtGenero() + " requerente: " + segurado.getNome() + "\n\n" +
-                        "Número do requerimento benefício: " + segurado.getNB() + "\n\n" +
-                        "Trata-se de requerimento de " + segurado.getEspecieBeneficio() + "." + "\n\n" +
+                Config.getOLatual() + "\n\n\n" +
+                        "Nome d" + segurado.getArtGenero() + " requerente: " + segurado.getNome() + "\n\n\n" +
+                        "Número do requerimento benefício: " + segurado.getNB() + "\n\n\n" +
+                        "Trata-se de requerimento de " + segurado.getEspecieBeneficio() + "." + "\n\n\n" +
                         "A data de nascimento d" + segurado.getArtGenero() + " requerente é " +
                         segurado.getStringDataNasc() +
                         ". A data de entrada do requerimento - DER é " +
@@ -450,8 +450,8 @@ public class GeradorDespachoApTC {
                         "o direito à concessão, é " +
                         segurado.getStringDIB() + ". Portanto, a idade na DIB é de " +
                         segurado.getIdadeDIB()[0] + " anos, " + segurado.getIdadeDIB()[1] + " meses e " +
-                        segurado.getIdadeDIB()[2] + " dias" + ".\n\n" +
-                        "Trata-se de requerente do sexo " + segurado.getSexo() + ".\n\n" +
+                        segurado.getIdadeDIB()[2] + " dias" + ".\n\n\n" +
+                        "Trata-se de requerente do sexo " + segurado.getSexo() + ".\n\n\n" +
                         "O ingresso no RGPS ocorreu em " + segurado.getStringDataFiliaAs() + ", " +
                         segurado.getAntesDepoisEC() +
                         " publicação da Emenda Constitucional 103/2019, em 13/11/2019. Assim, " +
@@ -459,8 +459,8 @@ public class GeradorDespachoApTC {
                         " ao primeiro requisito para análise quanto à concessão por direito adquirido à " +
                         "aposentadoria antes da publicação da " +
                         "Emenda Constitucional 103/2019 e/ou pela regras transitórias dos arts. 15, 16, 17 e 20 da " +
-                        "citada emenda.\n\n" +
-                        "Segue a análise do direito quanto às regras para concessão do benefício:\n";
+                        "citada emenda.\n\n\n" +
+                        "Segue a análise do direito quanto às regras para concessão do benefício:\n\n";
     }
 
     /*
@@ -488,7 +488,7 @@ public class GeradorDespachoApTC {
                         " e " + segurado.getCarenciaEfetiva(index) + " contribuições para fins de carência. " +
                         " Portanto, " +
                         segurado.getRecDireitoDataBase(index) + " direito à aposentadoria por esta regra até " +
-                        segurado.getStringDataBase(index) + "." + "\n";
+                        segurado.getStringDataBase(index) + "." + "\n\n";
     }
 
     /*

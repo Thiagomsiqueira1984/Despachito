@@ -120,6 +120,10 @@ public class Config {
         Config.OLatual = OLatual;
     }
 
+    public static File getPathImportaExtrato() {
+        return pathImportaExtrato;
+    }
+
     /*
     Métodos
      */

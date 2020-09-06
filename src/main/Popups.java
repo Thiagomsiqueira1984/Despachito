@@ -1,8 +1,14 @@
 package main;
 
+import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -15,6 +21,8 @@ import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.stage.StageStyle;
 
+import java.awt.*;
+import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -113,13 +121,28 @@ Popup de ok retorna true e cancela retorna false
         janelinha.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         Label label1 = new Label();
-        label1.setText("Despachito versão: 1.8.7");
+        label1.setText("Despachito versão: 1.8.8");
         label1.setTextFill(Color.valueOf("#137ccd"));
         label1.setStyle("-fx-font-weight: bold");
         Label label2 = new Label();
         label2.setTextFill(Color.valueOf("#137ccd"));
         label2.setStyle("-fx-font-weight: bold");
         label2.setText("Desenvolvedor: Thiago de Morais Siqueira");
+
+        Label labPag = new Label("Mais informações e video tutorial: ");
+        labPag.setTextFill(Color.valueOf("#137ccd"));
+        labPag.setStyle("-fx-font-weight: bold");
+
+        Hyperlink pagDespachito = new Hyperlink("https://thiagomsiqueira1984.github.io/Pagina-Despachito/");
+        pagDespachito.setOnAction(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI("https://thiagomsiqueira1984.github.io/Pagina-Despachito/"));
+            } catch (Exception ex) {}
+        });
+
+        HBox pag = new HBox();
+        pag.getChildren().addAll(labPag, pagDespachito);
+        pag.setAlignment(Pos.CENTER);
 
         Label ajuda = new Label();
         String textoAjuda = "Este programa foi desenvolvido com o intuito de importar arquivos de extrato de tempo de contribuição do programa PRISMA em formato .txt, extrair os dados e gerar automaticamente um despacho de conclusão do processo com base nestes dados.\n" +
@@ -157,7 +180,7 @@ Popup de ok retorna true e cancela retorna false
         sp.setContent(ajuda);
 
         VBox layout = new VBox();
-        layout.getChildren().addAll(label1, label2, sp, botao);
+        layout.getChildren().addAll(label1, label2, pag, sp, botao);
         layout.setAlignment(Pos.CENTER);
         layout.setSpacing(10);
         layout.setPadding(new Insets(5,5,15,5));
@@ -216,7 +239,7 @@ Popup de ok retorna true e cancela retorna false
                 msgErro.setVisible(true);
             }
             else {
-                novoOL.set(campoCodOL.getText() + campoNomeOL.getText());
+                novoOL.set(campoCodOL.getText() + " - " + campoNomeOL.getText());
                 janelinha.close();
             }
         });

@@ -4,6 +4,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Stream;
@@ -472,7 +473,7 @@ public class Segurado {
     public String parseExtrato(){
         String extrato = "";
         FileChooser seletorArquivo = new FileChooser();
-        seletorArquivo.setInitialDirectory(new File("C:\\CNISLINHA"));
+        seletorArquivo.setInitialDirectory(new File(Paths.get(Config.getPathImportaExtrato().getAbsolutePath()).toString()));
         seletorArquivo.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Arquivos de texto", "*.txt"));
 
         File selectedFile = seletorArquivo.showOpenDialog(null);

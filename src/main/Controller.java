@@ -220,7 +220,7 @@ public class Controller implements Initializable {
 
                                 cDespTC.setStringDespachoCompletoTC(String.join("\n", cDespTC.getDespachoCompletoTC()));
                                 caixaDespacho.appendText("Passa-se a analisar o direito à aposentadoria por " +
-                                        "tempo de contribuição\n\n" + cDespTC.getStringDespachoCompletoTC());
+                                        "tempo de contribuição\n\n\n" + cDespTC.getStringDespachoCompletoTC());
                             } else {
                                 Popups.popupAlerta("Alerta", "Arquivo selecionado não é um extrato de " +
                                         "aposentadoria por tempo de contribuição. Encerrando análise.");
@@ -262,7 +262,7 @@ public class Controller implements Initializable {
 
                                 cDespI.setStringDespachoCompletoIdade(String.join("\n", cDespI.getDespachoCompletoIdade()));
                                 caixaDespacho.appendText("Passa-se a analisar o direito à aposentadoria por " +
-                                        "idade\n\n" + cDespI.getStringDespachoCompletoIdade());
+                                        "idade\n\n\n" + cDespI.getStringDespachoCompletoIdade());
                             } else {
                                 Popups.popupAlerta("Alerta", "Arquivo selecionado não é um extrato de " +
                                         "aposentadoria por idade. Encerrando análise.");
