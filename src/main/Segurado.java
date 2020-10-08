@@ -66,7 +66,6 @@ public class Segurado {
     private List<String> carenciaExigida = new ArrayList<>(); //Lista contendo as carências exigidas guardadas em String
     private List<String[]> pedagio = new ArrayList<>(); //Lista de pedágio de tempo de contribuição com [0] = anos, [1] = meses e [2] = dias
     private List<String[]> tempCompExigido = new ArrayList<>(); //Lista contendo os tempos de contribuição exigidos guardados em array de String com [0] = anos, [1] = meses e [2] = dias
-    private List<String[]> tempCompPedagio = new ArrayList<>(); //Lista contendo os tempos de contribuição exigidos com pedagio guardados em array de String com [0] = anos, [1] = meses e [2] = dias
     private List<String> pontuacaoExigida = new ArrayList<>(); //Lista de pontuação exigida (idade + tempo de contribuição)
 
     private List<String[]> idadeEfetiva = new ArrayList<>(); //Lista contendo as idades efetivas guardadas em array de String com [0] = anos, [1] = meses e [2] = dias
@@ -379,14 +378,6 @@ public class Segurado {
 
     public void addTempCompExigido(String[] tempCompExigido) {
         this.tempCompExigido.add(tempCompExigido);
-    }
-
-    public String[] getTempCompPedagio(int index) {
-        return this.tempCompPedagio.get(index);
-    }
-
-    public void addTempCompPedagio(String[] tempCompPedagio) {
-        this.tempCompPedagio.add(tempCompPedagio);
     }
 
     public String getPontuacaoExigida(int index) {
@@ -802,7 +793,7 @@ public class Segurado {
      */
     public String[] parsePedagio(int index) {
         String[] arrayPedagio = new String[]{"00", "00", "00"};
-        if (index == this.getR5()) {
+        if (index == this.getR5() | index == this.getR8() | index == this.getR9()) {
             String pedagio = this.getExtrato();
             pedagio = pedagio.split(this.getRegraAnaliseDireito(index), 2)[1];
             pedagio = pedagio.split("Analise do direito em " + this.getStringDataBase(index))[1];
@@ -875,32 +866,6 @@ public class Segurado {
     }
 
     /*
-    Soma pedágio ao tempo de contribuição exigido
-     */
-    public String[] somaPedagioTempComp(int index) {
-        String[] PedagioTempComp = new String[3];
-        String[] tempComp = this.getTempCompExigido(index);
-        int[] tcpInt;
-        String[] pedagio = this.getPedagio(index);
-        int[] ped;
-        List<String> l = new ArrayList<>();
-        if (index == this.getR5()) {
-            tcpInt = Stream.of(tempComp).mapToInt(Integer::parseInt).toArray();
-            ped = Stream.of(pedagio).mapToInt(Integer::parseInt).toArray();
-            for(int i = 0; i < tcpInt.length; i++){
-                if ((tcpInt[i] + ped[i]) < 10) {
-                    l.add("0" + Integer.toString(tcpInt[i] + ped[i]));
-                } else {
-                    l.add(Integer.toString(tcpInt[i] + ped[i]));
-                }
-            }
-            PedagioTempComp = l.toArray(PedagioTempComp);
-        }
-        else {PedagioTempComp = tempComp;}
-        return PedagioTempComp;
-    }
-
-    /*
     Parse de pontuação exigida
      */
     public String parsePontuacaoExigida(int index) {
@@ -962,8 +927,8 @@ public class Segurado {
         else {
             tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
-            if (index == this.getR5()){
-                tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao \\(bruto\\)\\s+: ")[1];
+            if (index == this.getR5() | index == this.getR8() | index == this.getR9()){
+                tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao \\(liquido\\)\\s+: ")[1];
                 tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
             }
             else {

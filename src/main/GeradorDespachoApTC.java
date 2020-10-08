@@ -71,9 +71,6 @@ public class GeradorDespachoApTC {
         String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR1());
         segurado.addTempCompExigido(tempCompExigido);
 
-        String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR1());
-        segurado.addTempCompPedagio(tempCompPedagio);
-
         String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR1());
         segurado.addPontuacaoExigida(pontuacaoExigida);
 
@@ -120,9 +117,6 @@ public class GeradorDespachoApTC {
 
         String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR4());
         segurado.addTempCompExigido(tempCompExigido);
-
-        String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR4());
-        segurado.addTempCompPedagio(tempCompPedagio);
 
         String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR4());
         segurado.addPontuacaoExigida(pontuacaoExigida);
@@ -183,9 +177,6 @@ public class GeradorDespachoApTC {
         String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR5());
         segurado.addTempCompEfetivo(tempCompEfetivo);
 
-        String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR5());
-        segurado.addTempCompPedagio(tempCompPedagio);
-
         String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR5());
         segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
@@ -236,9 +227,6 @@ public class GeradorDespachoApTC {
 
         String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR6());
         segurado.addTempCompEfetivo(tempCompEfetivo);
-
-        String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR6());
-        segurado.addTempCompPedagio(tempCompPedagio);
 
         String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR6());
         segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
@@ -297,9 +285,6 @@ public class GeradorDespachoApTC {
             String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR7());
             segurado.addTempCompEfetivo(tempCompEfetivo);
 
-            String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR7());
-            segurado.addTempCompPedagio(tempCompPedagio);
-
             String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR7());
             segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
@@ -356,9 +341,6 @@ public class GeradorDespachoApTC {
 
             String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR8());
             segurado.addTempCompEfetivo(tempCompEfetivo);
-
-            String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR8());
-            segurado.addTempCompPedagio(tempCompPedagio);
 
             String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR8());
             segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
@@ -417,9 +399,6 @@ public class GeradorDespachoApTC {
             String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR9());
             segurado.addTempCompEfetivo(tempCompEfetivo);
 
-            String[] tempCompPedagio = segurado.somaPedagioTempComp(segurado.getR9());
-            segurado.addTempCompPedagio(tempCompPedagio);
-
             String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR9());
             segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
@@ -470,19 +449,19 @@ public class GeradorDespachoApTC {
         return
                 this.textoRegraAnaliseDireito(segurado, index) + "considerado até " +
                         segurado.getStringDataBase(index) + ", são necessários, cumulativamente" +
+                        this.testaIdadeExigida(segurado, index) +
                         this.testaTCateECexigido(segurado, index) +
                         ", " + segurado.getTempCompExigido(index)[0] + " anos, " +
                         segurado.getTempCompExigido(index)[1] + " meses e " +
                         segurado.getTempCompExigido(index)[2] + " dias de tempo de contribuição" +
-                        this.testaPedagio(segurado, index) +
-                        this.testaIdadeExigida(segurado, index) +
                         this.testaPontuacaoExigida(segurado, index) +
                         " e " + segurado.getCarenciaExigida(index) + " contribuições para fins de carência. " +
                         "Foram apurados " +
                         this.testaTCateECefetivo(segurado, index) +
                         ", " + segurado.getTempCompEfetivo(index)[0] + " anos, " +
                         segurado.getTempCompEfetivo(index)[1] + " meses e " +
-                        segurado.getTempCompEfetivo(index)[2] + " dias de tempo de contribuição" +
+                        segurado.getTempCompEfetivo(index)[2] + " dias de tempo de contribuição efetivo" +
+                        this.testaPedagio(segurado, index) +
                         this.testaIdadeEfetiva(segurado, index) +
                         this.testaPontuacaoEfetiva(segurado, index) +
                         " e " + segurado.getCarenciaEfetiva(index) + " contribuições para fins de carência. " +
@@ -515,6 +494,18 @@ public class GeradorDespachoApTC {
     }
 
     /*
+    Testa se a regra a ser impressa leva em consideração a idade e retorna texto da idade EXIGIDA
+     */
+    public String testaIdadeExigida(Segurado segurado, int index) {
+        if (index == segurado.getR1() | index == segurado.getR5() |
+                index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
+            return ", " + segurado.getIdadeExigida(index) + " de idade";
+        } else {
+            return "";
+        }
+    }
+
+    /*
     Testa se a regra a ser impressa leva em consideração o tempo de contribuição exigido até 13/11/2019
      */
     public String testaTCateECexigido(Segurado segurado, int index) {
@@ -542,15 +533,16 @@ public class GeradorDespachoApTC {
     }
 
     /*
-    Testa se a regra a ser impressa leva em consideração a idade e retorna texto da idade EXIGIDA
+    Testa se a regra a ser impressa leva em consideração o pedágio e retorna tempo de pedágio descontado
      */
-    public String testaIdadeExigida(Segurado segurado, int index) {
-        if (index == segurado.getR1() | index == segurado.getR5() |
-                index > segurado.getR6() && index <= segurado.getR7() | index == segurado.getR9()) {
-            return ", " + segurado.getIdadeExigida(index) + " de idade";
-        } else {
-            return "";
+    public String testaPedagio(Segurado segurado, int index) {
+        if (index == segurado.getR5() | index == segurado.getR8() | index == segurado.getR9()) {
+            return ", após desconto de " +
+                    segurado.getPedagio(index)[0] + " anos, " +
+                    segurado.getPedagio(index)[1] + " meses e " +
+                    segurado.getPedagio(index)[2] + " dias de pedágio ";
         }
+        else {return "";}
     }
 
     /*
@@ -565,22 +557,6 @@ public class GeradorDespachoApTC {
                             segurado.getIdadeEfetiva(index)[2] + " dias de idade";
         } else { return "";
         }
-    }
-
-    /*
-    Testa se a regra a ser impressa leva em consideração o pedágio e retorna pedágio e tempo + pedágio
-     */
-    public String testaPedagio(Segurado segurado, int index) {
-        if (index == segurado.getR5()) {
-            return ", acrescidos de " +
-                    segurado.getPedagio(index)[0] + " anos, " +
-                    segurado.getPedagio(index)[1] + " meses e " +
-                    segurado.getPedagio(index)[2] + " dias de pedágio, totalizando " +
-                    segurado.getTempCompPedagio(index)[0] + " anos, " +
-                    segurado.getTempCompPedagio(index)[1] + " meses e " +
-                    segurado.getTempCompPedagio(index)[2] + " dias de tempo de contribuição exigido";
-        }
-        else {return "";}
     }
 
     /*

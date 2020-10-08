@@ -174,7 +174,7 @@ public class GeradorDespachoApIdade {
      */
     public String escreverParte1(Segurado segurado) {
         return
-                Config.getOLatual() + "\n\n" +
+                Config.getOLatual() + "\n\n\n" +
                         "Nome d" + segurado.getArtGenero() + " requerente: " + segurado.getNome() + "\n\n\n" +
                         "Número do requerimento benefício: " + segurado.getNB() + "\n\n\n" +
                         "Trata-se de requerimento de " + segurado.getEspecieBeneficio() + "." + "\n\n\n" +
