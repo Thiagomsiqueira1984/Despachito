@@ -70,7 +70,7 @@ public class TextoRecorrente {
     Texto inicial para o arquivo de database de exigência recorrente
      */
     public static String eR1 =
-            "- RG, CPF, carteiras de trabalho e comprovante de residência;";
+            "- RG, CPF, carteiras de trabalho completas e comprovante de residência;";
 
     public static String eR2 =
             "- Declaração dos órgãos públicos onde trabalhou informando os períodos de vínculo, cargo, se a filiação " +
@@ -94,7 +94,7 @@ public class TextoRecorrente {
 
     public static String eR6 =
             "Formulários de comprovação de atividade especial devidamente preenchidos pelas empresas, acompanhados de " +
-                    "laudos ambientais contemporâneos aos períodos de atividade especial";
+                    "laudos ambientais contemporâneos aos períodos de atividade especial  (proprietário, parceiro, meeiro, arrendatário, etc)";
 
     public static String eR7 =
             "Declaração informando se recebe pensão por morte deixada por cônjuge/companheiro(a) em outro regime de " +

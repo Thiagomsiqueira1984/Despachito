@@ -681,11 +681,11 @@ public class Segurado {
     public String retornaNomeRegraAnaliseDireito(int index){
         String regra = "";
         if (index == this.r1) {
-            regra = "Regra geral do Art.19 - Aposentadoria Programada";
+            regra = "Regra geral do Art. 19 - Aposentadoria Programada";
         } else if (index == this.r2) {
             regra = "Direito a aposentadoria por idade antes da Emenda Constitucional 103/2019";
         } else if (index == this.r3) {
-            regra = "Regra transitoria do Art.18 - Aposentadoria por idade";
+            regra = "Regra transitoria do Art. 18 - Aposentadoria por idade";
         }
         else if (index == this.r4) {
             regra = "Direito a aposentadoria por tempo de contribuicao integral antes da Emenda Constitucional 103/2019";
@@ -694,16 +694,16 @@ public class Segurado {
             regra = "Direito a aposentadoria por tempo de contribuicao proporcional antes da Emenda Constitucional 103/2019";
         }
         else if (index == this.r6) {
-            regra = "Regra transitoria do Art.15 - Aposentadoria por tempo de contribuicao com soma de idade e tempo";
+            regra = "Regra transitoria do Art. 15 - Aposentadoria por tempo de contribuicao com soma de idade e tempo";
         }
         else if (index == this.r7) {
-            regra = "Regra transitoria do Art.16 - Tempo de contribuicao com idade minima";
+            regra = "Regra transitoria do Art. 16 - Tempo de contribuicao com idade minima";
         }
         else if (index == this.r8) {
-            regra = "Regra transitoria do Art.17 - Tempo de contribuicao com pedagio de 50%";
+            regra = "Regra transitoria do Art. 17 - Tempo de contribuicao com pedagio de 50%";
         }
         else if (index == this.r9) {
-            regra = "Regra transitoria do Art.20 - Tempo de contribuicao com pedagio de 100%";
+            regra = "Regra transitoria do Art. 20 - Tempo de contribuicao com pedagio de 100%";
         }
         return regra;
     }
