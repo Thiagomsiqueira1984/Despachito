@@ -681,29 +681,29 @@ public class Segurado {
     public String retornaNomeRegraAnaliseDireito(int index){
         String regra = "";
         if (index == this.r1) {
-            regra = "Regra geral do Art. 19 - Aposentadoria Programada";
+            regra = "Regra geral da Emenda Constitucional 103/2019, Art. 19";
         } else if (index == this.r2) {
-            regra = "Direito a aposentadoria por idade antes da Emenda Constitucional 103/2019";
+            regra = "Aposentadoria por idade da Lei 8.213/1991";
         } else if (index == this.r3) {
-            regra = "Regra transitoria do Art. 18 - Aposentadoria por idade";
+            regra = "Regra transitoria da Emenda Constitucional 103/2019, Art. 18";
         }
         else if (index == this.r4) {
-            regra = "Direito a aposentadoria por tempo de contribuicao integral antes da Emenda Constitucional 103/2019";
+            regra = "Aposentadoria por tempo de contribuicao da Lei 8.213/1991 com tempo integral";
         }
         else if (index == this.r5) {
-            regra = "Direito a aposentadoria por tempo de contribuicao proporcional antes da Emenda Constitucional 103/2019";
+            regra = "Aposentadoria por tempo de contribuicao da Lei 8.213/1991 com tempo proporcional";
         }
         else if (index == this.r6) {
-            regra = "Regra transitoria do Art. 15 - Aposentadoria por tempo de contribuicao com soma de idade e tempo";
+            regra = "Regra transitoria da Emenda Constitucional 103/2019, Art. 15";
         }
         else if (index == this.r7) {
-            regra = "Regra transitoria do Art. 16 - Tempo de contribuicao com idade minima";
+            regra = "Regra transitoria da Emenda Constitucional 103/2019, Art. 16";
         }
         else if (index == this.r8) {
-            regra = "Regra transitoria do Art. 17 - Tempo de contribuicao com pedagio de 50%";
+            regra = "Regra transitoria da Emenda Constitucional 103/2019, Art. 17";
         }
         else if (index == this.r9) {
-            regra = "Regra transitoria do Art. 20 - Tempo de contribuicao com pedagio de 100%";
+            regra = "Regra transitoria da Emenda Constitucional 103/2019, Art. 20";
         }
         return regra;
     }
@@ -919,7 +919,7 @@ public class Segurado {
     public String[] parseTempCompEfetivo(int index) {
         String tempCompEfetivo = this.getExtrato();
         if (this.getCodEspecieBeneficio().equals("42") && index==this.getR1()) {
-            tempCompEfetivo = tempCompEfetivo.split("Regra transitoria do Art.15", 2)[1];
+            tempCompEfetivo = tempCompEfetivo.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
             tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao\\s+: ")[1];
             tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
