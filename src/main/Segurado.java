@@ -636,7 +636,7 @@ public class Segurado {
      */
     public String parseFiliaString(){
         String filiaString = this.getExtrato();
-        filiaString = filiaString.split("PERIODOS DE QUALIDADE DE SEGURADO\\S+: ")[1];
+        filiaString = filiaString.split("PERIODOS DE QUALIDADE DE SEGURADO PARA ANALISE DO DIREITO\\S+: ")[1];
         filiaString = filiaString.split(" a")[0].trim();
         return filiaString;
     }

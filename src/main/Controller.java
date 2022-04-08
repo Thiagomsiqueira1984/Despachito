@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import org.fxmisc.richtext.StyledTextArea;
+
 
 
 public class Controller implements Initializable {

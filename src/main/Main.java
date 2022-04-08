@@ -1,10 +1,5 @@
 package main;
 
-import javax.swing.filechooser.FileFilter;
-
-
-import java.io.File;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,7 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+
+import javax.swing.filechooser.FileFilter;
+import java.io.File;
 
 
 public class Main extends Application {
