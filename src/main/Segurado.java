@@ -813,7 +813,7 @@ public class Segurado {
 
         boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[1]) < tempCompExigido;
 
-        if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == false)) {
+        if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == true)) {
             String pedagio = this.getExtrato();
             pedagio = pedagio.split(this.getRegraAnaliseDireito(index), 2)[1];
             pedagio = pedagio.split("Analise do direito em " + this.getStringDataBase(index))[1];
@@ -966,7 +966,7 @@ public class Segurado {
         else {
             tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
-            if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == false)){
+            if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == true)){
                 tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao \\(liquido\\)\\s+: ")[1];
                 tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
             }
