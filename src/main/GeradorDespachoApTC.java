@@ -596,7 +596,7 @@ public class GeradorDespachoApTC {
                 "concessão de aposentadoria por idade. " + "\n\n";
         String tFinal =
                 "Pelo exposto, " + segurado.getRecDireitoFinalTC() +
-                " à concessão da aposentadoria por tempo de contribuição." + "\n\n";
+                " à concessão da aposentadoria por tempo de contribuição." + "\n\n\n";
         if (segurado.getRecDireitoFinalTC().startsWith("não")) {
             if (segurado.fazPreAnaliseCarencia()) {
                 tFinalCarencia = "Foi  " + tFinalCarencia;

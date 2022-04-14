@@ -783,7 +783,7 @@ public class Segurado {
             carenciaExigida = carenciaExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
             carenciaExigida = carenciaExigida.split("Requisito\\s+:\\s+Carencia igual")[1];
             carenciaExigida = carenciaExigida.split("Exigido\\s")[1];
-            carenciaExigida = carenciaExigida.split("\\s")[0].trim();
+            carenciaExigida = carenciaExigida.split(",")[0].trim();
         }
         return carenciaExigida;
     }
@@ -792,8 +792,28 @@ public class Segurado {
     Parse de pedágio de tempo de contribuição
      */
     public String[] parsePedagio(int index) {
+
         String[] arrayPedagio = new String[]{"00", "00", "00"};
-        if (index == this.getR5() | index == this.getR8() | index == this.getR9()) {
+
+        String tempComp1198 = this.getExtrato();
+        tempComp1198 = tempComp1198.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];
+        tempComp1198 = tempComp1198.split("Analise do direito em 13/11/2019")[1];
+        tempComp1198 = tempComp1198.split("Tempo de contribuicao\\s+: ")[1];
+        tempComp1198.split("\\n")[0].trim();
+
+        String[] arrayTempComp1198;
+        arrayTempComp1198 = tempComp1198.split(", ");
+        arrayTempComp1198[0] = arrayTempComp1198[0].split("a")[0];
+        arrayTempComp1198[1] = arrayTempComp1198[1].split("m")[0];
+        arrayTempComp1198[2] = arrayTempComp1198[2].split("d")[0];
+
+        int tempCompExigido;
+
+        if(this.getSexo().equals("masculino")){tempCompExigido= 35;} else {tempCompExigido = 30;}
+
+        boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[1]) < tempCompExigido;
+
+        if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == false)) {
             String pedagio = this.getExtrato();
             pedagio = pedagio.split(this.getRegraAnaliseDireito(index), 2)[1];
             pedagio = pedagio.split("Analise do direito em " + this.getStringDataBase(index))[1];
@@ -846,7 +866,7 @@ public class Segurado {
             tempoExigido = tempoExigido.split("Tempo exigido:\\s")[1];
             tempoExigido = tempoExigido.split("\\n")[0].trim();
 
-            String anos = tempoExigido.split("\\s anos")[0];
+            String anos = tempoExigido.split("\\s")[0];
             String meses = "00";
             String dias = "00";
 
@@ -918,6 +938,25 @@ public class Segurado {
      */
     public String[] parseTempCompEfetivo(int index) {
         String tempCompEfetivo = this.getExtrato();
+
+        String tempComp1198 = this.getExtrato();
+        tempComp1198 = tempComp1198.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];
+        tempComp1198 = tempComp1198.split("Analise do direito em 13/11/2019")[1];
+        tempComp1198 = tempComp1198.split("Tempo de contribuicao\\s+: ")[1];
+        tempComp1198.split("\\n")[0].trim();
+
+        String[] arrayTempComp1198;
+        arrayTempComp1198 = tempComp1198.split(", ");
+        arrayTempComp1198[0] = arrayTempComp1198[0].split("a")[0];
+        arrayTempComp1198[1] = arrayTempComp1198[1].split("m")[0];
+        arrayTempComp1198[2] = arrayTempComp1198[2].split("d")[0];
+
+        int tempCompExigido;
+
+        if(this.getSexo().equals("masculino")){tempCompExigido= 35;} else {tempCompExigido = 30;}
+
+        boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[1]) < tempCompExigido;
+
         if (this.getCodEspecieBeneficio().equals("42") && index==this.getR1()) {
             tempCompEfetivo = tempCompEfetivo.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
@@ -927,7 +966,7 @@ public class Segurado {
         else {
             tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
-            if (index == this.getR5() | index == this.getR8() | index == this.getR9()){
+            if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == false)){
                 tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao \\(liquido\\)\\s+: ")[1];
                 tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
             }
