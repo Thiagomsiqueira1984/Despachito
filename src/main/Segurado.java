@@ -729,7 +729,8 @@ public class Segurado {
             data = data.split("Analise do direito em ")[1];
             data = data.split("\\s")[0].trim();
         }
-        return data;
+
+    return data;
     }
 
     /*
@@ -811,7 +812,7 @@ public class Segurado {
 
         if(this.getSexo().equals("masculino")){tempCompExigido= 35;} else {tempCompExigido = 30;}
 
-        boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[1]) < tempCompExigido;
+        boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[0]) < tempCompExigido;
 
         if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == true)) {
             String pedagio = this.getExtrato();
@@ -955,7 +956,7 @@ public class Segurado {
 
         if(this.getSexo().equals("masculino")){tempCompExigido= 35;} else {tempCompExigido = 30;}
 
-        boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[1]) < tempCompExigido;
+        boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[0]) < tempCompExigido;
 
         if (this.getCodEspecieBeneficio().equals("42") && index==this.getR1()) {
             tempCompEfetivo = tempCompEfetivo.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];
