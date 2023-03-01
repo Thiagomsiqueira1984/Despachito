@@ -57,6 +57,8 @@ public class Segurado {
     private int r8 = -1; //Número do índice referente à regra transitória art. 17 da EC 103/2019 (TC)
     private int r9 = -1; //Número do índice referente à regra transitória art. 20 da EC 103/2019 (TC)
 
+    private int loopNumber = 1; //Número do loop dentro da mesma regra de direito
+
     private List<String> regraAnaliseDireito = new ArrayList<>(); //Lista com o nome das regras para análise do direito em formato String
 
     private List<String> stringDataBase = new ArrayList<>(); //Lista com data base para análise do direito em formato String
@@ -318,6 +320,14 @@ public class Segurado {
 
     public void setR9(int r9) {
         this.r9 = r9;
+    }
+
+    public int getLoopNumber() {
+        return loopNumber;
+    }
+
+    public void setLoopNumber(int loopNumber) {
+        this.loopNumber = loopNumber;
     }
 
     public int countRegraAnaliseDireito() {
@@ -720,7 +730,7 @@ public class Segurado {
     if (index == this.r1) {
             data = this.getStringDIB();
 
-        } else if (index == this.r2 | index == this.getR4() | index == this.getR5()) {
+        } else if (index == this.r2 | index == this.getR4()) {
             data = "13/11/2019";
 
         } else { //Regras de direito que podem gerar mais de um parágrafo com datas diferentes no loop de do while
@@ -740,6 +750,10 @@ public class Segurado {
         int[] d = Arrays.stream(this.getStringDataBase(index).split("/")).mapToInt(Integer::parseInt).toArray();
         Calendar aDate = Calendar.getInstance();
         aDate.set(d[2], (d[1]-1), d[0]);
+        aDate.set(Calendar.HOUR_OF_DAY , 00);
+        aDate.set(Calendar.MINUTE , 00);
+        aDate.set(Calendar.SECOND , 00);
+        aDate.set(Calendar.MILLISECOND , 00);
         return aDate.getTime();
     }
 
@@ -761,13 +775,15 @@ public class Segurado {
             } else {
                 idadeExigida = "60 anos";
             }
-        } else if (index == this.getR3()|index == this.getR5()|index == this.getR7()|index == this.getR9()) {
+        } else if (index == this.getR3()|index == this.getR5() & !this.getStringDataBase(index).equals("16/12/1998") |index == this.getR7()|index == this.getR9()) {
             idadeExigida = this.getExtrato();
             idadeExigida = idadeExigida.split(this.getRegraAnaliseDireito(index),this.limite(index))[this.limite(index)-1];
             idadeExigida = idadeExigida.split("Analise do direito em " + this.getStringDataBase(index))[1];
             idadeExigida = idadeExigida.split("Idade exigida: ")[1];
             idadeExigida = idadeExigida.split("\\n")[0].trim();
 
+        } else if (index == this.getR5() & this.getStringDataBase(index).equals("16/12/1998")){
+            idadeExigida = "sem idade exigida";
         }
         return idadeExigida;
     }
@@ -814,7 +830,7 @@ public class Segurado {
 
         boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[0]) < tempCompExigido;
 
-        if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == true)) {
+        if (index == this.getR5() & !getStringDataBase(index).equals("16/12/1998") | index == this.getR9() | (index == this.getR8() && precisaPedagio == true)) {
             String pedagio = this.getExtrato();
             pedagio = pedagio.split(this.getRegraAnaliseDireito(index), 2)[1];
             pedagio = pedagio.split("Analise do direito em " + this.getStringDataBase(index))[1];
@@ -977,7 +993,7 @@ public class Segurado {
         else {
             tempCompEfetivo = tempCompEfetivo.split(this.getRegraAnaliseDireito(index), 2)[1];
             tempCompEfetivo = tempCompEfetivo.split("Analise do direito em " + this.getStringDataBase(index))[1];
-            if (index == this.getR5() | index == this.getR9() | (index == this.getR8() && precisaPedagio == true)){
+            if (index == this.getR5() & !getStringDataBase(index).equals("16/12/1998") | index == this.getR9() | (index == this.getR8() && precisaPedagio == true)){
                 tempCompEfetivo = tempCompEfetivo.split("Tempo de contribuicao \\(liquido\\)\\s+: ")[1];
                 tempCompEfetivo = tempCompEfetivo.split("\\n")[0].trim();
             }
@@ -998,14 +1014,15 @@ public class Segurado {
     /*
     Parse de pontuação efetiva
      */
-    public String[] parsePontuacaoEfetiva(int index) {
+    public String[] parsePontuacaoEfetiva(int index, int loopNumber) {
         String[] arrayPontuacaoEfetiva = {"00", "00", "00"};
         if (index == this.getR6()) {
             String pef = this.getExtrato();
-            pef = pef.split(this.getRegraAnaliseDireito(index), index)[index-1];
+            String[] chunks = pef.split(this.getRegraAnaliseDireito(index), loopNumber + 1);
+            pef = pef.split(this.getRegraAnaliseDireito(index), loopNumber + 1)[loopNumber];
             pef = pef.split("Analise do direito em " + this.getStringDataBase(index))[1];
             pef = pef.split("Soma Idade e TC\\s+: ")[1];
-            pef = pef.split("Possui direito nesta data")[0].trim();
+            pef = pef.split("\\n")[0].trim();
             arrayPontuacaoEfetiva = pef.split(", ");
             arrayPontuacaoEfetiva[0] = arrayPontuacaoEfetiva[0].split("a")[0];
             arrayPontuacaoEfetiva[1] = arrayPontuacaoEfetiva[1].split("m")[0];
@@ -1146,4 +1163,6 @@ public class Segurado {
 
         return limite;
     }
+
+
 }

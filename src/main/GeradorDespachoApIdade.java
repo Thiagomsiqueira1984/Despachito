@@ -1,6 +1,8 @@
 package main;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +14,15 @@ public class GeradorDespachoApIdade {
      */
     private List<String> despachoCompletoIdade = new ArrayList<>(); //Texto completo do despacho
     private String stringDespachoCompletoIdade; //Texto completo do despacho
+
+    private Date menorData; //Data mais antiga das regras transitórias de análise de direito
+    {
+        try {
+            menorData = new SimpleDateFormat("dd-MM-yyyy").parse("31-12-2019");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /*
@@ -160,11 +171,11 @@ public class GeradorDespachoApIdade {
             String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR3());
             segurado.addRecDireitoDataBase(recDireitoDataBase);
 
-            if (segurado.getDateDataBase(segurado.getR3()).compareTo(segurado.getDIB()) < 0) {
+            if (segurado.getDateDataBase(segurado.getR3()).compareTo(menorData) > 0) {
                 segurado.setR3(segurado.getR3() + 1);
             } else {break;}
 
-        } while (segurado.getDateDataBase(segurado.getR3() - 1).compareTo(segurado.getDIB())<0);
+        } while (segurado.getDateDataBase(segurado.getR3() - 1).compareTo(menorData) > 0);
 
         segurado.setR3(segurado.getR3() - 1);
     }

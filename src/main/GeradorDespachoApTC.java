@@ -1,6 +1,9 @@
 package main;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +14,23 @@ public class GeradorDespachoApTC {
      */
     private List<String> despachoCompletoTC = new ArrayList<>(); //Texto completo do despacho
     private String stringDespachoCompletoTC; //Texto completo do despacho
+    private Date menorData; //Data mais antiga das regras transitórias de análise de direito
+    {
+        try {
+            menorData = new SimpleDateFormat("dd-MM-yyyy").parse("31-12-2019");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private Date data98;
+    {
+        try {
+            data98 = new SimpleDateFormat("dd-MM-yyyy").parse("16-12-1998");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
     Getters e Setters
@@ -50,6 +69,8 @@ public class GeradorDespachoApTC {
 
         segurado.setR1(0);
 
+        segurado.setLoopNumber(1);
+
         String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR1());
         segurado.addRegraAnaliseDireito(regra);
 
@@ -83,7 +104,7 @@ public class GeradorDespachoApTC {
         String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR1());
         segurado.addTempCompEfetivo(tempCompEfetivo);
 
-        String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR1());
+        String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR1(), segurado.getLoopNumber());
         segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
         String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR1());
@@ -96,6 +117,8 @@ public class GeradorDespachoApTC {
     public void parseAtributosR4(Segurado segurado) {
 
         segurado.setR4(1);
+
+        segurado.setLoopNumber(1);
 
         String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR4());
         segurado.addRegraAnaliseDireito(regra);
@@ -130,7 +153,7 @@ public class GeradorDespachoApTC {
         String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR4());
         segurado.addTempCompEfetivo(tempCompEfetivo);
 
-        String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR4());
+        String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR4(), segurado.getLoopNumber());
         segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
         String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR4());
@@ -144,44 +167,57 @@ public class GeradorDespachoApTC {
 
         segurado.setR5(segurado.getR4() + 1);
 
-        String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR5());
-        segurado.addRegraAnaliseDireito(regra);
+        segurado.setLoopNumber(1);
 
-        String stringDataBase = segurado.parseDataBase(segurado.getR5());
-        segurado.addStringDataBase(stringDataBase);
+        do {
 
-        Date dateDatabase = segurado.converteDataBaseDate(segurado.getR5());
-        segurado.addDateDataBase(dateDatabase);
 
-        String idadeExigida = segurado.parseIdadeExigida(segurado.getR5());
-        segurado.addIdadeExigida(idadeExigida);
+            String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR5());
+            segurado.addRegraAnaliseDireito(regra);
 
-        String carenciaExigida = segurado.parseCarenciaExigida(segurado.getR5());
-        segurado.addCarenciaExigida(carenciaExigida);
+            String stringDataBase = segurado.parseDataBase(segurado.getR5());
+            segurado.addStringDataBase(stringDataBase);
 
-        String[] pedagio = segurado.parsePedagio(segurado.getR5());
-        segurado.addPedagio(pedagio);
+            Date dateDatabase = segurado.converteDataBaseDate(segurado.getR5());
+            segurado.addDateDataBase(dateDatabase);
 
-        String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR5());
-        segurado.addTempCompExigido(tempCompExigido);
+            String idadeExigida = segurado.parseIdadeExigida(segurado.getR5());
+            segurado.addIdadeExigida(idadeExigida);
 
-        String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR5());
-        segurado.addPontuacaoExigida(pontuacaoExigida);
+            String carenciaExigida = segurado.parseCarenciaExigida(segurado.getR5());
+            segurado.addCarenciaExigida(carenciaExigida);
 
-        String[] idadeEfetiva = segurado.parseIdadeEfetiva(segurado.getR5());
-        segurado.addIdadeEfetiva(idadeEfetiva);
+            String[] pedagio = segurado.parsePedagio(segurado.getR5());
+            segurado.addPedagio(pedagio);
 
-        String carenciaEfetiva = segurado.parseCarenciaEfetiva(segurado.getR5());
-        segurado.addCarenciaEfetiva(carenciaEfetiva);
+            String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR5());
+            segurado.addTempCompExigido(tempCompExigido);
 
-        String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR5());
-        segurado.addTempCompEfetivo(tempCompEfetivo);
+            String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR5());
+            segurado.addPontuacaoExigida(pontuacaoExigida);
 
-        String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR5());
-        segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
+            String[] idadeEfetiva = segurado.parseIdadeEfetiva(segurado.getR5());
+            segurado.addIdadeEfetiva(idadeEfetiva);
 
-        String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR5());
-        segurado.addRecDireitoDataBase(recDireitoDataBase);
+            String carenciaEfetiva = segurado.parseCarenciaEfetiva(segurado.getR5());
+            segurado.addCarenciaEfetiva(carenciaEfetiva);
+
+            String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR5());
+            segurado.addTempCompEfetivo(tempCompEfetivo);
+
+            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR5(), segurado.getLoopNumber());
+            segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
+
+            String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR5());
+            segurado.addRecDireitoDataBase(recDireitoDataBase);
+
+            if (segurado.getDateDataBase(segurado.getR5()).compareTo(data98) > 0) {
+                System.out.println(segurado.getDateDataBase(segurado.getR5()).compareTo(data98));
+                segurado.setR5(segurado.getR5() + 1);
+            } else {break;}
+
+        } while (segurado.getDateDataBase(segurado.getR5() - 1).compareTo(data98) > 0);
+
     }
 
     /*
@@ -192,53 +228,56 @@ public class GeradorDespachoApTC {
 
         segurado.setR6(segurado.getR5() + 1);
 
+        segurado.setLoopNumber(1);
+
         do {
 
 
-        String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR6());
-        segurado.addRegraAnaliseDireito(regra);
+            String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR6());
+            segurado.addRegraAnaliseDireito(regra);
 
-        String stringDataBase = segurado.parseDataBase(segurado.getR6());
-        segurado.addStringDataBase(stringDataBase);
+            String stringDataBase = segurado.parseDataBase(segurado.getR6());
+            segurado.addStringDataBase(stringDataBase);
 
-        Date dateDatabase = segurado.converteDataBaseDate(segurado.getR6());
-        segurado.addDateDataBase(dateDatabase);
+            Date dateDatabase = segurado.converteDataBaseDate(segurado.getR6());
+            segurado.addDateDataBase(dateDatabase);
 
-        String idadeExigida = segurado.parseIdadeExigida(segurado.getR6());
-        segurado.addIdadeExigida(idadeExigida);
+            String idadeExigida = segurado.parseIdadeExigida(segurado.getR6());
+            segurado.addIdadeExigida(idadeExigida);
 
-        String carenciaExigida = segurado.parseCarenciaExigida(segurado.getR6());
-        segurado.addCarenciaExigida(carenciaExigida);
+            String carenciaExigida = segurado.parseCarenciaExigida(segurado.getR6());
+            segurado.addCarenciaExigida(carenciaExigida);
 
-        String[] pedagio = segurado.parsePedagio(segurado.getR6());
-        segurado.addPedagio(pedagio);
+            String[] pedagio = segurado.parsePedagio(segurado.getR6());
+            segurado.addPedagio(pedagio);
 
-        String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR6());
-        segurado.addTempCompExigido(tempCompExigido);
+            String[] tempCompExigido = segurado.parseTempCompExigido(segurado.getR6());
+            segurado.addTempCompExigido(tempCompExigido);
 
-        String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR6());
-        segurado.addPontuacaoExigida(pontuacaoExigida);
+            String pontuacaoExigida = segurado.parsePontuacaoExigida(segurado.getR6());
+            segurado.addPontuacaoExigida(pontuacaoExigida);
 
-        String[] idadeEfetiva = segurado.parseIdadeEfetiva(segurado.getR6());
-        segurado.addIdadeEfetiva(idadeEfetiva);
+            String[] idadeEfetiva = segurado.parseIdadeEfetiva(segurado.getR6());
+            segurado.addIdadeEfetiva(idadeEfetiva);
 
-        String carenciaEfetiva = segurado.parseCarenciaEfetiva(segurado.getR6());
-        segurado.addCarenciaEfetiva(carenciaEfetiva);
+            String carenciaEfetiva = segurado.parseCarenciaEfetiva(segurado.getR6());
+            segurado.addCarenciaEfetiva(carenciaEfetiva);
 
-        String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR6());
-        segurado.addTempCompEfetivo(tempCompEfetivo);
+            String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR6());
+            segurado.addTempCompEfetivo(tempCompEfetivo);
 
-        String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR6());
-        segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
+            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR6(), segurado.getLoopNumber());
+            segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
-        String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR6());
-        segurado.addRecDireitoDataBase(recDireitoDataBase);
+            String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR6());
+            segurado.addRecDireitoDataBase(recDireitoDataBase);
 
-            if (segurado.getDateDataBase(segurado.getR6()).compareTo(segurado.getDER()) < 0) {
+            if (segurado.getDateDataBase(segurado.getR6()).compareTo(menorData) > 0) {
                 segurado.setR6(segurado.getR6() + 1);
+                segurado.setLoopNumber(segurado.getLoopNumber() + 1);
             } else {break;}
 
-        } while (segurado.getDateDataBase(segurado.getR6() - 1).compareTo(segurado.getDER())<0);
+        } while (segurado.getDateDataBase(segurado.getR6() - 1).compareTo(menorData) > 0);
     }
 
     /*
@@ -248,6 +287,8 @@ public class GeradorDespachoApTC {
     public void parseAtributosR7(Segurado segurado) {
 
         segurado.setR7(segurado.getR6()+1);
+
+        segurado.setLoopNumber(1);
 
         do {
 
@@ -285,17 +326,17 @@ public class GeradorDespachoApTC {
             String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR7());
             segurado.addTempCompEfetivo(tempCompEfetivo);
 
-            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR7());
+            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR7(), segurado.getLoopNumber());
             segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
             String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR7());
             segurado.addRecDireitoDataBase(recDireitoDataBase);
 
-            if (segurado.getDateDataBase(segurado.getR7()).compareTo(segurado.getDER()) < 0) {
+            if (segurado.getDateDataBase(segurado.getR7()).compareTo(menorData) > 0) {
                 segurado.setR7(segurado.getR7() + 1);
             } else {break;}
 
-        } while (segurado.getDateDataBase(segurado.getR7() - 1).compareTo(segurado.getDER())<0);
+        } while (segurado.getDateDataBase(segurado.getR7() - 1).compareTo(menorData) > 0);
     }
 
     /*
@@ -305,6 +346,8 @@ public class GeradorDespachoApTC {
     public void parseAtributosR8(Segurado segurado) {
 
         segurado.setR8(segurado.getR7()+1);
+
+        segurado.setLoopNumber(1);
 
         do {
 
@@ -342,7 +385,7 @@ public class GeradorDespachoApTC {
             String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR8());
             segurado.addTempCompEfetivo(tempCompEfetivo);
 
-            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR8());
+            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR8(), segurado.getLoopNumber());
             segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
             String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR8());
@@ -352,7 +395,7 @@ public class GeradorDespachoApTC {
                 segurado.setR8(segurado.getR8() + 1);
             } else {break;}
 
-        } while (segurado.getDateDataBase(segurado.getR8() - 1).compareTo(segurado.getDER())<0);
+        } while (segurado.getDateDataBase(segurado.getR8() - 1).compareTo(segurado.getDER()) < 0);
     }
 
     /*
@@ -362,6 +405,8 @@ public class GeradorDespachoApTC {
     public void parseAtributosR9(Segurado segurado) {
 
         segurado.setR9(segurado.getR8()+1);
+
+        segurado.setLoopNumber(1);
 
         do {
 
@@ -399,13 +444,13 @@ public class GeradorDespachoApTC {
             String[] tempCompEfetivo = segurado.parseTempCompEfetivo(segurado.getR9());
             segurado.addTempCompEfetivo(tempCompEfetivo);
 
-            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR9());
+            String[] pontuacaoEfetiva = segurado.parsePontuacaoEfetiva(segurado.getR9(), segurado.getLoopNumber());
             segurado.addPontuacaoEfetiva(pontuacaoEfetiva);
 
             String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR9());
             segurado.addRecDireitoDataBase(recDireitoDataBase);
 
-            if (segurado.getDateDataBase(segurado.getR9()).compareTo(segurado.getDER()) < 0) {
+            if (segurado.getDateDataBase(segurado.getR9()).compareTo(menorData) < 0) {
                 segurado.setR9(segurado.getR9() + 1);
             } else {break;}
 
@@ -479,7 +524,7 @@ public class GeradorDespachoApTC {
             texto = "Quanto à regra de aposentadoria programada art. 19 da Emenda Constitucional 103/2019, ";
         } else if (index == segurado.getR4()) {
             texto = "Quanto à regra de direito adquirido à aposentadoria integral antes da Emenda Constitucional 103/2019, art. 52 e inciso II do art. 53 da Lei 8.213/91, ";
-        } else if (index == segurado.getR5()) {
+        } else if (index > segurado.getR4() && index <= segurado.getR5()) {
             texto = "Quanto à regra de direito adquirido à aposentadoria proporcional antes da Emenda Constitucional 103/2019, art. 9º da Emenda Constitucional 20/1998, ";
         } else if (index > segurado.getR5() && index <= segurado.getR6()) {
             texto = "Quanto à regra transitória do art. 15 da Emenda Constitucional 103/2019, aposentadoria por tempo de contribuicao com soma de idade e tempo, ";
@@ -536,7 +581,7 @@ public class GeradorDespachoApTC {
     Testa se a regra a ser impressa leva em consideração o pedágio e retorna tempo de pedágio descontado
      */
     public String testaPedagio(Segurado segurado, int index) {
-        if (index == segurado.getR5() | index == segurado.getR8() | index == segurado.getR9()) {
+        if (index > segurado.getR4() && index <= segurado.getR5() | index == segurado.getR8() | index == segurado.getR9()) {
             return ", após desconto de " +
                     segurado.getPedagio(index)[0] + " anos, " +
                     segurado.getPedagio(index)[1] + " meses e " +
