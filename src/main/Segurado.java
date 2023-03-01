@@ -940,23 +940,33 @@ public class Segurado {
     public String[] parseTempCompEfetivo(int index) {
         String tempCompEfetivo = this.getExtrato();
 
-        String tempComp1198 = this.getExtrato();
-        tempComp1198 = tempComp1198.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];
-        tempComp1198 = tempComp1198.split("Analise do direito em 13/11/2019")[1];
-        tempComp1198 = tempComp1198.split("Tempo de contribuicao\\s+: ")[1];
-        tempComp1198.split("\\n")[0].trim();
-
-        String[] arrayTempComp1198;
-        arrayTempComp1198 = tempComp1198.split(", ");
-        arrayTempComp1198[0] = arrayTempComp1198[0].split("a")[0];
-        arrayTempComp1198[1] = arrayTempComp1198[1].split("m")[0];
-        arrayTempComp1198[2] = arrayTempComp1198[2].split("d")[0];
-
         int tempCompExigido;
+
+        String[] arrayTempComp1198 = new String[]{"00", "00", "00"};
+
+        boolean precisaPedagio =false;
 
         if(this.getSexo().equals("masculino")){tempCompExigido= 35;} else {tempCompExigido = 30;}
 
-        boolean precisaPedagio = Integer.parseInt(arrayTempComp1198[0]) < tempCompExigido;
+        if (this.getCodEspecieBeneficio().equals("42")) {
+
+            String tempComp1198 = this.getExtrato();
+            tempComp1198 = tempComp1198.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];
+            tempComp1198 = tempComp1198.split("Analise do direito em 13/11/2019")[1];
+            tempComp1198 = tempComp1198.split("Tempo de contribuicao\\s+: ")[1];
+            tempComp1198.split("\\n")[0].trim();
+
+            arrayTempComp1198 = tempComp1198.split(", ");
+            arrayTempComp1198[0] = arrayTempComp1198[0].split("a")[0];
+            arrayTempComp1198[1] = arrayTempComp1198[1].split("m")[0];
+            arrayTempComp1198[2] = arrayTempComp1198[2].split("d")[0];
+        }
+
+
+        if (this.getCodEspecieBeneficio().equals("42")) {
+
+        precisaPedagio = Integer.parseInt(arrayTempComp1198[0]) < tempCompExigido;}
+
 
         if (this.getCodEspecieBeneficio().equals("42") && index==this.getR1()) {
             tempCompEfetivo = tempCompEfetivo.split("Regra transitoria da Emenda Constitucional 103/2019, Art. 15", 2)[1];

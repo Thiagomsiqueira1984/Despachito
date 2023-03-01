@@ -121,7 +121,7 @@ Popup de ok retorna true e cancela retorna false
         janelinha.getIcons().add(new Image(Main.class.getResourceAsStream("Icone.png")));
 
         Label label1 = new Label();
-        label1.setText("Despachito versão: 1.8.13");
+        label1.setText("Despachito versão: 1.8.14");
         label1.setTextFill(Color.valueOf("#137ccd"));
         label1.setStyle("-fx-font-weight: bold");
         Label label2 = new Label();
