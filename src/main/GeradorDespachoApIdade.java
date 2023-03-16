@@ -15,10 +15,10 @@ public class GeradorDespachoApIdade {
     private List<String> despachoCompletoIdade = new ArrayList<>(); //Texto completo do despacho
     private String stringDespachoCompletoIdade; //Texto completo do despacho
 
-    private Date menorData; //Data mais antiga das regras transitórias de análise de direito
+    private Date menorDataF; //Data mais antiga das regras transitórias de análise de direito
     {
         try {
-            menorData = new SimpleDateFormat("dd-MM-yyyy").parse("31-12-2019");
+            menorDataF = new SimpleDateFormat("dd-MM-yyyy").parse("31-12-2019");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -140,6 +140,19 @@ public class GeradorDespachoApIdade {
 
         segurado.setR3(2);
 
+        Date menorDataLocal = null;
+        {
+            try {
+                menorDataLocal = new SimpleDateFormat("dd-MM-yyyy").parse("04-05-2022");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        if (segurado.getSexo() == "feminino"){
+            menorDataLocal = this.menorDataF;
+        }
+
         do {
             String regra = segurado.retornaNomeRegraAnaliseDireito(segurado.getR3());
             segurado.addRegraAnaliseDireito(regra);
@@ -171,11 +184,11 @@ public class GeradorDespachoApIdade {
             String recDireitoDataBase = segurado.parseRecDireitoDataBase(segurado.getR3());
             segurado.addRecDireitoDataBase(recDireitoDataBase);
 
-            if (segurado.getDateDataBase(segurado.getR3()).compareTo(menorData) > 0) {
+            if (segurado.getDateDataBase(segurado.getR3()).compareTo(menorDataLocal) > 0) {
                 segurado.setR3(segurado.getR3() + 1);
             } else {break;}
 
-        } while (segurado.getDateDataBase(segurado.getR3() - 1).compareTo(menorData) > 0);
+        } while (segurado.getDateDataBase(segurado.getR3() - 1).compareTo(menorDataF) > 0);
 
         segurado.setR3(segurado.getR3() - 1);
     }
